@@ -1,11 +1,8 @@
 package com.example.redpins;
 
-import com.facebook.*;
-import com.facebook.model.*;
-import android.widget.TextView;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
+import com.facebook.*;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 
