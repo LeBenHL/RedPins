@@ -75,11 +75,9 @@ public class MainFragment extends Fragment {
 	                }
 	            }
 	        });
-	        /*
 	        ConnectivityManager connMgr = (ConnectivityManager) 
 	            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 	        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-	        */
 	       // if (networkInfo != null && networkInfo.isConnected()) {
 	        if (true) {
 	            new postJSON(_user).execute("loginUser");
