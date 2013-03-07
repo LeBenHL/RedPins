@@ -1,37 +1,46 @@
 package com.example.redpins;
 
-import com.facebook.*;  	
-import com.facebook.model.*;  	
-import android.widget.TextView;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+import com.facebook.Session;
 
 public class MainActivity extends FragmentActivity {
 	
-	private MainFragment mainFragment;
+	private FacebookFragment facebookFragment;
+	private Fragment appFragment;
 
 	@Override
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    
+	    setContentView(R.layout.main_activity);
 	    if (savedInstanceState == null) {
 	        // Add the fragment on initial activity setup
-	        mainFragment = new MainFragment();
+	        facebookFragment = new FacebookFragment();
 	        getSupportFragmentManager()
 	        .beginTransaction()
-	        .add(android.R.id.content, mainFragment)
+	        .add(android.R.id.content, facebookFragment)
 	        .commit();
+	        appFragment = new NavigationFragment();
+	        getSupportFragmentManager()
+	        .beginTransaction()
+	        .add(R.id.mainAppFragment, appFragment)
+	        .commit();
+	    	getSupportFragmentManager()
+	        .beginTransaction().hide(appFragment).commit();
 	    } else {
 	        // Or set the fragment from restored state info
-	        mainFragment = (MainFragment) getSupportFragmentManager()
+	        facebookFragment = (FacebookFragment) getSupportFragmentManager()
 	        .findFragmentById(android.R.id.content);
+	        appFragment = getSupportFragmentManager()
+	    	        .findFragmentById(R.id.mainAppFragment);
 	    }
 	}
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -46,4 +55,50 @@ public class MainActivity extends FragmentActivity {
       Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
     
+    public void hideFacebookFragment() {
+    	getSupportFragmentManager()
+        .beginTransaction().hide(facebookFragment).commit();
+	   	getSupportFragmentManager()
+	    .beginTransaction()
+	    .show(appFragment)
+	    .commit();
+    }
+    
+    
+    public void showFacebookFragment() {
+    	getSupportFragmentManager()
+        .beginTransaction().show(facebookFragment).commit();
+	   	getSupportFragmentManager()
+	    .beginTransaction()
+	    .hide(appFragment)
+	    .commit();
+    }
+    
+	public void nearbyOnClick(View view) {
+		((NavigationFragment) appFragment).nearbyOnClick(view); 
+	}
+	
+	public void recommendationsOnClick(View view) {
+		((NavigationFragment) appFragment).recommendationsOnClick(view); 
+	}
+	
+	public void addEventOnClick(View view) {
+		((NavigationFragment) appFragment).addEventOnClick(view); 
+	}
+	
+	public void bookmarksOnClick(View view) {
+		((NavigationFragment) appFragment).bookmarksOnClick(view); 
+	}
+	
+	public void profileOnClick(View view) {
+		((NavigationFragment) appFragment).profileOnClick(view); 
+	}
+	
+	public void historyOnClick(View view) {
+		((NavigationFragment) appFragment).historyOnClick(view); 
+	}
+    
+    public void logoutFacebook(MenuItem item) {
+    	facebookFragment.authButton.callOnClick();
+    }
 }

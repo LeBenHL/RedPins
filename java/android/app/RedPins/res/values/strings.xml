@@ -6,5 +6,13 @@
     <string name="hello_world">Hello world!</string>
     <string name="app_id">335179273261206</string>
     <color name="gray">#F0F0F0</color>
+    <string name="logout">Logout</string>
+    <string name="Nearby">Nearby</string>
+    <string name="Recommendations">Recommended Events</string>
+    <string name="Subscriptions">Subscriptions</string>
+    <string name="Bookmarks">Bookmarks</string>
+    <string name="Profile">Profile</string>
+    <string name="History">History</string>
+    <string name="AddEvent">Add Event</string>
 
 </resources>

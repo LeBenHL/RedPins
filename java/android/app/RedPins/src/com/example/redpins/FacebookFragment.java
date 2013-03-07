@@ -27,13 +27,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MainFragment extends Fragment {
+public class FacebookFragment extends Fragment {
 	
 	private static final String TAG = "MainFragment";
 	private UiLifecycleHelper uiHelper;
 	
 	//The facebook user of our app
 	private GraphUser _user;
+	//The LoginButton
+	protected LoginButton authButton;
 	
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 	    @Override
@@ -53,9 +55,9 @@ public class MainFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, 
 	        ViewGroup container, 
 	        Bundle savedInstanceState) {
-	    View view = inflater.inflate(R.layout.activity_main, container, false);
+	    View view = inflater.inflate(R.layout.facebook_fragment, container, false);
 	    
-	    LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
+	    authButton = (LoginButton) view.findViewById(R.id.authButton);
 	    authButton.setFragment(this);
 	    //authButton.setReadPermissions(Arrays.asList("email", "user_events", "user_interests", "user_likes", "friends_events"));
 	    authButton.setReadPermissions(Arrays.asList("email"));
@@ -81,10 +83,13 @@ public class MainFragment extends Fragment {
 	       // if (networkInfo != null && networkInfo.isConnected()) {
 	        if (true) {
 	            new postJSON(_user).execute("loginUser");
+	           ((MainActivity) getActivity()).hideFacebookFragment();
 	        } else {
 	        }
 	        Log.i(TAG, "Logged in...");
 	    } else if (state.isClosed()) {
+	    	_user = null;
+	    	((MainActivity) getActivity()).showFacebookFragment();
 	        Log.i(TAG, "Logged out...");
 	    }
 	}
