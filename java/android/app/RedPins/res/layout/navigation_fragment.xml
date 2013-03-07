@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/Recommendations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/Nearby"
+        android:layout_marginLeft="53dp"
+        android:layout_toRightOf="@+id/Nearby"
+        android:onClick="recommendationsOnClick"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/RecommendationsImg"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:src="@drawable/content_event" />
+
+        <TextView
+            android:id="@+id/RecommendationsText"
+            android:layout_width="99dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/Recommendations"
+            android:textAlignment="viewStart" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/AddEvent"
+        android:layout_below="@+id/AddEvent"
+        android:layout_marginTop="30dp"
+        android:onClick="profileOnClick"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/ProfileImg"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:src="@drawable/social_person" />
+
+        <TextView
+            android:id="@+id/ProfileText"
+            android:layout_width="99dp"
+            android:layout_height="29dp"
+            android:gravity="center"
+            android:text="@string/Profile"
+            android:textAlignment="viewStart" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/AddEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Nearby"
+        android:layout_marginTop="29dp"
+        android:layout_toLeftOf="@+id/Recommendations"
+        android:onClick="addEventOnClick"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/AddEventImg"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:src="@drawable/av_make_available_offline" />
+
+        <TextView
+            android:id="@+id/AddEventText"
+            android:layout_width="99dp"
+            android:layout_height="29dp"
+            android:gravity="center"
+            android:text="@string/AddEvent"
+            android:textAlignment="viewStart" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Bookmarks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Profile"
+        android:layout_alignLeft="@+id/Recommendations"
+        android:onClick="bookmarksOnClick"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/Bookmarks"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:src="@drawable/collections_labels" />
+
+        <TextView
+            android:id="@+id/BookmarksText"
+            android:layout_width="99dp"
+            android:layout_height="29dp"
+            android:gravity="center"
+            android:text="@string/Bookmarks"
+            android:textAlignment="viewStart" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/History"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Bookmarks"
+        android:layout_alignTop="@+id/Profile"
+        android:onClick="historyOnClick"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/HistoryImg"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:src="@drawable/device_access_data_usage" />
+
+        <TextView
+            android:id="@+id/HistoryText"
+            android:layout_width="99dp"
+            android:layout_height="29dp"
+            android:gravity="center"
+            android:text="@string/History"
+            android:textAlignment="viewStart" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Nearby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="66dp"
+        android:layout_marginTop="132dp"
+        android:onClick="nearbyOnClick"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/NearbyImg"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:src="@drawable/device_access_location_found" />
+
+        <TextView
+            android:id="@+id/NearbyText"
+            android:layout_width="99dp"
+            android:layout_height="29dp"
+            android:gravity="center"
+            android:text="@string/Nearby"
+            android:textAlignment="viewStart" />
+    </LinearLayout>
+
+</RelativeLayout>
