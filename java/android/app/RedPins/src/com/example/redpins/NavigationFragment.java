@@ -4,15 +4,18 @@ import java.util.Arrays;
 
 import com.facebook.widget.LoginButton;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-public class NavigationFragment extends Fragment {
+public class NavigationFragment extends Fragment{
 	
 	private View nearbyButton;
 	private View recommendationsButton;
@@ -20,6 +23,7 @@ public class NavigationFragment extends Fragment {
 	private View bookmarksButton;
 	private View profileButton;
 	private View historyButton;
+	private View listButton;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, 
@@ -32,7 +36,7 @@ public class NavigationFragment extends Fragment {
 	    bookmarksButton = view.findViewById(R.id.Bookmarks);
 	    profileButton = view.findViewById(R.id.Profile);
 	    historyButton = view.findViewById(R.id.History);
-	    
+	    listButton = view.findViewById(R.id.list_button);
 	    return view;
 	}
 	
@@ -59,6 +63,5 @@ public class NavigationFragment extends Fragment {
 	public void historyOnClick(View view) {
 		Log.v("buttonClick", "HISTORY");
 	}
-
-
+	
 }

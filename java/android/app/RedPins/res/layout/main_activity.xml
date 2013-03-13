@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation= "vertical" >
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/searchFragment"
@@ -17,7 +17,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true" >
         </RelativeLayout>
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -32,7 +31,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true" >
         </RelativeLayout>
-
     </RelativeLayout>
 
 </LinearLayout>
