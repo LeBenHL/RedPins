@@ -27,7 +27,6 @@
             android:gravity="center"
             android:text="@string/Recommendations"
             android:textAlignment="viewStart" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -153,5 +152,11 @@
             android:text="@string/Nearby"
             android:textAlignment="viewStart" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/list_button"
+        android:layout_width="@dimen/mini_button"
+        android:layout_height="@dimen/mini_button"
+        android:onClick="listviewOnClick" />
 
 </RelativeLayout>
