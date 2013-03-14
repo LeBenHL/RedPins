@@ -421,6 +421,7 @@ containing a value of this type.
         public static final int facebook_fragment=0x7f03000d;
         public static final int main_activity=0x7f03000e;
         public static final int navigation_fragment=0x7f03000f;
+        public static final int search_fragment=0x7f030010;
     }
     public static final class menu {
         public static final int main=0x7f090000;
