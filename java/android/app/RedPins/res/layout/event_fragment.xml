@@ -100,12 +100,10 @@
         android:layout_margin="@dimen/object_padding"
         android:progress="0" />
 
-    <!--
-         <ListView
+    <ListView
         android:id="@+id/comment_listview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
     </ListView>
-    -->
 
 </LinearLayout>

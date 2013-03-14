@@ -203,7 +203,7 @@ public class ListMapActivity extends Activity implements OnClickListener, OnInfo
 				LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View v;
 				if (convertView == null) {
-					v = inflater.inflate(R.layout.list_events, null); 
+					v = inflater.inflate(R.layout.event_list, null); 
 				} else {
 					v = convertView;
 				}

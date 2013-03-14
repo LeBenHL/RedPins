@@ -1,5 +1,6 @@
 package com.example.redpins;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,37 +43,34 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 	private ListView listView;
 	private ActionBar actionBar;
 	private ImageButton homeButton;
-	
+	protected JSONArray jsonArr;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.list_fragment, container, false);
+		View view = inflater.inflate(R.layout.listview_fragment, container, false);
 		homeButton = (ImageButton) view.findViewById(R.id.home_button);
 		homeButton.setOnClickListener(this);
 		mapviewButton = (Button) view.findViewById(R.id.button_to_mapview);
 		mapviewButton.setOnClickListener(this);
 		listView = (ListView) view.findViewById(android.R.id.list);
-		populateList();
+		GetEventListTask task = new GetEventListTask();
+		task.execute();
 		return view;
 	}
-	
+
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.home_button:
 			((MainActivity) getActivity()).hideListviewFrag();
-			break;
-		case R.id.button_to_listview:
-			//go to viewView
-			((MainActivity)getActivity()).showListviewFrag();
-//			((MainActivity)getActivity()).hideMapviewFrag();
+			((MainActivity) getActivity()).showNaviFrag();
 			break;
 		case R.id.button_to_mapview:
 			//go to mapView
 			((MainActivity) getActivity()).hideListviewFrag();
-			((MainActivity)getActivity()).showMapviewFrag();
+			((MainActivity) getActivity()).showMapviewFrag();
 			break;
 		}
 	}
@@ -116,7 +114,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 				LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View v;
 				if (convertView == null) {
-					v = inflater.inflate(R.layout.list_events, null); 
+					v = inflater.inflate(R.layout.event_list, null); 
 				} else {
 					v = convertView;
 				}
@@ -131,10 +129,33 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 
 				eventName.setText("HIyo "+position);
 				//eventImage.setRes...
-				eventDesc.setText("desc" + position);
-				eventAddr.setText("addr" + position);
-				eventTime.setText("time" + position);
 
+				double lat;
+				double lng;
+				JSONObject json;
+				try {
+					json = jsonArr.getJSONObject(position);
+					eventName.setText(json.getString("title"));
+					eventDesc.setText(json.getString("url"));
+					lat = json.getDouble("lat");
+					lng = json.getDouble("lng");
+					eventAddr.setText(json.getString("address"));
+					String loc =  json.getString("l");//??
+					eventTime.setText(json.getString("time"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//				String img =  result.getString("");
+				//	String likes =  result.getString("");
+				//String dislikes =  result.getString("");
+				//				eventName.setText(name);
+				//				eventDesc.setText(desc);
+				//				eventLoc.setText(loc);
+				//				eventTime.setText(time);
+				//???eventImg.setImageURI(uri);
+				//				eventLikes.setText("LIKES "+likes);
+				//				eventDislikes.setText("DISLIKES " + dislikes);
 				return v;
 			}
 
@@ -174,70 +195,46 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 				return false;
 			}
 		};
-		System.out.println("LS2"+listView);
 		listView.setAdapter(adapter);
-//		GetEventListTask task = new GetEventListTask();
-//		task.execute();
+		//		GetEventListTask task = new GetEventListTask();
+		//		task.execute();
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
-		//super.onListItemClick(l, v, position, id);
-//		Intent i = new Intent(getActivity().getApplicationContext(),EventActivity.class);
-//		i.putExtra("event_id", v.getTag().toString());
-//		startActivity(i);
 		((MainActivity) getActivity()).showEventFrag();
 	}
-	
-	public class GetEventListTask extends AsyncTask<Void, Void, JSONObject>{
+
+	public class GetEventListTask extends AsyncTask<Void, Void, JSONArray>{
 
 		//how should i save comments
-		
+
 		@Override
-		protected JSONObject doInBackground(Void... arg0) {
+		protected JSONArray doInBackground(Void... arg0) {
 			JSONObject json = new JSONObject();
-			try {
-				//adds input values into JSON data object
-				json.put("event_id", "");//event_id);
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-			JSONObject ret = null;
+			//			try {
+			//				
+			//			} catch (JSONException e1) {
+			//				e1.printStackTrace();
+			//			}
+			JSONArray ret = null;
 			try {
 				//sends requests to server and receives
-				ret = Utility.requestServer("http://dry-wave-1707.herokuapp.com/events/find", json);
+				ret = Utility.requestServerArr("http://dry-wave-1707.herokuapp.com/events/find", json);
 			} catch (Throwable e) {
 			}
 			return ret;
 		}
 		@Override
-		protected void onPostExecute(JSONObject result) {
+		protected void onPostExecute(JSONArray result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			try {
-				populateList();
-				String name =  result.getString("title");
-				String desc =  result.getString("url");
-				String loc =  result.getString("location");
-				String time =  result.getString("time");
-//				String img =  result.getString("");
-			//	String likes =  result.getString("");
-				//String dislikes =  result.getString("");
-//				eventName.setText(name);
-//				eventDesc.setText(desc);
-//				eventLoc.setText(loc);
-//				eventTime.setText(time);
-				//???eventImg.setImageURI(uri);
-//				eventLikes.setText("LIKES "+likes);
-//				eventDislikes.setText("DISLIKES " + dislikes);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			
+			jsonArr = result;
+			populateList();
+
 		}
 	}
-	
+
 
 	private Location currLoc;
 	private LocationManager mLocationManager;

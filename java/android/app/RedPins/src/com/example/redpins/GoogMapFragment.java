@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,19 +26,19 @@ import android.widget.TextView;
 
 
 public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoWindowClickListener{
-	
+
 	private Button listviewButton;
 	private ImageButton homeButton;
 	private GoogleMap mMap;
-	
-//	@Override
-//	public void onCreate(Bundle savedInstanceState) {
-//		// TODO Auto-generated method stub
-//		super.onCreate(savedInstanceState);
-////		MapFragment map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-////		map.onAttach(getActivity());
-//	}
-//	
+
+	//	@Override
+	//	public void onCreate(Bundle savedInstanceState) {
+	//		// TODO Auto-generated method stub
+	//		super.onCreate(savedInstanceState);
+	////		MapFragment map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+	////		map.onAttach(getActivity());
+	//	}
+	//	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -55,16 +56,14 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		}
 		return view;
 	}
-	
+
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		//should take user to event page that corresponds to the event
-//		Intent i = new Intent(getActivity().getApplicationContext(),EventActivity.class);
-		//i.putExtra("event_id", );
-//		startActivity(i);
+		((MainActivity) getActivity()).hideMapviewFrag();
 		((MainActivity) getActivity()).showEventFrag();
 	}
-    
+
 	private void addPins(int x){
 		Location eventLoc = new Location(Context.LOCATION_SERVICE);
 		LatLng loc = new LatLng(eventLoc.getLatitude(),(x*10)+eventLoc.getLongitude());
@@ -107,16 +106,18 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-switch (v.getId()) {
-case R.id.home_button:
-	((MainActivity) getActivity()).hideMapviewFrag();
-	break;
-case R.id.button_to_listview:
-	//go to viewView
-	((MainActivity)getActivity()).showListviewFrag();
-	((MainActivity)getActivity()).hideMapviewFrag();
-	break;
-	
-}
+		switch (v.getId()) {
+		case R.id.home_button:
+			((MainActivity) getActivity()).hideMapviewFrag();
+			((MainActivity) getActivity()).showNaviFrag();
+			break;
+		case R.id.button_to_listview:
+			//go to viewView
+			((MainActivity) getActivity()).showListviewFrag();
+			((MainActivity) getActivity()).hideMapviewFrag();
+			break;
+
+		}
 	}
+	
 }

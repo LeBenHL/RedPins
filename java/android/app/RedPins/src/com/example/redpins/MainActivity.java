@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,7 @@ public class MainActivity extends FragmentActivity{
 	private Fragment mapFragment;
 	private Fragment eventFragment;
 	private GoogleMap mMap;
-	
+
 	public final static String serverURL = "http://dry-wave-1707.herokuapp.com";
 
 	@Override
@@ -42,14 +43,14 @@ public class MainActivity extends FragmentActivity{
 			.commit();
 			getSupportFragmentManager()
 			.beginTransaction().hide(appFragment).commit();
-//			hideFacebookFragment();//temporary
+			hideFacebookFragment();//temporary
 		} else {
 			// Or set the fragment from restored state info
 			facebookFragment = (FacebookFragment) getSupportFragmentManager()
 					.findFragmentById(android.R.id.content);
 			appFragment = getSupportFragmentManager()
 					.findFragmentById(R.id.mainAppFragment);
-//			hideFacebookFragment();//temporary
+			hideFacebookFragment();//temporary
 		}
 	}
 
@@ -119,61 +120,75 @@ public class MainActivity extends FragmentActivity{
 	public void historyOnClick(View view) {
 		((NavigationFragment) appFragment).historyOnClick(view); 
 	}
-
-	public void listviewOnClick(View view){
-		showListviewFrag();
+	
+	public void hideNaviFrag(){
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.hide(appFragment).commit();
 	}
+
+	public void showNaviFrag(){
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.show(appFragment).commit();
+	}
+	
 	public void hideListviewFrag(){
-		getSupportFragmentManager().beginTransaction().hide(listFragment).commit();
-		getSupportFragmentManager().beginTransaction().show(appFragment).commit();
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.remove(listFragment).commit();
 	}
 
 	public void showListviewFrag(){
-		//		getSupportFragmentManager().beginTransaction().remove(listFragment).commit();
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Bundle data = new Bundle();
+		data.putString("query","");
 		if(listFragment == null){
 			listFragment = new ListviewFragment();
-			getSupportFragmentManager().beginTransaction().add(android.R.id.content, listFragment).commit();
+			listFragment.setArguments(data);
+			ft.add(android.R.id.content, listFragment);
 		}
-		getSupportFragmentManager().beginTransaction().show(listFragment).commit();
-		getSupportFragmentManager().beginTransaction().hide(appFragment).commit();
+		ft.show(listFragment).commit();
 	}
 
 
 	public void hideMapviewFrag(){
-		getSupportFragmentManager().beginTransaction().hide(mapFragment).commit();
-		getSupportFragmentManager().beginTransaction().show(appFragment).commit();
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.remove(mapFragment).commit();
 	}
 
 	public void showMapviewFrag(){
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if(mapFragment == null){
 			mapFragment = new GoogMapFragment();
-			getSupportFragmentManager().beginTransaction().add(android.R.id.content, mapFragment).commit();
+			ft.add(android.R.id.content, mapFragment);
 		}
-		//		getSupportFragmentManager().beginTransaction().remove(mapFragment).commit();
-		getSupportFragmentManager().beginTransaction().show(mapFragment).commit();
-		getSupportFragmentManager().beginTransaction().hide(appFragment).commit();
+		ft.show(mapFragment).commit();
 	}
 
 	public void hideEventFrag(){
-		getSupportFragmentManager().beginTransaction().hide(eventFragment).commit();
-		getSupportFragmentManager().beginTransaction().show(appFragment).commit();
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.remove(eventFragment).commit();
 	}
 
 	public void showEventFrag(){
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Bundle data = new Bundle();
+		data.putString("event_id","");//event id!!!!!!!
 		if(eventFragment == null){
 			eventFragment = new EventFragment();
-			getSupportFragmentManager().beginTransaction().add(android.R.id.content, eventFragment).commit();
+			eventFragment.setArguments(data);
+			ft.add(android.R.id.content, eventFragment);
 		}
-		getSupportFragmentManager().beginTransaction().show(eventFragment).commit();
-		if(mapFragment != null){
-			getSupportFragmentManager().beginTransaction().hide(mapFragment).commit();
-		}
-		getSupportFragmentManager().beginTransaction().hide(listFragment).commit();
-		getSupportFragmentManager().beginTransaction().hide(appFragment).commit();
+		ft.show(eventFragment).commit();
 	}
 
 	public void eventClicked(View v){
+		hideListviewFrag();
 		showEventFrag();
+	}
+	
+	public void listviewOnClick(View view){
+		hideNaviFrag();
+		//		showMapviewFrag();
+		showListviewFrag();
 	}
 
 	public void logoutFacebook(MenuItem item) {
