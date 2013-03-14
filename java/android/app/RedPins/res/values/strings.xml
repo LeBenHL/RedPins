@@ -23,5 +23,7 @@
     <string name="to_mapview">To the Map</string>
     <string name="to_listview">To Search List</string>
     <string name="home">HOME</string>
+    <string name="search_hint">Search by tags</string>
+    <string name="title_activity_search">SearchActivity</string>
 
 </resources>

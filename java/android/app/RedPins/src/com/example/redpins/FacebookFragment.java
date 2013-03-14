@@ -74,19 +74,19 @@ public class FacebookFragment extends Fragment {
 	            public void onCompleted(GraphUser user, Response response) {
 	                if (user != null) {
 	                	_user = user;
+	                	Log.v("onSessionStateChange", "GOT USER");
+	        	        ConnectivityManager connMgr = (ConnectivityManager) 
+	        		            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        		       if (networkInfo != null && networkInfo.isConnected()) {
+        		            new postJSON(_user).execute("loginUser");
+        		           ((MainActivity) getActivity()).hideFacebookFragment();
+        		        } else {
+        		        }
+        		        Log.i(TAG, "Logged in...");
 	                }
 	            }
 	        });
-	        ConnectivityManager connMgr = (ConnectivityManager) 
-	            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-	        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-	       // if (networkInfo != null && networkInfo.isConnected()) {
-	        if (true) {
-	            new postJSON(_user).execute("loginUser");
-	           ((MainActivity) getActivity()).hideFacebookFragment();
-	        } else {
-	        }
-	        Log.i(TAG, "Logged in...");
 	    } else if (state.isClosed()) {
 	    	_user = null;
 	    	((MainActivity) getActivity()).showFacebookFragment();
@@ -265,13 +265,13 @@ public class FacebookFragment extends Fragment {
 	        		case ADDUSER:
 	    	            jsonToSend.put("email", _user.getProperty("email").toString());
 	    	            jsonToSend.put("facebook_id", _user.getProperty("id").toString());
+	    	            jsonToSend.put("firstname", _user.getFirstName());
+	    	            jsonToSend.put("lastname", _user.getLastName());
 	        			break;
 	        		default:
 	        			//Should not reach this case EVER
 	        			throw new Exception();
 	        	}
-	            Log.v("postUrl", _user.getProperty("email").toString());
-	            Log.v("postUrl", _user.getProperty("id").toString());
 	        	//byte[] outputBytes = jsonString.getBytes("UTF-8");
 	        	OutputStream os = conn.getOutputStream();
 	        	os.write(jsonToSend.toString().getBytes());
