@@ -1,13 +1,17 @@
 package com.example.redpins;
 
 import android.app.FragmentManager;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 
 import com.facebook.Session;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,12 +55,22 @@ public class MainActivity extends FragmentActivity{
 					.findFragmentById(R.id.mainAppFragment);
 //			hideFacebookFragment();//temporary
 		}
+	
+		handleIntent(getIntent());
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		
+	    // Get the SearchView and set the searchable configuration
+	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    SearchView searchView = (SearchView) findViewById(R.id.search_view);
+	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+	    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+	    searchView.setSubmitButtonEnabled(true); // Enable a submit button
+	    
 		return true;
 	}
 
@@ -95,6 +109,24 @@ public class MainActivity extends FragmentActivity{
 		.hide(appFragment)
 		.commit();
 	}
+	
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+	
+    // handle the search query intent
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //use the query to search your data somehow
+            Log.v("MainActivity", "THIS IS THE QUERY: " + query);
+            // TODO: Eric, replace the showListviewFrag() call
+            // with call to ListViewFragment constructor here
+            showListviewFrag();
+        }
+    }
 
 	public void nearbyOnClick(View view) {
 		((NavigationFragment) appFragment).nearbyOnClick(view); 
