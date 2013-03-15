@@ -67,6 +67,13 @@ public class EventFragment extends Fragment implements OnClickListener{
 		task.execute();
 		return view;
 	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		GetEventTask task = new GetEventTask();
+		task.execute();
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -80,7 +87,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			}else{
 				((MainActivity) getActivity()).showNaviFrag();
 			}
-			((MainActivity) getActivity()).hideEventFrag();
+			((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction().hide(((MainActivity) getActivity()).eventFragment).commit();
 			break;
 		case R.id.event_url:
 			//takes user to web browser with given link
@@ -141,14 +148,11 @@ public class EventFragment extends Fragment implements OnClickListener{
 					eventTime.setText(time);
 				}
 				//???eventImg.setImageURI(uri);
-				String likes =  "20";
-				String dislikes =  "10";
-				eventLikes.setText("LIKES: "+likes);
-				eventDislikes.setText("DISLIKES: " + dislikes);
-				progressBar.setProgress((int) (Double.parseDouble(likes)/(Double.parseDouble(likes)+Double.parseDouble(dislikes))*100));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+//			GetLikesTask task = new GetLikesTask();
+//			task.execute();
 		//	GetCommentTask commentTask = new GetCommentTask();
 		//	commentTask.execute();
 		}
@@ -164,7 +168,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			try {
 				json.put("event_id", event_id);
 				System.out.println(event_id);
-				temp = Utility.requestServer(MainActivity.serverURL + "/events/getComments", json);
+				temp = Utility.requestServer(MainActivity.serverURL + "/events/getComments.json", json);
 				ret = temp.toJSONArray(temp.names()).getJSONArray(0);
 				ret.toString().replace("[", "");
 				ret.toString().replace("]", "");
@@ -290,24 +294,36 @@ public class EventFragment extends Fragment implements OnClickListener{
 		};
 		commentsList.setAdapter(adapter);
 	}
-	public class GetLikesTask extends AsyncTask<Void, Void, JSONArray>{
+	public class GetLikesTask extends AsyncTask<Void, Void, JSONObject>{
 
 		@Override
-		protected JSONArray doInBackground(Void... arg0) {
+		protected JSONObject doInBackground(Void... arg0) {
 			JSONObject json = new JSONObject();
-			JSONArray ret = null;
-//			try {
-				//sends requests to server and receives
-			//	ret = Utility.requestServer(MainActivity.serverURL + "/events/find", json);
-//			} catch (Throwable e) {
-//			}
+			JSONObject ret = null;
+			try {
+				json.put("event_id", event_id);
+				ret = Utility.requestServer(MainActivity.serverURL + "/events/getRatings.json", json);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//sends requests to server and receives
 			return ret;
 		}
 
 		@Override
-		protected void onPostExecute(JSONArray result) {
+		protected void onPostExecute(JSONObject result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
+
+			try {
+				eventLikes.setText("LIKES: "+result.getInt("likes"));
+				eventDislikes.setText("DISLIKES: " + result.getInt("dislikes"));
+				progressBar.setProgress((100*result.getInt("likes"))/(result.getInt("likes")+result.getInt("dislikes")));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 //
