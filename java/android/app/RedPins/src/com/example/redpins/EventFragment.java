@@ -296,11 +296,17 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected JSONArray doInBackground(Void... arg0) {
 			JSONObject json = new JSONObject();
 			JSONArray ret = null;
-//			try {
-				//sends requests to server and receives
-			//	ret = Utility.requestServer(MainActivity.serverURL + "/events/find", json);
-//			} catch (Throwable e) {
-//			}
+			JSONObject temp;
+			try {
+				json.put("event_id", event_id);
+				// sends requests to server and receives
+				temp = Utility.requestServer(MainActivity.serverURL + "/events/getRatings.json", json);
+				ret = temp.toJSONArray(temp.names()).getJSONArray(0);
+				ret.toString().replace("[", "");
+				ret.toString().replace("]", "");
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 			return ret;
 		}
 

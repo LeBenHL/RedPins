@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.SearchView;
 
 import com.facebook.Session;
+import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 
@@ -28,17 +29,19 @@ public class MainActivity extends FragmentActivity{
 	private String mQuery;
 	public String facebook_id;
 	private GoogleMap mMap;
+	private static GraphUser user;
 
 	private Menu _menu;
 
-	public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";///"http://safe-savannah-1864.herokuapp.com";
+	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
+	public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
 		if (savedInstanceState == null) {
-			// Add the fragment on initial activity setup
+			// Add the fragment on initial activity setup	
 			facebookFragment = new FacebookFragment();
 			getSupportFragmentManager()
 			.beginTransaction()
@@ -51,7 +54,7 @@ public class MainActivity extends FragmentActivity{
 			.commit();
 			getSupportFragmentManager()
 			.beginTransaction().hide(appFragment).commit();
-			hideFacebookFragment();//temporary
+			hideFacebookFragment();//temporary	
 		} else {
 			// Or set the fragment from restored state info
 			facebookFragment = (FacebookFragment) getSupportFragmentManager()
@@ -123,6 +126,14 @@ public class MainActivity extends FragmentActivity{
 		.beginTransaction()
 		.hide(appFragment)
 		.commit();
+	}
+	
+	public void setFacebookUser(GraphUser _user) {
+		user = _user;
+	}
+	
+	public String getFacebookId() {
+		return user.getProperty("id").toString();
 	}
 
 	@Override

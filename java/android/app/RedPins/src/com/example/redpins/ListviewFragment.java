@@ -39,6 +39,7 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.text.method.HideReturnsTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -186,7 +187,10 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 				double lng;
 				JSONObject json;
 				try {
-					System.out.println(jsonArr);
+					if (jsonArr == null) {
+						System.out.println("jsonarray is null");
+					}
+					//System.out.println(jsonArr);
 					json = jsonArr.getJSONObject(position);
 					System.out.println("JSON"+position+": "+json);
 					v.setTag(json.getInt("id"));
@@ -256,7 +260,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			JSONObject json = new JSONObject();
 						try {
 //							json.put("query", getArguments().getString("query"));
-//							json.put("facebook_id", ((MainActivity)getActivity()).facebook_id);
+							json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
 							json.put("event_id", "1");
 						} catch (JSONException e1) {
 							e1.printStackTrace();
@@ -266,12 +270,12 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 				//sends requests to server and receives
 				JSONObject jsonObj = Utility.requestServer(MainActivity.serverURL + "/events/search.json", json);
 				System.out.println("RESPONSE: " + jsonObj.toString());
-				ret = jsonObj.toJSONArray(jsonObj.names()).getJSONArray(0);
-				System.out.println("RESPONSE: " + ret);
+				ret = jsonObj.toJSONArray(jsonObj.names()).getJSONArray(1);
+				System.out.println("RET: " + ret);
 				ret.toString().replace("[", "");
 				ret.toString().replace("]", "");
-//				System.out.println("RESPONSE: " + ret);
 			} catch (JSONException e) {
+				System.out.println("Caught Exception");
 				e.printStackTrace();
 			}
 			return ret;

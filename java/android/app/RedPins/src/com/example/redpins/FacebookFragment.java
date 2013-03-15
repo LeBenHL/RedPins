@@ -33,7 +33,7 @@ public class FacebookFragment extends Fragment {
 	private UiLifecycleHelper uiHelper;
 	
 	//The facebook user of our app
-	public GraphUser _user;
+	private GraphUser _user;
 	//The LoginButton
 	protected LoginButton authButton;
 	
@@ -74,6 +74,7 @@ public class FacebookFragment extends Fragment {
 	            public void onCompleted(GraphUser user, Response response) {
 	                if (user != null) {
 	                	_user = user;
+	                	((MainActivity) getActivity()).setFacebookUser(user);
 	                	Log.v("onSessionStateChange", "GOT USER");
 	        	        ConnectivityManager connMgr = (ConnectivityManager) 
 	        		            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -90,6 +91,7 @@ public class FacebookFragment extends Fragment {
 	        });
 	    } else if (state.isClosed()) {
 	    	_user = null;
+	    	((MainActivity) getActivity()).setFacebookUser(null);
 	    	((MainActivity) getActivity()).showFacebookFragment();
 	    	((MainActivity) getActivity()).setFacebookMenuLogin();
 	        Log.i(TAG, "Logged out...");
@@ -175,7 +177,8 @@ public class FacebookFragment extends Fragment {
 		private static final int ERR_BAD_FACEBOOK_ID = -4;
     	
     	//The base URL we are trying to post to
-    	private static final String baseUrl = "http://nameless-brook-4178.herokuapp.com";//"http://safe-savannah-1864.herokuapp.com";
+    	//private static final String baseUrl = "http://nameless-brook-4178.herokuapp.com";
+    	private static final String baseUrl = "http://safe-savannah-1864.herokuapp.com";
     	
     	//The facebook session we are working on
     	private GraphUser _user;
