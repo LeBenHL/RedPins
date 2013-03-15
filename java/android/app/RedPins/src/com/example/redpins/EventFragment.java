@@ -41,6 +41,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 	private String urlLink;
 	private String linkBack;
 	protected JSONArray commentArr;
+	private Button addCommentButton;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +58,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 		eventLikes = (TextView) view.findViewById(R.id.event_like);
 		eventDislikes = (TextView) view.findViewById(R.id.event_dislike);
 		commentsList = (ListView) view.findViewById(R.id.comment_listview);
+		addCommentButton = (Button) view.findViewById(R.id.add_comment_button);
+		addCommentButton.setOnClickListener(this);
 		event_id = getArguments().getString("event_id");
 		linkBack = getArguments().getString("prev");
 		progressBar = (ProgressBar) view.findViewById(R.id.event_progress);
@@ -73,7 +76,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			if(linkBack.equals("map")){
 				((MainActivity) getActivity()).showMapviewFrag();
 			}else if(linkBack.equals("list")){
-				((MainActivity) getActivity()).showMapviewFrag();
+				((MainActivity) getActivity()).showListviewFrag();
 			}else{
 				((MainActivity) getActivity()).showNaviFrag();
 			}
@@ -88,6 +91,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			AddCommentFragment commFragment = new AddCommentFragment();
 			Bundle bundle = new Bundle();
 			bundle.putString("event_id", event_id);
+			commFragment.setArguments(bundle);
 			getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content,commFragment).commit();
 		}
 	}
@@ -103,13 +107,14 @@ public class EventFragment extends Fragment implements OnClickListener{
 			try {
 				//adds input values into JSON data object
 				json.put("event_id", event_id);
+				json.put("facebook_id", ((MainActivity)getActivity()).facebook_id);
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
 			JSONObject ret = null;
 			try {
 				//sends requests to server and receive
-				ret = Utility.requestServer(MainActivity.serverURL+"/events/find", json);
+				ret = Utility.requestServer(MainActivity.serverURL+"/events/getEvent.json", json);
 			} catch (Throwable e) {
 			}
 			return ret;
@@ -120,33 +125,32 @@ public class EventFragment extends Fragment implements OnClickListener{
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			try {
-				System.out.println(""+result);
-				JSONObject replace = new JSONObject();
-				replace.put("title", "Doc's Party");
-				replace.put("url", "http://www.google.com");
-				replace.put("location", "Starbucks");
-				replace.put("time", "5:30AM");
-				String name = replace.getString("title");//result.getString("title");
-				String url = replace.getString("url"); //result.getString("url");
-				String loc = replace.getString("location"); //result.getString("location");
-				String time = replace.getString("time"); //result.getString("time");
-				//				String img =  result.getString("");
-				String likes =  "20";//result.getString("");
-				String dislikes =  "10";//result.getString("");
-				eventName.setText(name);
-				urlLink = url;
-				eventURL.setText(urlLink);
-				eventLoc.setText(loc);
-				eventTime.setText(time);
+				System.out.println(result);
+				JSONArray jsonArr = result.toJSONArray(result.names());
+				System.out.println(jsonArr.getInt(0));
+				if(jsonArr.getInt(0) == 1){
+					JSONObject json = jsonArr.getJSONObject(1);
+					String name = json.getString("title");
+					String url = json.getString("url");
+					String loc = json.getString("location");
+					String time = json.getString("start_time");
+					eventName.setText(name);
+					urlLink = url;
+					eventURL.setText(urlLink);
+					eventLoc.setText(loc);
+					eventTime.setText(time);
+				}
 				//???eventImg.setImageURI(uri);
+				String likes =  "20";
+				String dislikes =  "10";
 				eventLikes.setText("LIKES: "+likes);
 				eventDislikes.setText("DISLIKES: " + dislikes);
 				progressBar.setProgress((int) (Double.parseDouble(likes)/(Double.parseDouble(likes)+Double.parseDouble(dislikes))*100));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			GetCommentTask commentTask = new GetCommentTask();
-			commentTask.execute();
+		//	GetCommentTask commentTask = new GetCommentTask();
+		//	commentTask.execute();
 		}
 	}
 
@@ -155,12 +159,20 @@ public class EventFragment extends Fragment implements OnClickListener{
 		@Override
 		protected JSONArray doInBackground(Void... arg0) {
 			JSONObject json = new JSONObject();
+			JSONObject temp;
 			JSONArray ret = null;
 			try {
-				//sends requests to server and receives
-				ret = Utility.requestServerArr(MainActivity.serverURL + "/events/find", json);
-			} catch (Throwable e) {
+				json.put("event_id", event_id);
+				System.out.println(event_id);
+				temp = Utility.requestServer(MainActivity.serverURL + "/events/getComments", json);
+				ret = temp.toJSONArray(temp.names()).getJSONArray(0);
+				ret.toString().replace("[", "");
+				ret.toString().replace("]", "");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			//sends requests to server and receives
 			return ret;
 		}
 
@@ -168,8 +180,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected void onPostExecute(JSONArray result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			commentArr = result;
-			populateCommentList();
+			if(commentArr != null){
+				commentArr = result;
+			}
+				populateCommentList();
 		}
 	}
 
@@ -225,9 +239,9 @@ public class EventFragment extends Fragment implements OnClickListener{
 				JSONObject json;
 				try {
 					json = commentArr.getJSONObject(position);
-					commentUsername.setText(json.getString("username"));
-					commentDate.setText(json.getString("date"));
-					commentContent.setText(json.getString("content"));
+					commentUsername.setText("" + json.getString("firstname")+" "+json.getString("lastname"));
+					commentDate.setText(json.getString("created_at"));
+					commentContent.setText(json.getString("comment"));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -282,11 +296,11 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected JSONArray doInBackground(Void... arg0) {
 			JSONObject json = new JSONObject();
 			JSONArray ret = null;
-			try {
+//			try {
 				//sends requests to server and receives
-				ret = Utility.requestServerArr(MainActivity.serverURL + "/events/find", json);
-			} catch (Throwable e) {
-			}
+			//	ret = Utility.requestServer(MainActivity.serverURL + "/events/find", json);
+//			} catch (Throwable e) {
+//			}
 			return ret;
 		}
 
@@ -294,16 +308,14 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected void onPostExecute(JSONArray result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			commentArr = result;
-			populateCommentList();
 		}
 	}
-
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		GetEventTask task = new GetEventTask();
-		task.execute();
-	}
+//
+//	@Override
+//	public void onResume() {
+//		// TODO Auto-generated method stub
+//		super.onResume();
+//		GetCommentTask task = new GetCommentTask();
+//		task.execute();
+//	}
 }

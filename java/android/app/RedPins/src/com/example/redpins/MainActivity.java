@@ -20,18 +20,18 @@ import com.google.android.gms.maps.MapFragment;
 
 public class MainActivity extends FragmentActivity{
 
-	private FacebookFragment facebookFragment;
+	public FacebookFragment facebookFragment;
 	private Fragment appFragment;
 	private Fragment listFragment;
-	private Fragment mapFragment;
+	public Fragment mapFragment;
 	private Fragment eventFragment;
 	private String mQuery;
 	public String facebook_id;
 	private GoogleMap mMap;
-	
+
 	private Menu _menu;
 
-	public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
+	public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";///"http://safe-savannah-1864.herokuapp.com";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,6 @@ public class MainActivity extends FragmentActivity{
 					.findFragmentById(R.id.mainAppFragment);
 			hideFacebookFragment();//temporary
 		}
-	
 		handleIntent(getIntent());
 	}
 
@@ -69,14 +68,14 @@ public class MainActivity extends FragmentActivity{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		_menu = menu;
-		
-	    // Get the SearchView and set the searchable configuration
-	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    SearchView searchView = (SearchView) findViewById(R.id.search_view);
-	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-	    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-	    searchView.setSubmitButtonEnabled(true); // Enable a submit button
-	    
+
+		// Get the SearchView and set the searchable configuration
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchView searchView = (SearchView) findViewById(R.id.search_view);
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+		searchView.setSubmitButtonEnabled(true); // Enable a submit button
+
 		return true;
 	}
 
@@ -96,12 +95,12 @@ public class MainActivity extends FragmentActivity{
 		super.onActivityResult(requestCode, resultCode, data);
 		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 	}
-	
+
 	public void setFacebookMenuLogin() {
 		MenuItem facebookMenuItem = _menu.findItem(R.id.logout);
 		facebookMenuItem.setTitle("Login");
 	}
-	
+
 	public void setFacebookMenuLogout() {
 		MenuItem facebookMenuItem = _menu.findItem(R.id.logout);
 		facebookMenuItem.setTitle("Logout");
@@ -125,26 +124,24 @@ public class MainActivity extends FragmentActivity{
 		.hide(appFragment)
 		.commit();
 	}
-	
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }
-	
-    // handle the search query intent
-    private void handleIntent(Intent intent) {
 
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //use the query to search your data somehow
-            Log.v("MainActivity", "THIS IS THE QUERY: " + query);
-            // TODO: Eric, replace the showListviewFrag() call
-            // with call to ListViewFragment constructor here
-            mQuery = query;
-            showListviewFrag();
-            hideNaviFrag();
-        }
-    }
+	@Override
+	protected void onNewIntent(Intent intent) {
+		handleIntent(intent);
+	}
+
+	// handle the search query intent
+	private void handleIntent(Intent intent) {
+
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			//use the query to search your data somehow
+			Log.v("MainActivity", "THIS IS THE QUERY: " + query);
+			mQuery = query;
+			showListviewFrag();
+			hideNaviFrag();
+		}
+	}
 
 	public void nearbyOnClick(View view) {
 		((NavigationFragment) appFragment).nearbyOnClick(view); 
@@ -169,7 +166,7 @@ public class MainActivity extends FragmentActivity{
 	public void historyOnClick(View view) {
 		((NavigationFragment) appFragment).historyOnClick(view); 
 	}
-	
+
 	public void hideNaviFrag(){
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.hide(appFragment).commit();
@@ -179,10 +176,10 @@ public class MainActivity extends FragmentActivity{
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.show(appFragment).commit();
 	}
-	
+
 	public void hideListviewFrag(){
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.remove(listFragment).commit();
+		ft.hide(listFragment).commit();
 	}
 
 	public void showListviewFrag(){
@@ -194,7 +191,8 @@ public class MainActivity extends FragmentActivity{
 			listFragment.setArguments(data);
 			ft.add(android.R.id.content, listFragment);
 		}
-		ft.show(listFragment).commit();
+		ft.show(listFragment);
+		ft.hide(appFragment).commit();
 	}
 
 
@@ -229,21 +227,11 @@ public class MainActivity extends FragmentActivity{
 		}
 		ft.show(eventFragment).commit();
 	}
-	
+
 	public void listviewOnClick(View view){
 		hideNaviFrag();
 		//		showMapviewFrag();
 		showListviewFrag();
-	}
-	
-	public Fragment getListFrag(){
-		return listFragment;
-	}
-	public Fragment getMapFrag(){
-		return mapFragment;
-	}
-	public Fragment getEventFrag(){
-		return eventFragment;
 	}
 
 	public void eventClicked(View view){
@@ -252,7 +240,7 @@ public class MainActivity extends FragmentActivity{
 		//		showMapviewFrag();
 		showEventFrag("list", "1");
 	}
-	
+
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
 	}

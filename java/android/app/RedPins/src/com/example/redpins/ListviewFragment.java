@@ -68,12 +68,18 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.listview_fragment, container, false);
+		((MainActivity) getActivity()).hideNaviFrag();
 		homeButton = (ImageButton) view.findViewById(R.id.home_button);
 		homeButton.setOnClickListener(this);
 		mapviewButton = (Button) view.findViewById(R.id.button_to_mapview);
 		mapviewButton.setOnClickListener(this);
 		listView = (ListView) view.findViewById(android.R.id.list);
 		listView.setClickable(true);
+		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
+		searchTerm = getArguments().getString("query");
+		searchText.setText(searchTerm);
+		GetEventListTask task = new GetEventListTask();
+		task.execute();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
 			@Override
@@ -88,11 +94,6 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			}
 			
 		});
-		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
-		searchTerm = getArguments().getString("query");
-		searchText.setText(searchTerm);
-		GetEventListTask task = new GetEventListTask();
-		task.execute();
 		return view;
 	}
 
@@ -107,8 +108,10 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		case R.id.button_to_mapview:
 			//go to mapView
 			Bundle bundle = new Bundle();
-			bundle.putParcelable("JSONArr", (Parcelable) jsonArr);
-			((MainActivity)getActivity()).getMapFrag().setArguments(bundle);
+			bundle.putString("JSONArr", jsonArr.toString());
+			((MainActivity)getActivity()).mapFragment = new GoogMapFragment();
+			((MainActivity)getActivity()).mapFragment.setArguments(bundle);
+			((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().add(android.R.id.content, ((MainActivity)getActivity()).mapFragment).commit();
 			((MainActivity) getActivity()).hideListviewFrag();
 			((MainActivity) getActivity()).showMapviewFrag();
 			break;
@@ -178,13 +181,12 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 				TextView eventTime = (TextView) v.findViewById(R.id.event_time);
 				//event tags
 				// Likes/Dislikes
-
-				eventName.setText("HIyo "+position);
 				//eventImage.setRes...
 				double lat;
 				double lng;
 				JSONObject json;
 				try {
+					System.out.println(jsonArr);
 					json = jsonArr.getJSONObject(position);
 					System.out.println("JSON"+position+": "+json);
 					v.setTag(json.getInt("id"));
@@ -253,26 +255,22 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		protected JSONArray doInBackground(Void... arg0) {
 			JSONObject json = new JSONObject();
 						try {
-							json.put("query", getArguments().getString("query"));
+//							json.put("query", getArguments().getString("query"));
+//							json.put("facebook_id", ((MainActivity)getActivity()).facebook_id);
+							json.put("event_id", "1");
 						} catch (JSONException e1) {
 							e1.printStackTrace();
 						}
-//			try {
-//				//adds input values into JSON data object
-//				json.put("user", "andrew");
-//				json.put("password", "password");
-//			} catch (JSONException e1) {
-//				e1.printStackTrace();
-//			}
 			JSONArray ret =null;
 			try {
 				//sends requests to server and receives
 				JSONObject jsonObj = Utility.requestServer(MainActivity.serverURL + "/events/search.json", json);
 				System.out.println("RESPONSE: " + jsonObj.toString());
 				ret = jsonObj.toJSONArray(jsonObj.names()).getJSONArray(0);
+				System.out.println("RESPONSE: " + ret);
 				ret.toString().replace("[", "");
 				ret.toString().replace("]", "");
-				System.out.println("RESPONSE: " + ret);
+//				System.out.println("RESPONSE: " + ret);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

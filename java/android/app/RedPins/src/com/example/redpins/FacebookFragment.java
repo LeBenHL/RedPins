@@ -33,7 +33,7 @@ public class FacebookFragment extends Fragment {
 	private UiLifecycleHelper uiHelper;
 	
 	//The facebook user of our app
-	private GraphUser _user;
+	public GraphUser _user;
 	//The LoginButton
 	protected LoginButton authButton;
 	
@@ -175,7 +175,7 @@ public class FacebookFragment extends Fragment {
 		private static final int ERR_BAD_FACEBOOK_ID = -4;
     	
     	//The base URL we are trying to post to
-    	private static final String baseUrl = "http://safe-savannah-1864.herokuapp.com";
+    	private static final String baseUrl = "http://nameless-brook-4178.herokuapp.com";//"http://safe-savannah-1864.herokuapp.com";
     	
     	//The facebook session we are working on
     	private GraphUser _user;
@@ -274,7 +274,6 @@ public class FacebookFragment extends Fragment {
 	        			//Should not reach this case EVER
 	        			throw new Exception();
 	        	}
-	        	((MainActivity) getActivity()).facebook_id = _user.getProperty("id").toString();
 	        	//byte[] outputBytes = jsonString.getBytes("UTF-8");
 	        	OutputStream os = conn.getOutputStream();
 	        	os.write(jsonToSend.toString().getBytes());

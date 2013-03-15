@@ -50,12 +50,20 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		View view = inflater.inflate(R.layout.map_fragment, container, false);
 		Fragment mapFrag = (Fragment) getFragmentManager().findFragmentById(R.id.map);
 		mMap = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-		mMap.setOnInfoWindowClickListener(this);
+		//mMap.setOnInfoWindowClickListener(this);
+		System.out.println(mMap);
 		homeButton = (ImageButton) view.findViewById(R.id.home_button);
 		homeButton.setOnClickListener(this);
 		listviewButton = (Button) view.findViewById(R.id.button_to_listview);
 		listviewButton.setOnClickListener(this);
-		JSONArray jsonArr = (JSONArray) getArguments().getParcelable("JSONArr");
+		JSONArray jsonArr = null;
+		System.out.println(getArguments().getString("JSONArr"));
+		try {
+			jsonArr = new JSONArray(getArguments().getString("JSONArr"));
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		for(int i = 0; i < 10 ; i++){
 			try {
 				addPins(jsonArr.getJSONObject(i));
@@ -76,7 +84,14 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 
 	private void addPins(JSONObject json){
 		Location eventLoc = new Location(Context.LOCATION_SERVICE);
-		LatLng loc = new LatLng(eventLoc.getLatitude(),10+eventLoc.getLongitude());
+		LatLng loc = null;
+		final JSONObject jsonObj = json;
+		try {
+			loc = new LatLng(json.getDouble("latitude"),json.getDouble("longitude"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		mMap.setInfoWindowAdapter(new InfoWindowAdapter() {
 
 			@Override
@@ -99,11 +114,16 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 				//event tags
 				// Likes/Dislikes
 
-				eventName.setText("MY EVENT:");
-				eventImage.setImageResource(R.drawable.ic_launcher);
-				eventDesc.setText("Desc:");
-				eventAddr.setText("Addr:");
-				eventTime.setText("Time:");
+				try {
+					eventName.setText(jsonObj.getString("title"));
+					//eventImage.setImageResource(R.drawable.ic_launcher);
+					eventDesc.setText(jsonObj.getString("url"));
+					eventAddr.setText(jsonObj.getString("location"));
+					eventTime.setText(jsonObj.getString("start_time")+"~"+ jsonObj.getString("end_time"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 			//	v.setTag(1, event_id);
 				// Returning the view containing InfoWindow contents
