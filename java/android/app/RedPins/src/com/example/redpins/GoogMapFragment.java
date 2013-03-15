@@ -19,6 +19,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,52 +35,55 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	private Button listviewButton;
 	private ImageButton homeButton;
 	private GoogleMap mMap;
+	private View mapView;
 
-	//	@Override
-	//	public void onCreate(Bundle savedInstanceState) {
-	//		// TODO Auto-generated method stub
-	//		super.onCreate(savedInstanceState);
-	////		MapFragment map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-	////		map.onAttach(getActivity());
-	//	}
-	//	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.map_fragment, container, false);
-		Fragment mapFrag = (Fragment) getFragmentManager().findFragmentById(R.id.map);
-		mMap = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-		//mMap.setOnInfoWindowClickListener(this);
-		System.out.println(mMap);
-		homeButton = (ImageButton) view.findViewById(R.id.home_button);
-		homeButton.setOnClickListener(this);
-		listviewButton = (Button) view.findViewById(R.id.button_to_listview);
-		listviewButton.setOnClickListener(this);
-		JSONArray jsonArr = null;
-		System.out.println(getArguments().getString("JSONArr"));
-		try {
-			jsonArr = new JSONArray(getArguments().getString("JSONArr"));
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		for(int i = 0; i < 10 ; i++){
+//		if(savedInstanceState==null){
+			View view = inflater.inflate(R.layout.map_fragment, container, false);
+			//Fragment mapFrag = (Fragment) getFragmentManager().findFragmentById(R.id.map);
+			mMap = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+			//mMap.setOnInfoWindowClickListener(this);
+			homeButton = (ImageButton) view.findViewById(R.id.home_button);
+			homeButton.setOnClickListener(this);
+			listviewButton = (Button) view.findViewById(R.id.button_to_listview);
+			listviewButton.setOnClickListener(this);
+			JSONArray jsonArr = null;
+			System.out.println(getArguments().getString("JSONArr"));
 			try {
-				addPins(jsonArr.getJSONObject(i));
-			} catch (JSONException e) {
+				jsonArr = new JSONArray(getArguments().getString("JSONArr"));
+			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
-		}
-		return view;
+			for(int i = 0; i < 10 ; i++){
+				try {
+					addPins(jsonArr.getJSONObject(i));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			mapView = view;
+			return view;
+//		}else{
+//			return getView();
+//		}
 	}
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		//should take user to event page that corresponds to the event
-//		((MainActivity) getActivity()).hideMapviewFrag();
-//		((MainActivity) getActivity()).showEventFrag(event_id, "map");
+		//		((MainActivity) getActivity()).hideMapviewFrag();
+		//		((MainActivity) getActivity()).showEventFrag(event_id, "map");
 	}
 
 	private void addPins(JSONObject json){
@@ -124,8 +128,8 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-			//	v.setTag(1, event_id);
+
+				//	v.setTag(1, event_id);
 				// Returning the view containing InfoWindow contents
 				return v;
 			}
@@ -150,5 +154,12 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 
 		}
 	}
-	
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+		FragmentTransaction ft = ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction();
+		ft.remove(((MainActivity) getActivity()).getSupportFragmentManager().findFragmentById(R.id.map)).commit();
+	//	ft.remove(((MainActivity) getActivity()).mapFragment).commit();
+	}
 }
