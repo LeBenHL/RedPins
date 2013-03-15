@@ -31,6 +31,8 @@ public class Utility{
 
 	public static JSONObject requestServer(String url,JSONObject jsonInput){
 		HttpPost request = new HttpPost(url);
+		Log.v("UTILITY", "API REQUEST: " + url);
+		Log.v("UTILITY", "JSON INPUT: " + jsonInput.toString());
 		JSONStringer jsonString = new JSONStringer();
 		if (jsonInput!=null){
 			Iterator<String> iter = jsonInput.keys();

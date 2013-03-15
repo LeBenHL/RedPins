@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.HideReturnsTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,14 +68,16 @@ public class EventFragment extends Fragment implements OnClickListener{
 		task.execute();
 		GetLikesTask likesTask = new GetLikesTask();
 		likesTask.execute();
+		GetCommentTask commentsTask = new GetCommentTask();
+		commentsTask.execute();
 		return view;
 	}
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		GetEventTask task = new GetEventTask();
-		task.execute();
+//		GetEventTask task = new GetEventTask();
+//		task.execute();
 	}
 
 	@Override
@@ -116,7 +119,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			try {
 				//adds input values into JSON data object
 				json.put("event_id", event_id);
-				json.put("facebook_id", ((MainActivity)getActivity()).facebook_id);
+				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
@@ -169,13 +172,14 @@ public class EventFragment extends Fragment implements OnClickListener{
 			JSONArray ret = null;
 			try {
 				json.put("event_id", event_id);
-				System.out.println(event_id);
 				temp = Utility.requestServer(MainActivity.serverURL + "/events/getComments.json", json);
-				ret = temp.toJSONArray(temp.names()).getJSONArray(0);
+				ret = temp.getJSONArray("comments");
+				Log.v("EVENTFRAGMENT", "comment json array: " + ret.toString());
 				ret.toString().replace("[", "");
 				ret.toString().replace("]", "");
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
+				System.out.println("caught exception in getcommentask and error: " + e.toString());
 				e.printStackTrace();
 			}
 			//sends requests to server and receives
@@ -186,7 +190,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected void onPostExecute(JSONArray result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			if(commentArr != null){
+			Log.v("onPostExecute", "comment result: " + result.toString());
+			if(commentArr == null){
 				commentArr = result;
 			}
 				populateCommentList();
@@ -230,6 +235,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			@Override
 			public View getView(int position, View convertView, ViewGroup parent) {
 				// TODO Auto-generated method stub
+				Log.v("POPULATECOMMENT", "getView in populateCommentList called");
 				LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View v;
 				if (convertView == null) {
@@ -245,6 +251,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 				JSONObject json;
 				try {
 					json = commentArr.getJSONObject(position);
+					Log.v("POPULATECOMMENT", "getting json object of commentArr");
+
 					commentUsername.setText("" + json.getString("firstname")+" "+json.getString("lastname"));
 					commentDate.setText(json.getString("created_at"));
 					commentContent.setText(json.getString("comment"));

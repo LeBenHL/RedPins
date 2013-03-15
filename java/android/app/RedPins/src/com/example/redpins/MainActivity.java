@@ -27,7 +27,6 @@ public class MainActivity extends FragmentActivity{
 	public Fragment mapFragment;
 	public Fragment eventFragment;
 	private String mQuery;
-	public String facebook_id;
 	private GoogleMap mMap;
 	private static GraphUser user;
 
