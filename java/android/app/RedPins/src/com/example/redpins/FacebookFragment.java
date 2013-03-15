@@ -83,6 +83,7 @@ public class FacebookFragment extends Fragment {
         		           ((MainActivity) getActivity()).hideFacebookFragment();
         		        } else {
         		        }
+        		       ((MainActivity) getActivity()).setFacebookMenuLogout();
         		        Log.i(TAG, "Logged in...");
 	                }
 	            }
@@ -90,6 +91,7 @@ public class FacebookFragment extends Fragment {
 	    } else if (state.isClosed()) {
 	    	_user = null;
 	    	((MainActivity) getActivity()).showFacebookFragment();
+	    	((MainActivity) getActivity()).setFacebookMenuLogin();
 	        Log.i(TAG, "Logged out...");
 	    }
 	}
