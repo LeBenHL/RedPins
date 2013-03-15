@@ -272,6 +272,7 @@ public class FacebookFragment extends Fragment {
 	        			//Should not reach this case EVER
 	        			throw new Exception();
 	        	}
+	        	((MainActivity) getActivity()).facebook_id = _user.getProperty("id").toString();
 	        	//byte[] outputBytes = jsonString.getBytes("UTF-8");
 	        	OutputStream os = conn.getOutputStream();
 	        	os.write(jsonToSend.toString().getBytes());

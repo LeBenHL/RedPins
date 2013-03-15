@@ -100,6 +100,12 @@
         android:layout_margin="@dimen/object_padding"
         android:progress="0" />
 
+    <Button 
+        android:id="@+id/add_comment_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Comment"/>
+    
     <ListView
         android:id="@+id/comment_listview"
         android:layout_width="wrap_content"

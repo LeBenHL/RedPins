@@ -1,5 +1,9 @@
 package com.example.redpins;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -51,8 +55,14 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		homeButton.setOnClickListener(this);
 		listviewButton = (Button) view.findViewById(R.id.button_to_listview);
 		listviewButton.setOnClickListener(this);
+		JSONArray jsonArr = (JSONArray) getArguments().getParcelable("JSONArr");
 		for(int i = 0; i < 10 ; i++){
-			addPins(i*10);
+			try {
+				addPins(jsonArr.getJSONObject(i));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return view;
 	}
@@ -60,13 +70,13 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		//should take user to event page that corresponds to the event
-		((MainActivity) getActivity()).hideMapviewFrag();
-		((MainActivity) getActivity()).showEventFrag();
+//		((MainActivity) getActivity()).hideMapviewFrag();
+//		((MainActivity) getActivity()).showEventFrag(event_id, "map");
 	}
 
-	private void addPins(int x){
+	private void addPins(JSONObject json){
 		Location eventLoc = new Location(Context.LOCATION_SERVICE);
-		LatLng loc = new LatLng(eventLoc.getLatitude(),(x*10)+eventLoc.getLongitude());
+		LatLng loc = new LatLng(eventLoc.getLatitude(),10+eventLoc.getLongitude());
 		mMap.setInfoWindowAdapter(new InfoWindowAdapter() {
 
 			@Override
@@ -94,12 +104,13 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 				eventDesc.setText("Desc:");
 				eventAddr.setText("Addr:");
 				eventTime.setText("Time:");
-
+				
+			//	v.setTag(1, event_id);
 				// Returning the view containing InfoWindow contents
 				return v;
 			}
 		});
-		mMap.addMarker(new MarkerOptions().position(loc).title("LOC: " + x).snippet("desc"+"\n"+"address"));
+		mMap.addMarker(new MarkerOptions().position(loc).title("LOC: ").snippet("desc"+"\n"+"address"));
 	}
 
 

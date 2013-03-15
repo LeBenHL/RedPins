@@ -25,9 +25,10 @@ public class MainActivity extends FragmentActivity{
 	private Fragment listFragment;
 	private Fragment mapFragment;
 	private Fragment eventFragment;
-	private GoogleMap mMap;
+	private String mQuery;
+	public String facebook_id;
 
-	public final static String serverURL = "http://dry-wave-1707.herokuapp.com";
+	public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -125,7 +126,9 @@ public class MainActivity extends FragmentActivity{
             Log.v("MainActivity", "THIS IS THE QUERY: " + query);
             // TODO: Eric, replace the showListviewFrag() call
             // with call to ListViewFragment constructor here
+            mQuery = query;
             showListviewFrag();
+            hideNaviFrag();
         }
     }
 
@@ -171,7 +174,7 @@ public class MainActivity extends FragmentActivity{
 	public void showListviewFrag(){
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Bundle data = new Bundle();
-		data.putString("query","");
+		data.putString("query",mQuery);
 		if(listFragment == null){
 			listFragment = new ListviewFragment();
 			listFragment.setArguments(data);
@@ -200,10 +203,11 @@ public class MainActivity extends FragmentActivity{
 		ft.remove(eventFragment).commit();
 	}
 
-	public void showEventFrag(){
+	public void showEventFrag(String prev, String eventID){
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Bundle data = new Bundle();
-		data.putString("event_id","");//event id!!!!!!!
+		data.putString("prev", prev);
+		data.putString("event_id",eventID);
 		if(eventFragment == null){
 			eventFragment = new EventFragment();
 			eventFragment.setArguments(data);
@@ -211,18 +215,30 @@ public class MainActivity extends FragmentActivity{
 		}
 		ft.show(eventFragment).commit();
 	}
-
-	public void eventClicked(View v){
-		hideListviewFrag();
-		showEventFrag();
-	}
 	
 	public void listviewOnClick(View view){
 		hideNaviFrag();
 		//		showMapviewFrag();
 		showListviewFrag();
 	}
+	
+	public Fragment getListFrag(){
+		return listFragment;
+	}
+	public Fragment getMapFrag(){
+		return mapFragment;
+	}
+	public Fragment getEventFrag(){
+		return eventFragment;
+	}
 
+	public void eventClicked(View view){
+		System.out.println("CLICKED");
+		hideListviewFrag();
+		//		showMapviewFrag();
+		showEventFrag("list", "1");
+	}
+	
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
 	}

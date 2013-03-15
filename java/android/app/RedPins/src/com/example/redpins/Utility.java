@@ -27,62 +27,12 @@ import android.os.Bundle;
 
 public class Utility{
 	//takes care of sending and receiving json data
+
 	public static JSONObject requestServer(String url,JSONObject jsonInput){
 		HttpPost request = new HttpPost(url);
-		JSONStringer jsonString = stringJSON(jsonInput);   
-
-		StringEntity entity = null;
-		try {
-			entity = new StringEntity(jsonString.toString());
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
-		entity.setContentType("application/json;charset=UTF-8");
-		entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
-		request.setEntity(entity); 
-
-		InputStreamReader read = getResponse(request);
-		
-		StringBuilder sBuilder = stringBuild(read);
-		JSONObject jsonOutput = null;
-		try {
-			jsonOutput = new JSONObject(sBuilder.toString());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jsonOutput;
-	}
-	
-	
-	public static JSONArray requestServerArr(String url,JSONObject jsonInput){
-		HttpPost request = new HttpPost(url);
-		JSONStringer jsonString = stringJSON(jsonInput);            
-
-		StringEntity entity = null;
-		try {
-			entity = new StringEntity(jsonString.toString());
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
-		entity.setContentType("application/json;charset=UTF-8");
-		entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
-		request.setEntity(entity); 
-
-		InputStreamReader read = getResponse(request);
-		StringBuilder sBuilder = stringBuild(read);
-		JSONArray jsonArr = null;
-		try {
-			jsonArr = new JSONArray(sBuilder.toString());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jsonArr;
-	}
-	
-	private static JSONStringer stringJSON(JSONObject json){
 		JSONStringer jsonString = new JSONStringer();
-		if (json!=null){
-			Iterator<String> iter = json.keys();
+		if (jsonInput!=null){
+			Iterator<String> iter = jsonInput.keys();
 			if(iter.hasNext())
 				try {
 					jsonString.object();
@@ -92,7 +42,7 @@ public class Utility{
 			while (iter.hasNext()){
 				String s =iter.next();
 				try {
-					jsonString.key(s).value(json.get(s));
+					jsonString.key(s).value(jsonInput.get(s));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -103,33 +53,24 @@ public class Utility{
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-		return jsonString;
-	}
-	
-	private static StringBuilder stringBuild(InputStreamReader read){
-		BufferedReader buffReader = new BufferedReader(read);
-		StringBuilder sBuilder =new StringBuilder();
+
+		StringEntity entity = null;
 		try {
-			String line = buffReader.readLine();
-			while(line != null){
-				sBuilder.append(line);
-				line = buffReader.readLine();
-				System.out.println(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			entity = new StringEntity(jsonString.toString());
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
 		}
-		return sBuilder;
-	}
-	
-	private static InputStreamReader getResponse(HttpPost req){
+		entity.setContentType("application/json;charset=UTF-8");
+		entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
+		request.setEntity(entity); 
+
 		DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10000); 
-		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10000); 
+		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 5000); 
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),5000); 
 
 		HttpResponse response =null;
 		try {
-			response = httpClient.execute(req);
+			response = httpClient.execute(request);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -143,6 +84,99 @@ public class Utility{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return read;
+		BufferedReader buffReader = new BufferedReader(read);
+		StringBuilder sBuilder =new StringBuilder();
+		try {
+			String line = buffReader.readLine();
+			while(line != null){
+				sBuilder.append(line);
+				line = buffReader.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JSONObject jsonOutput = null;
+		try {
+			jsonOutput = new JSONObject(sBuilder.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonOutput;
+	}
+	
+	public static JSONArray requestServerArr(String url,JSONObject jsonInput){
+		HttpPost request = new HttpPost(url);
+		JSONStringer jsonString = new JSONStringer();
+		if (jsonInput!=null){
+			Iterator<String> iter = jsonInput.keys();
+			if(iter.hasNext())
+				try {
+					jsonString.object();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			while (iter.hasNext()){
+				String s =iter.next();
+				try {
+					jsonString.key(s).value(jsonInput.get(s));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}             
+		}
+		try {
+			jsonString.endObject();
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
+		StringEntity entity = null;
+		try {
+			entity = new StringEntity(jsonString.toString());
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		entity.setContentType("application/json;charset=UTF-8");
+		entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
+		request.setEntity(entity); 
+
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 5000); 
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),5000); 
+
+		HttpResponse response =null;
+		try {
+			response = httpClient.execute(request);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		InputStreamReader read = null;
+		try {
+			read = new InputStreamReader(response.getEntity().getContent());
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		BufferedReader buffReader = new BufferedReader(read);
+		StringBuilder sBuilder =new StringBuilder();
+		try {
+			String line = buffReader.readLine();
+			while(line != null){
+				sBuilder.append(line);
+				line = buffReader.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JSONArray jsonOutput = null;
+		try {
+			jsonOutput = new JSONArray(sBuilder.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonOutput;
 	}
 }

@@ -3,8 +3,6 @@ package com.example.redpins;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.example.redpins.EventActivity.GetEventTask;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import android.content.Context;
@@ -41,6 +39,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 	private String event_id;
 	private ProgressBar progressBar;
 	private String urlLink;
+	private String linkBack;
 	protected JSONArray commentArr;
 
 	@Override
@@ -58,7 +57,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 		eventLikes = (TextView) view.findViewById(R.id.event_like);
 		eventDislikes = (TextView) view.findViewById(R.id.event_dislike);
 		commentsList = (ListView) view.findViewById(R.id.comment_listview);
-		event_id = savedInstanceState.getString("event_id");
+		event_id = getArguments().getString("event_id");
+		linkBack = getArguments().getString("prev");
 		progressBar = (ProgressBar) view.findViewById(R.id.event_progress);
 		GetEventTask task = new GetEventTask();
 		task.execute();
@@ -70,7 +70,13 @@ public class EventFragment extends Fragment implements OnClickListener{
 		// TODO Auto-generated method stub
 		switch(v.getId()){
 		case R.id.home_button:
-			((MainActivity) getActivity()).showNaviFrag();
+			if(linkBack.equals("map")){
+				((MainActivity) getActivity()).showMapviewFrag();
+			}else if(linkBack.equals("list")){
+				((MainActivity) getActivity()).showMapviewFrag();
+			}else{
+				((MainActivity) getActivity()).showNaviFrag();
+			}
 			((MainActivity) getActivity()).hideEventFrag();
 			break;
 		case R.id.event_url:
@@ -78,6 +84,11 @@ public class EventFragment extends Fragment implements OnClickListener{
 			Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlLink));
 			startActivity(myIntent);
 			break;
+		case R.id.add_comment_button:
+			AddCommentFragment commFragment = new AddCommentFragment();
+			Bundle bundle = new Bundle();
+			bundle.putString("event_id", event_id);
+			getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content,commFragment).commit();
 		}
 	}
 
@@ -134,9 +145,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			//			GetCommentTask commentTask = new GetCommentTask();
-			//			commentTask.execute();
-
+			GetCommentTask commentTask = new GetCommentTask();
+			commentTask.execute();
 		}
 	}
 
@@ -148,7 +158,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			JSONArray ret = null;
 			try {
 				//sends requests to server and receives
-				ret = Utility.requestServerArr("http://dry-wave-1707.herokuapp.com/events/find", json);
+				ret = Utility.requestServerArr(MainActivity.serverURL + "/events/find", json);
 			} catch (Throwable e) {
 			}
 			return ret;
@@ -245,7 +255,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			@Override
 			public int getCount() {
 				// TODO Auto-generated method stub
-				return 10;
+				return commentArr.length();
 			}
 
 			@Override
@@ -260,6 +270,36 @@ public class EventFragment extends Fragment implements OnClickListener{
 				return false;
 			}
 		};
-			commentsList.setAdapter(adapter);
+		commentsList.setAdapter(adapter);
+	}
+	public class GetLikesTask extends AsyncTask<Void, Void, JSONArray>{
+
+		@Override
+		protected JSONArray doInBackground(Void... arg0) {
+			JSONObject json = new JSONObject();
+			JSONArray ret = null;
+			try {
+				//sends requests to server and receives
+				ret = Utility.requestServerArr(MainActivity.serverURL + "/events/find", json);
+			} catch (Throwable e) {
+			}
+			return ret;
+		}
+
+		@Override
+		protected void onPostExecute(JSONArray result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			commentArr = result;
+			populateCommentList();
+		}
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		GetEventTask task = new GetEventTask();
+		task.execute();
 	}
 }
