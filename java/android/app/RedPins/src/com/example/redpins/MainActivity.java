@@ -27,6 +27,9 @@ public class MainActivity extends FragmentActivity{
 	private Fragment eventFragment;
 	private String mQuery;
 	public String facebook_id;
+	private GoogleMap mMap;
+	
+	private Menu _menu;
 
 	public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
@@ -65,6 +68,7 @@ public class MainActivity extends FragmentActivity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		_menu = menu;
 		
 	    // Get the SearchView and set the searchable configuration
 	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -91,6 +95,16 @@ public class MainActivity extends FragmentActivity{
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+	}
+	
+	public void setFacebookMenuLogin() {
+		MenuItem facebookMenuItem = _menu.findItem(R.id.logout);
+		facebookMenuItem.setTitle("Login");
+	}
+	
+	public void setFacebookMenuLogout() {
+		MenuItem facebookMenuItem = _menu.findItem(R.id.logout);
+		facebookMenuItem.setTitle("Logout");
 	}
 
 	public void hideFacebookFragment() {
