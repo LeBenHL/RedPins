@@ -73,16 +73,18 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		mapviewButton = (Button) view.findViewById(R.id.button_to_mapview);
 		mapviewButton.setOnClickListener(this);
 		listView = (ListView) view.findViewById(android.R.id.list);
+		listView.setClickable(true);
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int arg2,
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
 					long arg3) {
 				// TODO Auto-generated method stub
+				View view = (View) listView.getItemAtPosition(position);
 				System.out.println("CLICKED");
 				((MainActivity) getActivity()).hideListviewFrag();
 				//		showMapviewFrag();
-				((MainActivity) getActivity()).showEventFrag("list", v.getTag().toString());
+				((MainActivity) getActivity()).showEventFrag("list", view.getTag().toString());
 			}
 			
 		});
@@ -113,6 +115,18 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		}
 	}
 
+	protected OnClickListener listener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			System.out.println("CLICKED");
+			((MainActivity) getActivity()).hideListviewFrag();
+			//		showMapviewFrag();
+			((MainActivity) getActivity()).showEventFrag("list", v.getTag().toString());
+		}
+	};
+	
 	private void populateList(){
 		ListAdapter adapter = new ListAdapter() {
 
@@ -156,7 +170,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 				} else {
 					v = convertView;
 				}
-
+				v.setOnClickListener(listener);
 				TextView eventName = (TextView) v.findViewById(R.id.event_name);
 				ImageView eventImage = (ImageView) v.findViewById(R.id.event_image);
 				TextView eventDesc = (TextView) v.findViewById(R.id.event_description);

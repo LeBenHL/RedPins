@@ -255,7 +255,11 @@ public class EventFragment extends Fragment implements OnClickListener{
 			@Override
 			public int getCount() {
 				// TODO Auto-generated method stub
-				return commentArr.length();
+				if(commentArr == null){
+					return 0;
+				}else{
+					return commentArr.length();
+				}
 			}
 
 			@Override
@@ -294,7 +298,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			populateCommentList();
 		}
 	}
-	
+
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
