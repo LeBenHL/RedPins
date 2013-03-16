@@ -210,7 +210,8 @@ public class MainActivity extends FragmentActivity{
 	public void hideMapviewFrag(){
 		System.out.println("hiding mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(mapFragment).commit();
+		ft.remove(getSupportFragmentManager().findFragmentById(R.id.map));
+		ft.remove(mapFragment).commit();
 	}
 
 	public void showMapviewFrag(){

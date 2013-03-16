@@ -154,12 +154,5 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 
 		}
 	}
-	@Override
-	public void onDestroyView() {
-		// TODO Auto-generated method stub
-		super.onDestroyView();
-		FragmentTransaction ft = ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction();
-		ft.remove(((MainActivity) getActivity()).getSupportFragmentManager().findFragmentById(R.id.map)).commit();
-	//	ft.remove(((MainActivity) getActivity()).mapFragment).commit();
-	}
+
 }

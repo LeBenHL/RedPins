@@ -15,5 +15,5 @@ local.properties
 *.ap_
 *.dex
 *.class
-bin/
-gen/
+java/android/app/RedPins/bin/*
+java/android/app/RedPins/gen/*
