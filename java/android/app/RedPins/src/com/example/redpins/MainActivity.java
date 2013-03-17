@@ -28,7 +28,10 @@ public class MainActivity extends FragmentActivity{
 	public Fragment eventFragment;
 	private String mQuery;
 	private GoogleMap mMap;
+	
+	//Facebook User and Session
 	private static GraphUser user;
+	private static Session session;
 
 	private Menu _menu;
 
@@ -131,9 +134,18 @@ public class MainActivity extends FragmentActivity{
 		user = _user;
 	}
 	
+	public void setFacebookSession(Session _session) {
+		session = _session;
+	}
+	
 	public String getFacebookId() {
 		return user.getProperty("id").toString();
 	}
+	
+	public String getFacebookSessionToken() {
+		return session.getAccessToken();
+	}
+
 
 	@Override
 	protected void onNewIntent(Intent intent) {
