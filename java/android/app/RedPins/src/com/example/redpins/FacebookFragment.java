@@ -34,6 +34,8 @@ public class FacebookFragment extends Fragment {
 	
 	//The facebook user of our app
 	private GraphUser _user;
+	//The facebook session of the user using our app
+	private Session _session;
 	//The LoginButton
 	protected LoginButton authButton;
 	
@@ -66,6 +68,8 @@ public class FacebookFragment extends Fragment {
 	}
 	
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+		((MainActivity) getActivity()).setFacebookSession(session);
+		_session = session;
 	    if (state.isOpened()) {
 	        // Request user data and show the results
 	        Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
@@ -266,18 +270,21 @@ public class FacebookFragment extends Fragment {
 	        		case LOGINUSER:
 	    	            jsonToSend.put("email", _user.getProperty("email").toString());
 	    	            jsonToSend.put("facebook_id", _user.getProperty("id").toString());
+	    	            jsonToSend.put("session_token", _session.getAccessToken());
 	        			break;
 	        		case ADDUSER:
 	    	            jsonToSend.put("email", _user.getProperty("email").toString());
 	    	            jsonToSend.put("facebook_id", _user.getProperty("id").toString());
 	    	            jsonToSend.put("firstname", _user.getFirstName());
 	    	            jsonToSend.put("lastname", _user.getLastName());
+	    	            jsonToSend.put("session_token", _session.getAccessToken());
 	        			break;
 	        		default:
 	        			//Should not reach this case EVER
 	        			throw new Exception();
 	        	}
 	        	//byte[] outputBytes = jsonString.getBytes("UTF-8");
+	        	Log.v("postUrl", jsonToSend.toString());
 	        	OutputStream os = conn.getOutputStream();
 	        	os.write(jsonToSend.toString().getBytes());
 	         	Log.v("postUrl", Integer.valueOf(conn.getResponseCode()).toString());
