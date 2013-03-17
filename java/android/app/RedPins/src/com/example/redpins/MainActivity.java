@@ -40,6 +40,7 @@ public class MainActivity extends FragmentActivity{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		System.out.println("GOT CREATED");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
 		if (savedInstanceState == null) {
@@ -65,6 +66,7 @@ public class MainActivity extends FragmentActivity{
 					.findFragmentById(R.id.mainAppFragment);
 			hideFacebookFragment();//temporary
 		}
+		// handle the search intent
 		handleIntent(getIntent());
 	}
 
@@ -149,6 +151,7 @@ public class MainActivity extends FragmentActivity{
 
 	@Override
 	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
 		handleIntent(intent);
 	}
 
