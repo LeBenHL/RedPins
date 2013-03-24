@@ -120,6 +120,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 				//adds input values into JSON data object
 				json.put("event_id", event_id);
 				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}

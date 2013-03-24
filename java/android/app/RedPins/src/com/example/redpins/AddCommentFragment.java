@@ -47,6 +47,7 @@ public class AddCommentFragment extends Fragment implements OnClickListener{
 			try {
 				//adds input values into JSON data object
 				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
 				json.put("event_id", getArguments().getString("event_id"));
 				json.put("comment", commentText.getText().toString());
 				System.out.println(getArguments().getString("event_id"));
