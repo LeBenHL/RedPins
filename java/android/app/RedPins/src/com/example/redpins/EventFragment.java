@@ -1,11 +1,15 @@
 package com.example.redpins;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.net.Uri;
@@ -25,6 +29,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EventFragment extends Fragment implements OnClickListener{
 
@@ -38,11 +43,17 @@ public class EventFragment extends Fragment implements OnClickListener{
 	private TextView eventDislikes;
 	private ListView commentsList;
 	private String event_id;
+	private int owner_id;
 	private ProgressBar progressBar;
 	private String urlLink;
 	private String linkBack;
-	protected JSONArray commentArr;
+	protected ArrayList<JSONObject> commentArr;
 	private Button addCommentButton;
+	private Context mContext; 
+	private ImageButton likeButton;
+	private ImageButton dislikeButton;
+	private Button bookmarkButton;
+	private boolean bookmarked;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,9 +72,17 @@ public class EventFragment extends Fragment implements OnClickListener{
 		commentsList = (ListView) view.findViewById(R.id.comment_listview);
 		addCommentButton = (Button) view.findViewById(R.id.add_comment_button);
 		addCommentButton.setOnClickListener(this);
+		likeButton = (ImageButton) view.findViewById(R.id.like_button);
+		likeButton.setOnClickListener(this);
+		dislikeButton = (ImageButton) view.findViewById(R.id.dislike_button);
+		dislikeButton.setOnClickListener(this);
 		event_id = getArguments().getString("event_id");
 		linkBack = getArguments().getString("prev");
 		progressBar = (ProgressBar) view.findViewById(R.id.event_progress);
+		mContext = getActivity().getApplicationContext();
+		commentArr = new ArrayList<JSONObject>();
+		bookmarkButton = (Button) view.findViewById(R.id.bookmark_button);
+		bookmarkButton.setOnClickListener(this);
 		GetEventTask task = new GetEventTask();
 		task.execute();
 		GetLikesTask likesTask = new GetLikesTask();
@@ -76,8 +95,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-//		GetEventTask task = new GetEventTask();
-//		task.execute();
+		GetCommentTask task = new GetCommentTask();
+		task.execute();
 	}
 
 	@Override
@@ -103,8 +122,32 @@ public class EventFragment extends Fragment implements OnClickListener{
 			AddCommentFragment commFragment = new AddCommentFragment();
 			Bundle bundle = new Bundle();
 			bundle.putString("event_id", event_id);
+			bundle.putString("callback", linkBack);
 			commFragment.setArguments(bundle);
 			getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content,commFragment).commit();
+			((MainActivity)getActivity()).hideEventFrag();
+			break;
+		case R.id.like_button:
+			System.out.println("LIKE");
+			likeButton.setSelected(true);
+			likeButton.setClickable(false);
+			dislikeButton.setSelected(false);
+			dislikeButton.setClickable(true);
+			likeTask task = new likeTask();
+			task.execute();
+			break;
+		case R.id.dislike_button:
+			System.out.println("DISLIKE");
+			dislikeButton.setSelected(true);
+			dislikeButton.setClickable(false);
+			likeButton.setSelected(false);
+			likeButton.setClickable(true);
+			dislikeTask task2 = new dislikeTask();
+			task2.execute();
+			break;
+		case R.id.bookmark_button:
+			bookmarkEvent();
+			break;
 		}
 	}
 
@@ -147,6 +190,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 					String url = json.getString("url");
 					String loc = json.getString("location");
 					String time = json.getString("start_time");
+					owner_id = json.getInt("user_id");
 					eventName.setText(name);
 					urlLink = url;
 					eventURL.setText(urlLink);
@@ -157,10 +201,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-//			GetLikesTask task = new GetLikesTask();
-//			task.execute();
-		//	GetCommentTask commentTask = new GetCommentTask();
-		//	commentTask.execute();
+			//			GetLikesTask task = new GetLikesTask();
+			//			task.execute();
+			//	GetCommentTask commentTask = new GetCommentTask();
+			//	commentTask.execute();
 		}
 	}
 
@@ -191,11 +235,16 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected void onPostExecute(JSONArray result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			Log.v("onPostExecute", "comment result: " + result.toString());
-			if(commentArr == null){
-				commentArr = result;
+			System.out.println("comment result: " + result.toString());
+			for(int i = 0; i<result.length();i++){
+				try {
+					System.out.println("JSONObj: " +result.getJSONObject(i));
+					commentArr.add(result.getJSONObject(i));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
-				populateCommentList();
+			populateCommentList();
 		}
 	}
 
@@ -248,18 +297,27 @@ public class EventFragment extends Fragment implements OnClickListener{
 				TextView commentUsername = (TextView) v.findViewById(R.id.comment_username);
 				TextView commentDate = (TextView) v.findViewById(R.id.comment_date);
 				TextView commentContent = (TextView) v.findViewById(R.id.comment_content);
-
+				final int pos = position;
 				JSONObject json;
 				try {
-					json = commentArr.getJSONObject(position);
+					json = commentArr.get(position);
 					Log.v("POPULATECOMMENT", "getting json object of commentArr");
 
 					commentUsername.setText("" + json.getString("firstname")+" "+json.getString("lastname"));
 					commentDate.setText(json.getString("created_at"));
 					commentContent.setText(json.getString("comment"));
+					final String facebook_id = json.getString("facebook_id");
+					v.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							System.out.println("item clicked: " + facebook_id);
+							removeComment(facebook_id, pos);
+						}
+					});
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+
 				return v;
 			}
 
@@ -287,7 +345,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 				if(commentArr == null){
 					return 0;
 				}else{
-					return commentArr.length();
+					return commentArr.size();
 				}
 			}
 
@@ -338,12 +396,137 @@ public class EventFragment extends Fragment implements OnClickListener{
 			}
 		}
 	}
-//
-//	@Override
-//	public void onResume() {
-//		// TODO Auto-generated method stub
-//		super.onResume();
-//		GetCommentTask task = new GetCommentTask();
-//		task.execute();
-//	}
+
+	public void removeComment(String comment_user_id, int position){
+		if(comment_user_id.equals(((MainActivity)getActivity()).getFacebookId())){
+			final int pos = position;
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle("Remove Comment")
+			.setMessage("Would you like to remove this comment?")
+			.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			})
+			.setPositiveButton("remove", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					commentArr.remove(pos);
+					populateCommentList();
+					//RemoveCommentTask task = new RemoveCommentTask();
+					//task.execute();
+				}
+			});
+			AlertDialog alertDialog = builder.create();
+			// Set the Icon for the Dialog
+			alertDialog.show();
+		}else{
+			Toast toast = Toast.makeText(getActivity(), "You are not owner of this comment", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+	}
+	public void updateComments(){
+		GetCommentTask task = new GetCommentTask();
+		task.execute();
+	}
+	
+	public class likeTask extends AsyncTask<Void, Void, Void>{
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub
+			JSONObject json = new JSONObject();
+			JSONObject ret = null;
+			JSONObject temp;
+			try {
+				json.put("event_id", event_id);
+				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
+				json.put("like", true);
+			//	json.put(name, value)
+				// sends requests to server and receives
+				ret = Utility.requestServer(MainActivity.serverURL + "/users/likeEvent.json", json);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
+	public class dislikeTask extends AsyncTask<Void, Void, Void>{
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub
+			JSONObject json = new JSONObject();
+			JSONObject ret = null;
+			JSONObject temp;
+			try {
+				json.put("event_id", event_id);
+				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
+			//	json.put(name, value)
+				// sends requests to server and receives
+				ret = Utility.requestServer(MainActivity.serverURL + "/users/removeLike.json", json);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
+	public class BookmarkTask extends AsyncTask<Void, Void, Void>{
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub
+			JSONObject json = new JSONObject();
+			JSONObject ret = null;
+			JSONObject temp;
+			try {
+				json.put("event_id", event_id);
+				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
+				// sends requests to server and receives
+				ret = Utility.requestServer(MainActivity.serverURL + "/users/bookmarkEvent.json", json);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
+	public class UnbookmarkTask extends AsyncTask<Void, Void, Void>{
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub
+			JSONObject json = new JSONObject();
+			JSONObject ret = null;
+			JSONObject temp;
+			try {
+				json.put("event_id", event_id);
+				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
+				// sends requests to server and receives
+				ret = Utility.requestServer(MainActivity.serverURL + "/users/bookmarkEvent.json", json);//remove bookmark
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
+	private void bookmarkEvent(){
+		if(!bookmarked){
+			bookmarked = true;
+			BookmarkTask task = new BookmarkTask();
+			task.execute();
+		}else{
+			bookmarked = false;
+			UnbookmarkTask task = new UnbookmarkTask();
+			task.execute();
+		}
+	}
 }

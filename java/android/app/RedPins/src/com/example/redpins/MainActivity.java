@@ -58,14 +58,17 @@ public class MainActivity extends FragmentActivity{
 			.commit();
 			getSupportFragmentManager()
 			.beginTransaction().hide(appFragment).commit();
-			hideFacebookFragment();//temporary	
+			//hideFacebookFragment();//temporary	
 		} else {
 			// Or set the fragment from restored state info
 			facebookFragment = (FacebookFragment) getSupportFragmentManager()
 					.findFragmentById(android.R.id.content);
 			appFragment = getSupportFragmentManager()
 					.findFragmentById(R.id.mainAppFragment);
-			hideFacebookFragment();//temporary
+		//	hideFacebookFragment();//temporary
+		}
+		if(user!=null || session != null){
+			hideFacebookFragment();
 		}
 		// handle the search intent
 		handleIntent(getIntent());

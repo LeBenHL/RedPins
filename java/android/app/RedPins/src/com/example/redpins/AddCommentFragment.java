@@ -35,7 +35,9 @@ public class AddCommentFragment extends Fragment implements OnClickListener{
 		// TODO Auto-generated method stub
 		AddCommentTask task = new AddCommentTask();
 		task.execute();
+		((MainActivity)getActivity()).showEventFrag(getArguments().getString("callback"), getArguments().getString("event_id"));
 		getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+		
 	}
 
 	public class AddCommentTask extends AsyncTask<Void, Void, Void>{
