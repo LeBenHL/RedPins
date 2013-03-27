@@ -26,6 +26,7 @@ public class MainActivity extends FragmentActivity{
 	private Fragment listFragment;
 	public Fragment mapFragment;
 	public Fragment eventFragment;
+	public Fragment bookmarksFragment;
 	private String mQuery;
 	private GoogleMap mMap;
 	
@@ -57,14 +58,17 @@ public class MainActivity extends FragmentActivity{
 			.commit();
 			getSupportFragmentManager()
 			.beginTransaction().hide(appFragment).commit();
-			hideFacebookFragment();//temporary	
+			//hideFacebookFragment();//temporary	
 		} else {
 			// Or set the fragment from restored state info
 			facebookFragment = (FacebookFragment) getSupportFragmentManager()
 					.findFragmentById(android.R.id.content);
 			appFragment = getSupportFragmentManager()
 					.findFragmentById(R.id.mainAppFragment);
-			hideFacebookFragment();//temporary
+		//	hideFacebookFragment();//temporary
+		}
+		if(user!=null || session != null){
+			hideFacebookFragment();
 		}
 		// handle the search intent
 		handleIntent(getIntent());
@@ -257,7 +261,23 @@ public class MainActivity extends FragmentActivity{
 		ft.add(android.R.id.content, eventFragment).commit();
 	}
 
+	public void hideBookmarksFrag(){
+		System.out.println("hiding bookmarks page");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.hide(bookmarksFragment).commit();
+	}
 
+	public void showBookmarksFrag(){
+		System.out.println("showing bookmarks page");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//		Bundle data = new Bundle();
+//		data.putString("prev", prev);
+//		data.putString("event_id",eventID);
+		bookmarksFragment = new BookmarksFragment();
+//		eventFragment.setArguments(data);
+		ft.add(android.R.id.content, bookmarksFragment).commit();
+	}
+	
 	public void listviewOnClick(View view){
 		hideNaviFrag();
 		//		showMapviewFrag();

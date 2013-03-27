@@ -83,7 +83,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	public void onInfoWindowClick(Marker marker) {
 		//should take user to event page that corresponds to the event
 		//		((MainActivity) getActivity()).hideMapviewFrag();
-		//		((MainActivity) getActivity()).showEventFrag(event_id, "map");
+		//((MainActivity) getActivity()).showEventFrag(marker., "map");
 	}
 
 	private void addPins(JSONObject json){
@@ -117,18 +117,25 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 				TextView eventTime = (TextView) v.findViewById(R.id.event_time);
 				//event tags
 				// Likes/Dislikes
-
 				try {
 					eventName.setText(jsonObj.getString("title"));
 					//eventImage.setImageResource(R.drawable.ic_launcher);
 					eventDesc.setText(jsonObj.getString("url"));
 					eventAddr.setText(jsonObj.getString("location"));
 					eventTime.setText(jsonObj.getString("start_time")+"~"+ jsonObj.getString("end_time"));
+					final String event_id = jsonObj.getString("event_id");
+					v.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							((MainActivity) getActivity()).showEventFrag(event_id, "map");
+						}
+					});
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 				//	v.setTag(1, event_id);
 				// Returning the view containing InfoWindow contents
 				return v;
