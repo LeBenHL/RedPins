@@ -76,7 +76,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 		likeButton.setOnClickListener(this);
 		dislikeButton = (ImageButton) view.findViewById(R.id.dislike_button);
 		dislikeButton.setOnClickListener(this);
-		event_id = getArguments().getString("event_id");
+		if(event_id==null){
+			event_id = getArguments().getString("event_id");
+		}
+		System.out.println("event_id1: "+event_id);
 		linkBack = getArguments().getString("prev");
 		progressBar = (ProgressBar) view.findViewById(R.id.event_progress);
 		mContext = getActivity().getApplicationContext();
@@ -95,8 +98,12 @@ public class EventFragment extends Fragment implements OnClickListener{
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		GetCommentTask task = new GetCommentTask();
-		task.execute();
+		if(event_id==null){
+			event_id = getArguments().getString("event_id");
+		}
+		System.out.println("event_id2: "+event_id);
+		//		GetCommentTask task = new GetCommentTask();
+		//		task.execute();
 	}
 
 	@Override
@@ -434,7 +441,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 		GetCommentTask task = new GetCommentTask();
 		task.execute();
 	}
-	
+
 	public class likeTask extends AsyncTask<Void, Void, Void>{
 		@Override
 		protected Void doInBackground(Void... arg0) {
@@ -446,17 +453,27 @@ public class EventFragment extends Fragment implements OnClickListener{
 				json.put("event_id", event_id);
 				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
-				json.put("like", true);
-			//	json.put(name, value)
+				//	json.put(name, value)
 				// sends requests to server and receives
+				if(likeButton.isPressed() || dislikeButton.isPressed()){
+					Utility.requestServer(MainActivity.serverURL + "/users/removeLike.json", json);
+				}
+				json.put("like", true);
 				ret = Utility.requestServer(MainActivity.serverURL + "/users/likeEvent.json", json);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 			return null;
 		}
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			GetLikesTask task = new GetLikesTask();
+			task.execute();
+		}
 	}
-	
+
 	public class dislikeTask extends AsyncTask<Void, Void, Void>{
 		@Override
 		protected Void doInBackground(Void... arg0) {
@@ -468,16 +485,27 @@ public class EventFragment extends Fragment implements OnClickListener{
 				json.put("event_id", event_id);
 				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
-			//	json.put(name, value)
+				//	json.put(name, value)
 				// sends requests to server and receives
-				ret = Utility.requestServer(MainActivity.serverURL + "/users/removeLike.json", json);
+				if(likeButton.isPressed() || dislikeButton.isPressed()){
+					Utility.requestServer(MainActivity.serverURL + "/users/removeLike.json", json);
+				}
+				json.put("like", false);
+				Utility.requestServer(MainActivity.serverURL + "/users/likeEvent.json", json);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 			return null;
 		}
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			GetLikesTask task = new GetLikesTask();
+			task.execute();
+		}
 	}
-	
+
 	public class BookmarkTask extends AsyncTask<Void, Void, Void>{
 		@Override
 		protected Void doInBackground(Void... arg0) {
@@ -497,7 +525,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			return null;
 		}
 	}
-	
+
 	public class UnbookmarkTask extends AsyncTask<Void, Void, Void>{
 		@Override
 		protected Void doInBackground(Void... arg0) {
@@ -517,7 +545,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			return null;
 		}
 	}
-	
+
 	private void bookmarkEvent(){
 		if(!bookmarked){
 			bookmarked = true;
@@ -529,4 +557,5 @@ public class EventFragment extends Fragment implements OnClickListener{
 			task.execute();
 		}
 	}
+	
 }

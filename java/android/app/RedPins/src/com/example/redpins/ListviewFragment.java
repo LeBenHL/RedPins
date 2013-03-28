@@ -91,7 +91,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 				System.out.println("CLICKED");
 				((MainActivity) getActivity()).hideListviewFrag();
 				//		showMapviewFrag();
-				((MainActivity) getActivity()).showEventFrag("list", view.getTag().toString());
+				((MainActivity) getActivity()).showEventFrag(view.getTag().toString(),"list");
 			}
 			
 		});
@@ -127,7 +127,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			System.out.println("CLICKED");
 			((MainActivity) getActivity()).hideListviewFrag();
 			//		showMapviewFrag();
-			((MainActivity) getActivity()).showEventFrag("list", v.getTag().toString());
+			((MainActivity) getActivity()).showEventFrag(v.getTag().toString(),"list");
 		}
 	};
 	

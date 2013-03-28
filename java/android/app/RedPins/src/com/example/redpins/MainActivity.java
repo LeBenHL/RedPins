@@ -27,9 +27,10 @@ public class MainActivity extends FragmentActivity{
 	public Fragment mapFragment;
 	public Fragment eventFragment;
 	public Fragment bookmarksFragment;
-	private String mQuery;
+	public Fragment searchFragment;
+	public String mQuery;
 	private GoogleMap mMap;
-	
+
 	//Facebook User and Session
 	private static GraphUser user;
 	private static Session session;
@@ -46,32 +47,39 @@ public class MainActivity extends FragmentActivity{
 		setContentView(R.layout.main_activity);
 		if (savedInstanceState == null) {
 			// Add the fragment on initial activity setup	
-			facebookFragment = new FacebookFragment();
-			getSupportFragmentManager()
-			.beginTransaction()
-			.add(android.R.id.content, facebookFragment)
-			.commit();
 			appFragment = new NavigationFragment();
 			getSupportFragmentManager()
 			.beginTransaction()
 			.add(R.id.mainAppFragment, appFragment)
 			.commit();
+			facebookFragment = new FacebookFragment();
 			getSupportFragmentManager()
-			.beginTransaction().hide(appFragment).commit();
+			.beginTransaction()
+			.add(android.R.id.content, facebookFragment)
+			.commit();
+			//			getSupportFragmentManager()
+			//			.beginTransaction().hide(appFragment).commit();
+			//			
 			//hideFacebookFragment();//temporary	
 		} else {
 			// Or set the fragment from restored state info
-			facebookFragment = (FacebookFragment) getSupportFragmentManager()
-					.findFragmentById(android.R.id.content);
 			appFragment = getSupportFragmentManager()
 					.findFragmentById(R.id.mainAppFragment);
-		//	hideFacebookFragment();//temporary
+			facebookFragment = (FacebookFragment) getSupportFragmentManager()
+					.findFragmentById(android.R.id.content);
+
+			//	hideFacebookFragment();//temporary
 		}
-		if(user!=null || session != null){
-			hideFacebookFragment();
-		}
+		searchFragment = new SearchFragment();
+		getSupportFragmentManager()
+		.beginTransaction()
+		.add(R.id.searchFragment, searchFragment)
+		.commit();
+		//		if(user!=null || session != null){
+		//			hideFacebookFragment();
+		//		}
 		// handle the search intent
-		handleIntent(getIntent());
+		//handleIntent(getIntent());
 	}
 
 	@Override
@@ -81,11 +89,11 @@ public class MainActivity extends FragmentActivity{
 		_menu = menu;
 
 		// Get the SearchView and set the searchable configuration
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) findViewById(R.id.search_view);
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-		searchView.setSubmitButtonEnabled(true); // Enable a submit button
+		//		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		//		SearchView searchView = (SearchView) findViewById(R.id.search_view);
+		//		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		//		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+		//		searchView.setSubmitButtonEnabled(true); // Enable a submit button
 
 		return true;
 	}
@@ -135,42 +143,42 @@ public class MainActivity extends FragmentActivity{
 		.hide(appFragment)
 		.commit();
 	}
-	
+
 	public void setFacebookUser(GraphUser _user) {
 		user = _user;
 	}
-	
+
 	public void setFacebookSession(Session _session) {
 		session = _session;
 	}
-	
+
 	public String getFacebookId() {
 		return user.getProperty("id").toString();
 	}
-	
+
 	public String getFacebookSessionToken() {
 		return session.getAccessToken();
 	}
 
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		setIntent(intent);
-		handleIntent(intent);
-	}
-
-	// handle the search query intent
-	private void handleIntent(Intent intent) {
-
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			//use the query to search your data somehow
-			Log.v("MainActivity", "THIS IS THE QUERY: " + query);
-			mQuery = query;
-			showListviewFrag();
-			hideNaviFrag();
-		}
-	}
+	//
+	//	@Override
+	//	protected void onNewIntent(Intent intent) {
+	//		setIntent(intent);
+	//		handleIntent(intent);
+	//	}
+	//
+	//	// handle the search query intent
+	//	private void handleIntent(Intent intent) {
+	//
+	//		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	//			String query = intent.getStringExtra(SearchManager.QUERY);
+	//			//use the query to search your data somehow
+	//			Log.v("MainActivity", "THIS IS THE QUERY: " + query);
+	//			mQuery = query;
+	//			showListviewFrag();
+	//			hideNaviFrag();
+	//		}
+	//	}
 
 	public void nearbyOnClick(View view) {
 		((NavigationFragment) appFragment).nearbyOnClick(view); 
@@ -199,25 +207,26 @@ public class MainActivity extends FragmentActivity{
 	public void hideNaviFrag(){
 		System.out.println("hiding navi");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(appFragment).commit();
+		ft.remove(appFragment).commit();
 	}
 
 	public void showNaviFrag(){
 		System.out.println("showing navi");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.show(appFragment).commit();
+		ft.add(R.id.mainAppFragment,appFragment).commit();
 	}
 
 	public void hideListviewFrag(){
 		System.out.println("hiding listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(listFragment).commit();
+		ft.remove(listFragment).commit();
 	}
 
 	public void showListviewFrag(){
 		System.out.println("showing listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Bundle data = new Bundle();
+		System.out.println("mQuery: "+ mQuery);
 		data.putString("query",mQuery);
 		listFragment = new ListviewFragment();
 		listFragment.setArguments(data);
@@ -247,13 +256,14 @@ public class MainActivity extends FragmentActivity{
 	public void hideEventFrag(){
 		System.out.println("hiding event page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(eventFragment).commit();
+		ft.remove(eventFragment).commit();
 	}
 
-	public void showEventFrag(String prev, String eventID){
+	public void showEventFrag(String eventID, String prev){
 		System.out.println("showing event page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Bundle data = new Bundle();
+		System.out.println("eventID: "+eventID + ", prev: "+prev);
 		data.putString("prev", prev);
 		data.putString("event_id",eventID);
 		eventFragment = new EventFragment();
@@ -264,31 +274,18 @@ public class MainActivity extends FragmentActivity{
 	public void hideBookmarksFrag(){
 		System.out.println("hiding bookmarks page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(bookmarksFragment).commit();
+		ft.remove(bookmarksFragment).commit();
 	}
 
 	public void showBookmarksFrag(){
 		System.out.println("showing bookmarks page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//		Bundle data = new Bundle();
-//		data.putString("prev", prev);
-//		data.putString("event_id",eventID);
+		//		Bundle data = new Bundle();
+		//		data.putString("prev", prev);
+		//		data.putString("event_id",eventID);
 		bookmarksFragment = new BookmarksFragment();
-//		eventFragment.setArguments(data);
+		//		eventFragment.setArguments(data);
 		ft.add(android.R.id.content, bookmarksFragment).commit();
-	}
-	
-	public void listviewOnClick(View view){
-		hideNaviFrag();
-		//		showMapviewFrag();
-		showListviewFrag();
-	}
-
-	public void eventClicked(View view){
-		System.out.println("CLICKED");
-		hideListviewFrag();
-		//		showMapviewFrag();
-		showEventFrag("list", "1");
 	}
 
 	public void logoutFacebook(MenuItem item) {
