@@ -36,7 +36,6 @@ public class NavigationFragment extends Fragment{
 	    bookmarksButton = view.findViewById(R.id.Bookmarks);
 	    profileButton = view.findViewById(R.id.Profile);
 	    historyButton = view.findViewById(R.id.History);
-	    listButton = view.findViewById(R.id.list_button);
 	    return view;
 	}
 	

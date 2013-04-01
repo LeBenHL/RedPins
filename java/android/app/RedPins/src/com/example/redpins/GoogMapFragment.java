@@ -1,5 +1,7 @@
 package com.example.redpins;
 
+import java.util.HashMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,54 +38,54 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	private ImageButton homeButton;
 	private GoogleMap mMap;
 	private View mapView;
+	private HashMap<String, String> hash;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		hash = new HashMap<String, String>();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-//		if(savedInstanceState==null){
-			View view = inflater.inflate(R.layout.map_fragment, container, false);
-			//Fragment mapFrag = (Fragment) getFragmentManager().findFragmentById(R.id.map);
-			mMap = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-			//mMap.setOnInfoWindowClickListener(this);
-			homeButton = (ImageButton) view.findViewById(R.id.home_button);
-			homeButton.setOnClickListener(this);
-			listviewButton = (Button) view.findViewById(R.id.button_to_listview);
-			listviewButton.setOnClickListener(this);
-			JSONArray jsonArr = null;
-			System.out.println(getArguments().getString("JSONArr"));
+		//		if(savedInstanceState==null){
+		View view = inflater.inflate(R.layout.map_fragment, container, false);
+		//Fragment mapFrag = (Fragment) getFragmentManager().findFragmentById(R.id.map);
+		mMap = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+		mMap.setOnInfoWindowClickListener(this);
+		homeButton = (ImageButton) view.findViewById(R.id.home_button);
+		homeButton.setOnClickListener(this);
+		listviewButton = (Button) view.findViewById(R.id.button_to_listview);
+		listviewButton.setOnClickListener(this);
+		JSONArray jsonArr = null;
+		System.out.println(getArguments().getString("JSONArr"));
+		try {
+			jsonArr = new JSONArray(getArguments().getString("JSONArr"));
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		for(int i = 0; i < 10 ; i++){
 			try {
-				jsonArr = new JSONArray(getArguments().getString("JSONArr"));
-			} catch (JSONException e1) {
+				addPins(jsonArr.getJSONObject(i));
+			} catch (JSONException e) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e.printStackTrace();
 			}
-			for(int i = 0; i < 10 ; i++){
-				try {
-					addPins(jsonArr.getJSONObject(i));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			mapView = view;
-			return view;
-//		}else{
-//			return getView();
-//		}
+		}
+		mapView = view;
+		return view;
 	}
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-		//should take user to event page that corresponds to the event
-		//		((MainActivity) getActivity()).hideMapviewFrag();
-		//((MainActivity) getActivity()).showEventFrag(marker., "map");
+		System.out.println("WINDOW CLICKED");
+		String event_id = hash.get(marker.getId());
+		System.out.println("event_idMAP: "+event_id);
+		((MainActivity) getActivity()).showEventFrag(event_id, "map");
 	}
 
 	private void addPins(JSONObject json){
@@ -123,15 +125,18 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 					eventDesc.setText(jsonObj.getString("url"));
 					eventAddr.setText(jsonObj.getString("location"));
 					eventTime.setText(jsonObj.getString("start_time")+"~"+ jsonObj.getString("end_time"));
-					final String event_id = jsonObj.getString("event_id");
-					v.setOnClickListener(new OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							((MainActivity) getActivity()).showEventFrag(event_id, "map");
-						}
-					});
+					String event_id = jsonObj.getString("id");
+					System.out.println("MARKER ID: "+marker.getId());
+					hash.put(marker.getId(), event_id);
+					//					v.setOnClickListener(new OnClickListener() {
+					//					
+					//						@Override
+					//						public void onClick(View v) {
+					//							// TODO Auto-generated method stub
+					//							System.out.println("WINDOW CLICKED");
+					//							((MainActivity) getActivity()).showEventFrag(event_id, "map");
+					//						}
+					//					});
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
