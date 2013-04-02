@@ -86,14 +86,15 @@ public class EventFragment extends Fragment implements OnClickListener{
 		commentArr = new ArrayList<JSONObject>();
 		bookmarkButton = (Button) view.findViewById(R.id.bookmark_button);
 		bookmarkButton.setOnClickListener(this);
+		
+		// API calls
 		GetEventTask task = new GetEventTask();
 		task.execute();
-		GetLikesTask likesTask = new GetLikesTask();
-		likesTask.execute();
 		GetCommentTask commentsTask = new GetCommentTask();
 		commentsTask.execute();
 		GetUserEventRatingTask userRatingTask = new GetUserEventRatingTask();
 		userRatingTask.execute();
+		
 		return view;
 	}
 	@Override
@@ -214,6 +215,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 		}
 	}
 
+	// grabs all the comments for an event
 	public class GetCommentTask extends AsyncTask<Void, Void, JSONArray>{
 
 		@Override
@@ -369,39 +371,6 @@ public class EventFragment extends Fragment implements OnClickListener{
 		};
 		commentsList.setAdapter(adapter);
 	}
-	public class GetLikesTask extends AsyncTask<Void, Void, JSONObject>{
-
-		@Override
-		protected JSONObject doInBackground(Void... arg0) {
-			JSONObject json = new JSONObject();
-			JSONObject ret = null;
-			JSONObject temp;
-			try {
-				json.put("event_id", event_id);
-				// sends requests to server and receives
-				ret = Utility.requestServer(MainActivity.serverURL + "/events/getRatings.json", json);
-			} catch (Throwable e) {
-				e.printStackTrace();
-			}
-
-			return ret;
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-
-			try {
-				eventLikes.setText("LIKES: "+ result.getInt("likes"));
-				eventDislikes.setText("DISLIKES: " + result.getInt("dislikes"));
-				progressBar.setProgress((100*result.getInt("likes"))/(result.getInt("likes")+result.getInt("dislikes")));
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
 	
 	public class GetUserEventRatingTask extends AsyncTask<Void, Void, JSONObject>{
 
@@ -428,8 +397,12 @@ public class EventFragment extends Fragment implements OnClickListener{
 			super.onPostExecute(result);
 
 			try {
+				eventLikes.setText("LIKES: "+ result.getInt("likes"));
+				eventDislikes.setText("DISLIKES: " + result.getInt("dislikes"));
+				progressBar.setProgress((100*result.getInt("likes"))/(result.getInt("likes")+result.getInt("dislikes")));
+				
 				if(result.getString("alreadyLikedEvent").equals("true")) {
-					if (result.getString("like").equals("true")) {
+					if (result.getString("rating").equals("true")) {
 						likeButton.setBackgroundColor(Color.GREEN);
 						dislikeButton.setBackgroundColor(Color.TRANSPARENT);
 						likeButton.setClickable(false);
@@ -513,8 +486,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected void onPostExecute(Void result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			GetLikesTask task = new GetLikesTask();
-			task.execute();
+			GetUserEventRatingTask userRatingTask = new GetUserEventRatingTask();
+			userRatingTask.execute();
 		}
 	}
 
@@ -545,8 +518,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected void onPostExecute(Void result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			GetLikesTask task = new GetLikesTask();
-			task.execute();
+			GetUserEventRatingTask userRatingTask = new GetUserEventRatingTask();
+			userRatingTask.execute();
 		}
 	}
 
