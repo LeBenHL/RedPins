@@ -1,11 +1,13 @@
 package com.example.redpins;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -39,6 +41,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	private GoogleMap mMap;
 	private View mapView;
 	private HashMap<String, String> hash;
+	private ArrayList <LatLng> locArray;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		homeButton.setOnClickListener(this);
 		listviewButton = (Button) view.findViewById(R.id.button_to_listview);
 		listviewButton.setOnClickListener(this);
+		locArray = new ArrayList<LatLng>();
 		JSONArray jsonArr = null;
 		System.out.println(getArguments().getString("JSONArr"));
 		try {
@@ -68,7 +72,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		for(int i = 0; i < 10 ; i++){
+		for(int i = 0; i < jsonArr.length() ; i++){
 			try {
 				addPins(jsonArr.getJSONObject(i));
 			} catch (JSONException e) {
@@ -76,7 +80,18 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 				e.printStackTrace();
 			}
 		}
+		
+		double sumLat = 0;
+		double sumLng = 0;
+		for(int i = 0; i < jsonArr.length();i++){
+			LatLng locInfo = locArray.get(i);
+			sumLat += locInfo.latitude;
+			sumLng += locInfo.longitude;
+		}
+		double avgLat = sumLat/(double) jsonArr.length();
+		double avgLng = sumLng/(double) jsonArr.length();
 		mapView = view;
+		mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(avgLat,avgLng) , 14.0f) );
 		return view;
 	}
 
@@ -85,6 +100,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		System.out.println("WINDOW CLICKED");
 		String event_id = hash.get(marker.getId());
 		System.out.println("event_idMAP: "+event_id);
+		((MainActivity) getActivity()).hideMapviewFrag();
 		((MainActivity) getActivity()).showEventFrag(event_id, "map");
 	}
 
@@ -98,6 +114,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		locArray.add(loc);
 		mMap.setInfoWindowAdapter(new InfoWindowAdapter() {
 
 			@Override
@@ -160,8 +177,8 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 			break;
 		case R.id.button_to_listview:
 			//go to viewView
-			((MainActivity) getActivity()).showListviewFrag();
 			((MainActivity) getActivity()).hideMapviewFrag();
+			((MainActivity) getActivity()).showListviewFrag();
 			break;
 
 		}

@@ -1,5 +1,8 @@
 package com.example.redpins;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
@@ -9,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +34,7 @@ public class MainActivity extends FragmentActivity{
 	public Fragment searchFragment;
 	public String mQuery;
 	private GoogleMap mMap;
+//	private Stack<String> fragStack;
 
 	//Facebook User and Session
 	private static GraphUser user;
@@ -45,6 +50,8 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("GOT CREATED");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity);
+//		fragStack = new Stack<String>();
+		//fragStack.push("navi");
 		if (savedInstanceState == null) {
 			// Add the fragment on initial activity setup	
 			appFragment = new NavigationFragment();
@@ -214,6 +221,7 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("showing navi");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.mainAppFragment,appFragment).commit();
+//		fragStack.push("navi");
 	}
 
 	public void hideListviewFrag(){
@@ -232,12 +240,15 @@ public class MainActivity extends FragmentActivity{
 		listFragment.setArguments(data);
 		ft.add(android.R.id.content, listFragment);
 		ft.show(listFragment).commit();
+//		fragStack.push("list");
 	}
 
 
 	public void hideMapviewFrag(){
 		System.out.println("hiding mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.hide(getSupportFragmentManager().findFragmentById(R.id.map));
+		ft.hide(mapFragment);
 		ft.remove(getSupportFragmentManager().findFragmentById(R.id.map));
 		ft.remove(mapFragment).commit();
 	}
@@ -251,6 +262,7 @@ public class MainActivity extends FragmentActivity{
 		}else{
 			ft.show(mapFragment).commit();
 		}
+//		fragStack.push("map");
 	}
 
 	public void hideEventFrag(){
@@ -269,6 +281,7 @@ public class MainActivity extends FragmentActivity{
 		eventFragment = new EventFragment();
 		eventFragment.setArguments(data);
 		ft.add(android.R.id.content, eventFragment).commit();
+//		fragStack.push("event");
 	}
 
 	public void hideBookmarksFrag(){
@@ -286,9 +299,40 @@ public class MainActivity extends FragmentActivity{
 		bookmarksFragment = new BookmarksFragment();
 		//		eventFragment.setArguments(data);
 		ft.add(android.R.id.content, bookmarksFragment).commit();
+//		fragStack.push("bookmark");
 	}
 
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+//		if(keyCode == KeyEvent.KEYCODE_BACK){
+//			String currPage = fragStack.pop();
+//			if(fragStack.isEmpty()){
+//				return super.onKeyDown(keyCode, event);
+//			}
+//			String prevPage = fragStack.peek();
+//			System.out.println("PREV PAGE: "+prevPage);
+//			if(prevPage.equals("navi")){
+//				hideListviewFrag();
+//				showNaviFrag();
+//			}else if(prevPage.equals("list")){
+//				hideEventFrag();
+//				showListviewFrag();
+//			}else if(prevPage.equals("map")){
+//				hideEventFrag();
+//				showMapviewFrag();
+//			}
+////			else if(prevPage.equals("event")){
+////				showEventFrag(getArguments().getString("event_id"), getArguments().getString("callback"));
+////			}
+////			else if(prevPage.equals("bookmark")){
+////				hideBookmarksFrag();
+////			}
+//		}
+		return super.onKeyDown(keyCode, event);
 	}
 }
