@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -79,7 +80,6 @@ public class EventFragment extends Fragment implements OnClickListener{
 		if(event_id==null){
 			event_id = getArguments().getString("event_id");
 		}
-		System.out.println("event_id1: "+event_id);
 		linkBack = getArguments().getString("prev");
 		progressBar = (ProgressBar) view.findViewById(R.id.event_progress);
 		mContext = getActivity().getApplicationContext();
@@ -92,6 +92,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 		likesTask.execute();
 		GetCommentTask commentsTask = new GetCommentTask();
 		commentsTask.execute();
+		GetUserEventRatingTask userRatingTask = new GetUserEventRatingTask();
+		userRatingTask.execute();
 		return view;
 	}
 	@Override
@@ -108,7 +110,6 @@ public class EventFragment extends Fragment implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch(v.getId()){
 		case R.id.home_button:
 			if(linkBack.equals("map")){
@@ -136,18 +137,18 @@ public class EventFragment extends Fragment implements OnClickListener{
 			break;
 		case R.id.like_button:
 			System.out.println("LIKE");
-			likeButton.setSelected(true);
+			likeButton.setBackgroundColor(Color.GREEN);
+			dislikeButton.setBackgroundColor(Color.TRANSPARENT);
 			likeButton.setClickable(false);
-			dislikeButton.setSelected(false);
 			dislikeButton.setClickable(true);
 			likeTask task = new likeTask();
 			task.execute();
 			break;
 		case R.id.dislike_button:
 			System.out.println("DISLIKE");
-			dislikeButton.setSelected(true);
+			likeButton.setBackgroundColor(Color.TRANSPARENT);
+			dislikeButton.setBackgroundColor(Color.RED);
 			dislikeButton.setClickable(false);
-			likeButton.setSelected(false);
 			likeButton.setClickable(true);
 			dislikeTask task2 = new dislikeTask();
 			task2.execute();
@@ -160,8 +161,6 @@ public class EventFragment extends Fragment implements OnClickListener{
 
 	//gets the information you need for a given event through server request
 	public class GetEventTask extends AsyncTask<Void, Void, JSONObject>{
-
-		//how should i save comments
 
 		@Override
 		protected JSONObject doInBackground(Void... arg0) {
@@ -394,9 +393,54 @@ public class EventFragment extends Fragment implements OnClickListener{
 			super.onPostExecute(result);
 
 			try {
-				eventLikes.setText("LIKES: "+result.getInt("likes"));
+				eventLikes.setText("LIKES: "+ result.getInt("likes"));
 				eventDislikes.setText("DISLIKES: " + result.getInt("dislikes"));
 				progressBar.setProgress((100*result.getInt("likes"))/(result.getInt("likes")+result.getInt("dislikes")));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public class GetUserEventRatingTask extends AsyncTask<Void, Void, JSONObject>{
+
+		@Override
+		protected JSONObject doInBackground(Void... arg0) {
+			JSONObject json = new JSONObject();
+			JSONObject ret = null;
+			try {
+				json.put("event_id", event_id);
+				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
+				// sends requests to server and receives
+				ret = Utility.requestServer(MainActivity.serverURL + "/users/alreadyLikedEvent.json", json);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+
+			return ret;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+
+			try {
+				if(result.getString("alreadyLikedEvent").equals("true")) {
+					if (result.getString("like").equals("true")) {
+						likeButton.setBackgroundColor(Color.GREEN);
+						dislikeButton.setBackgroundColor(Color.TRANSPARENT);
+						likeButton.setClickable(false);
+						dislikeButton.setClickable(true);
+					} else {
+						likeButton.setBackgroundColor(Color.TRANSPARENT);
+						dislikeButton.setBackgroundColor(Color.RED);
+						dislikeButton.setClickable(false);
+						likeButton.setClickable(true);
+					}
+				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
