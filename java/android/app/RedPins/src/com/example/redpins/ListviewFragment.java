@@ -64,7 +64,8 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 	private ImageButton homeButton;
 	protected JSONArray jsonArr;
 	private String searchTerm;
-	
+	private String searchLoc;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
 		searchTerm = getArguments().getString("query");
 		searchText.setText(searchTerm);
+		searchLoc = getArguments().getString("location");
 		GetEventListTask task = new GetEventListTask();
 		task.execute();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -93,7 +95,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 				//		showMapviewFrag();
 				((MainActivity) getActivity()).showEventFrag(view.getTag().toString(),"list");
 			}
-			
+
 		});
 		return view;
 	}
@@ -120,7 +122,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 	}
 
 	protected OnClickListener listener = new OnClickListener() {
-		
+
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
@@ -130,7 +132,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			((MainActivity) getActivity()).showEventFrag(v.getTag().toString(),"list");
 		}
 	};
-	
+
 	private void populateList(){
 		ListAdapter adapter = new ListAdapter() {
 
@@ -226,7 +228,11 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			@Override
 			public int getCount() {
 				// TODO Auto-generated method stub
-				return 10;
+				if(jsonArr == null){
+					return 0;
+				}else{
+					return jsonArr.length();
+				}
 			}
 
 			@Override
@@ -258,15 +264,16 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		@Override
 		protected JSONArray doInBackground(Void... arg0) {
 			JSONObject json = new JSONObject();
-						try {
-							json.put("search_query", getArguments().getString("query"));
-							json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
-							json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
-							json.put("location_query", "Berkeley, CA");
-							//json.put("event_id", "1");
-						} catch (JSONException e1) {
-							e1.printStackTrace();
-						}
+			try {
+				json.put("query", searchTerm);
+				json.put("location_query", searchLoc);
+				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
+				json.put("page", 1);
+				System.out.println("INPUT: " + json.toString());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
 			JSONArray ret =null;
 			try {
 				//sends requests to server and receives

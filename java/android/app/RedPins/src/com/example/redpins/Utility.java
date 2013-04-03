@@ -68,8 +68,8 @@ public class Utility{
 		request.setEntity(entity); 
 
 		DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 10000); 
-		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),10000); 
+		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 50000); 
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),50000); 
 
 		HttpResponse response =null;
 		try {

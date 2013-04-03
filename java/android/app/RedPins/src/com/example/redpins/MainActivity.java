@@ -3,6 +3,8 @@ package com.example.redpins;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import org.apache.http.HttpClientConnection;
+
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
@@ -27,12 +29,13 @@ public class MainActivity extends FragmentActivity{
 
 	public FacebookFragment facebookFragment;
 	private Fragment appFragment;
-	private Fragment listFragment;
+	public Fragment listFragment;
 	public Fragment mapFragment;
 	public Fragment eventFragment;
 	public Fragment bookmarksFragment;
 	public Fragment searchFragment;
 	public String mQuery;
+	public String mLoc;
 	private GoogleMap mMap;
 //	private Stack<String> fragStack;
 
@@ -43,7 +46,8 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
+//	public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
+	public final static String serverURL = "http://192.168.5.188:3000";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -214,11 +218,13 @@ public class MainActivity extends FragmentActivity{
 	public void hideNaviFrag(){
 		System.out.println("hiding navi");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.hide(appFragment);
 		ft.remove(appFragment).commit();
 	}
 
 	public void showNaviFrag(){
 		System.out.println("showing navi");
+		appFragment = new NavigationFragment();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.mainAppFragment,appFragment).commit();
 //		fragStack.push("navi");
@@ -227,6 +233,7 @@ public class MainActivity extends FragmentActivity{
 	public void hideListviewFrag(){
 		System.out.println("hiding listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.hide(listFragment);
 		ft.remove(listFragment).commit();
 	}
 
@@ -236,9 +243,10 @@ public class MainActivity extends FragmentActivity{
 		Bundle data = new Bundle();
 		System.out.println("mQuery: "+ mQuery);
 		data.putString("query",mQuery);
+		data.putString("location",mLoc);
 		listFragment = new ListviewFragment();
 		listFragment.setArguments(data);
-		ft.add(android.R.id.content, listFragment);
+		ft.add(R.id.mainAppFragment, listFragment);
 		ft.show(listFragment).commit();
 //		fragStack.push("list");
 	}
@@ -256,18 +264,17 @@ public class MainActivity extends FragmentActivity{
 	public void showMapviewFrag(){
 		System.out.println("showing mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		if(mapFragment == null){
 			mapFragment = new GoogMapFragment();
-			ft.add(android.R.id.content, mapFragment).commit();
-		}else{
+			ft.add(R.id.mainAppFragment, mapFragment);
 			ft.show(mapFragment).commit();
-		}
+		
 //		fragStack.push("map");
 	}
 
 	public void hideEventFrag(){
 		System.out.println("hiding event page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.hide(eventFragment);
 		ft.remove(eventFragment).commit();
 	}
 
@@ -287,6 +294,7 @@ public class MainActivity extends FragmentActivity{
 	public void hideBookmarksFrag(){
 		System.out.println("hiding bookmarks page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.hide(bookmarksFragment);
 		ft.remove(bookmarksFragment).commit();
 	}
 
