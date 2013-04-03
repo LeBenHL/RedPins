@@ -8,10 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
 public class SearchFragment extends Fragment implements OnQueryTextListener{
+	private EditText locInput;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -23,6 +26,7 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 		searchView.setSubmitButtonEnabled(true); // Enable a submit button
+		locInput = (EditText) view.findViewById(R.id.location_input);
 
 		return view;
 	}
@@ -38,6 +42,10 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		// TODO Auto-generated method stub
 		Log.v("MainActivity", "THIS IS THE QUERY: " + query);
 		((MainActivity) getActivity()).mQuery = query;
+		((MainActivity) getActivity()).mLoc = locInput.getText().toString();
+		if(((MainActivity)getActivity()).listFragment != null){
+			((MainActivity) getActivity()).hideListviewFrag();
+		}
 		((MainActivity) getActivity()).showListviewFrag();
 		((MainActivity) getActivity()).hideNaviFrag();
 		return false;

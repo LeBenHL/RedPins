@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
     <ImageButton
         android:id="@+id/home_button"
         android:layout_width="wrap_content"
@@ -11,13 +11,12 @@
         android:src="@drawable/action_about"
         android:text="@string/home" />
 
-    
     <Button
         android:id="@+id/bookmark_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="B"/>
-    
+        android:text="B" />
+
     <TextView
         android:id="@+id/event_name"
         android:layout_width="match_parent"
@@ -49,8 +48,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:text="Event Description"
+                android:text="Event URL"
                 android:textColor="#0032FF"
+                android:textSize="@dimen/words" />
+
+            <TextView
+                android:id="@+id/event_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Description"
                 android:textSize="@dimen/words" />
 
             <TextView
@@ -122,7 +128,7 @@
             android:id="@+id/dislike_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/com_facebook_button_check_off"/>
+            android:src="@drawable/com_facebook_button_check_off" />
     </LinearLayout>
 
     <Button

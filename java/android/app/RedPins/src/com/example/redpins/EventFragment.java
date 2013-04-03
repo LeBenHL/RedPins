@@ -41,6 +41,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 	private ImageView eventImg;
 	private TextView eventLikes;
 	private TextView eventDislikes;
+	private TextView eventDesc;
 	private ListView commentsList;
 	private String event_id;
 	private int owner_id;
@@ -67,6 +68,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 		eventLoc = (TextView) view.findViewById(R.id.event_location);
 		eventTime = (TextView) view.findViewById(R.id.event_time);
 		eventImg = (ImageView) view.findViewById(R.id.event_image);
+		eventDesc = (TextView) view.findViewById(R.id.event_description);
 		eventLikes = (TextView) view.findViewById(R.id.event_like);
 		eventDislikes = (TextView) view.findViewById(R.id.event_dislike);
 		commentsList = (ListView) view.findViewById(R.id.comment_listview);
@@ -196,13 +198,16 @@ public class EventFragment extends Fragment implements OnClickListener{
 					String name = json.getString("title");
 					String url = json.getString("url");
 					String loc = json.getString("location");
+					String desc = json.getString("description");
 					String time = json.getString("start_time");
 					owner_id = json.getInt("user_id");
 					eventName.setText(name);
 					urlLink = url;
-					eventURL.setText(urlLink);
-					eventLoc.setText(loc);
-					eventTime.setText(time);
+					eventURL.setText("URL: "+urlLink);
+					eventLoc.setText("Location: "+loc);
+					eventTime.setText("Time: " + time);
+					eventDesc.setText("Description: "+desc);
+					
 				}
 				//???eventImg.setImageURI(uri);
 			} catch (JSONException e) {
@@ -425,15 +430,15 @@ public class EventFragment extends Fragment implements OnClickListener{
 					// TODO Auto-generated method stub
 					commentArr.remove(pos);
 					populateCommentList();
-					//RemoveCommentTask task = new RemoveCommentTask();
-					//task.execute();
+					RemoveCommentTask task = new RemoveCommentTask();
+					task.execute();
 				}
 			});
 			AlertDialog alertDialog = builder.create();
 			// Set the Icon for the Dialog
 			alertDialog.show();
 		}else{
-			Toast toast = Toast.makeText(getActivity(), "You are not owner of this comment", Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(getActivity(), "You are not the author of this comment", Toast.LENGTH_SHORT);
 			toast.show();
 		}
 	}
@@ -538,7 +543,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
 				// sends requests to server and receives
-				ret = Utility.requestServer(MainActivity.serverURL + "/users/bookmarkEvent.json", json);//remove bookmark
+				ret = Utility.requestServer(MainActivity.serverURL + "/users/removeBookmark.json", json);//remove bookmark
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -546,6 +551,25 @@ public class EventFragment extends Fragment implements OnClickListener{
 		}
 	}
 
+	public class RemoveCommentTask extends AsyncTask<Void, Void, Void>{
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub
+			JSONObject json = new JSONObject();
+			JSONObject ret = null;
+			try {
+				json.put("event_id", event_id);
+				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
+				// sends requests to server and receives
+				ret = Utility.requestServer(MainActivity.serverURL + "/users/removeComment.json", json);//remove bookmark
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
 	private void bookmarkEvent(){
 		if(!bookmarked){
 			bookmarked = true;

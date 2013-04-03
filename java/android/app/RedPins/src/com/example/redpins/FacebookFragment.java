@@ -182,7 +182,8 @@ public class FacebookFragment extends Fragment {
     	
     	//The base URL we are trying to post to
     	//private static final String baseUrl = "http://nameless-brook-4178.herokuapp.com";
-    	private static final String baseUrl = "http://safe-savannah-1864.herokuapp.com";
+    	//private static final String baseUrl = "http://safe-savannah-1864.herokuapp.com";
+		private static final String baseUrl = MainActivity.serverURL;
     	
     	//The facebook session we are working on
     	private GraphUser _user;
