@@ -229,7 +229,9 @@ public class EventFragment extends Fragment implements OnClickListener{
 					urlLink = url;
 					eventURL.setText("URL: "+urlLink);
 					eventLoc.setText("Location: "+loc);
+					System.out.println("TIME: "+time);
 					eventTime.setText("Time: " + time);
+					System.out.println("Description: "+desc);
 					eventDesc.setText("Description: "+desc);
 					
 				}

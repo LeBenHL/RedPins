@@ -46,8 +46,15 @@
         android:layout_columnSpan="4"
         android:layout_gravity="left"
         android:clickable="true"
-        android:text="Event Description"
+        android:text="Event URL"
         android:textColor="#0032FF"
+        android:textSize="@dimen/words" />
+    
+   <TextView
+        android:id="@+id/event_description"
+        android:layout_columnSpan="4"
+        android:layout_gravity="left"
+        android:text="Event Description"
         android:textSize="@dimen/words" />
 
     <TextView
