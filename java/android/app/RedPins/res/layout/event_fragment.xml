@@ -101,12 +101,14 @@
         android:id="@+id/like_button"
         android:layout_column="0"
         android:layout_gravity="left"
-        android:src="@drawable/com_facebook_button_check_on" />
+        android:src="@drawable/rating_good" 
+        style="?android:attr/borderlessButtonStyle"/>
 
     <ImageButton
         android:id="@+id/dislike_button"
         android:layout_gravity="left"
-        android:src="@drawable/com_facebook_button_check_off" />
+        android:src="@drawable/rating_bad" 
+        style="?android:attr/borderlessButtonStyle"/>
 
     <Button
         android:id="@+id/add_comment_button"

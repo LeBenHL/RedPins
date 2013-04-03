@@ -265,7 +265,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		protected JSONArray doInBackground(Void... arg0) {
 			JSONObject json = new JSONObject();
 			try {
-				json.put("query", searchTerm);
+				json.put("search_query", searchTerm);
 				json.put("location_query", searchLoc);
 				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());

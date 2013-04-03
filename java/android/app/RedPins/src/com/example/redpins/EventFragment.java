@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -104,8 +105,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 		bookmarkButton.setOnClickListener(this);
 		GetEventTask task = new GetEventTask();
 		task.execute();
-		GetLikesTask likesTask = new GetLikesTask();
-		likesTask.execute();
+		GetUserEventRatingTask userRatingTask = new GetUserEventRatingTask();
+		userRatingTask.execute();
 		GetCommentTask commentsTask = new GetCommentTask();
 		commentsTask.execute();
 		return view;
@@ -401,7 +402,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 		};
 		commentsList.setAdapter(adapter);
 	}
-	public class GetLikesTask extends AsyncTask<Void, Void, JSONObject>{
+	public class GetUserEventRatingTask extends AsyncTask<Void, Void, JSONObject>{
 
 		@Override
 		protected JSONObject doInBackground(Void... arg0) {
@@ -410,8 +411,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 			JSONObject temp;
 			try {
 				json.put("event_id", event_id);
+				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
+				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
 				// sends requests to server and receives
-				ret = Utility.requestServer(MainActivity.serverURL + "/events/getRatings.json", json);
+				ret = Utility.requestServer(MainActivity.serverURL + "/users/alreadyLikedEvent.json", json);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -428,6 +431,20 @@ public class EventFragment extends Fragment implements OnClickListener{
 				eventLikes.setText("LIKES: "+result.getInt("likes"));
 				eventDislikes.setText("DISLIKES: " + result.getInt("dislikes"));
 				progressBar.setProgress((100*result.getInt("likes"))/(result.getInt("likes")+result.getInt("dislikes")));
+				
+				if(result.getString("alreadyLikedEvent").equals("true")) {
+					if (result.getString("rating").equals("true")) {
+						likeButton.setBackgroundColor(Color.GREEN);
+						dislikeButton.setBackgroundColor(Color.TRANSPARENT);
+						likeButton.setClickable(false);
+						dislikeButton.setClickable(true);
+					} else {
+						likeButton.setBackgroundColor(Color.TRANSPARENT);
+						dislikeButton.setBackgroundColor(Color.RED);
+						dislikeButton.setClickable(false);
+						likeButton.setClickable(true);
+					}
+				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -561,7 +578,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected void onPostExecute(Void result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			GetLikesTask task = new GetLikesTask();
+			GetUserEventRatingTask task = new GetUserEventRatingTask();
 			task.execute();
 		}
 	}
@@ -593,7 +610,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected void onPostExecute(Void result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			GetLikesTask task = new GetLikesTask();
+			GetUserEventRatingTask task = new GetUserEventRatingTask();
 			task.execute();
 		}
 	}
