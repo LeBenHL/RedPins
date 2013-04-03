@@ -59,6 +59,8 @@ public class NavigationFragment extends Fragment{
 	
 	public void profileOnClick(View view) {
 		Log.v("buttonClick", "PROFILE");
+		((MainActivity)getActivity()).hideNaviFrag();
+		((MainActivity)getActivity()).showAddPhotoFrag();
 	}
 	
 	public void historyOnClick(View view) {

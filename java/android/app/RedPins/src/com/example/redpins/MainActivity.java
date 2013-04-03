@@ -34,6 +34,7 @@ public class MainActivity extends FragmentActivity{
 	public Fragment eventFragment;
 	public Fragment bookmarksFragment;
 	public Fragment searchFragment;
+	public Fragment addPhotoFragment;
 	public String mQuery;
 	public String mLoc;
 	private GoogleMap mMap;
@@ -46,8 +47,8 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-//	public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 	public final static String serverURL = "http://192.168.5.188:3000";
+	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -168,6 +169,7 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	public String getFacebookSessionToken() {
+		System.out.println(session.getAccessToken());
 		return session.getAccessToken();
 	}
 
@@ -309,6 +311,25 @@ public class MainActivity extends FragmentActivity{
 		ft.add(android.R.id.content, bookmarksFragment).commit();
 //		fragStack.push("bookmark");
 	}
+	
+	public void hideAddPhotoFragFrag(){
+		System.out.println("hiding add photo page");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.remove(addPhotoFragment).commit();
+	}
+
+	public void showAddPhotoFrag(){
+		System.out.println("showing add photo page");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		//		Bundle data = new Bundle();
+		//		data.putString("prev", prev);
+		//		data.putString("event_id",eventID);
+		addPhotoFragment = new AddPhotoFragment();
+		//		eventFragment.setArguments(data);
+		ft.add(android.R.id.content, addPhotoFragment).commit();
+//		fragStack.push("bookmark");
+	}
+	
 
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/add_photo_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="0dp"
+    android:padding="10dp" >
+    
+	<ScrollView
+	    android:id="@+id/add_photo_scrollview"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_gravity="center" >
+        
+	    <RelativeLayout
+            android:id="@+id/add_photo_relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Space
+				android:id="@+id/add_photo_space"
+	    		android:layout_width="wrap_content"
+	    		android:layout_height="30dp"
+	   			android:layout_marginTop="130dp"/>
+            
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" android:weightSum="1" android:padding="10dp"
+				android:layout_below="@+id/add_photo_space">
+				<TextView 
+                android:id="@+id/add_photo_path"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/add_photo_select_btn"
+                android:text="Browse for a photo"
+                />
+				<Button
+				    android:id="@+id/add_photo_select_btn"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:minHeight="40dp"
+				    android:layout_below="@+id/add_photo_path"
+				    android:text="Upload a photo" />
+
+            </LinearLayout>
+			<LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/linearLayout1" android:weightSum="1" android:padding="10dp">
+				
+                <Button
+                    android:id="@+id/add_photo_cancel_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight=".5"
+					
+                    android:minHeight="40dp"
+                    android:text="Cancel"
+                    android:padding="15dp"/>
+
+                <Button
+                    android:id="@+id/add_photo_upload_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight=".5"
+                    
+                    android:minHeight="40dp"
+                    android:text="Upload"/>
+
+            </LinearLayout>
+
+
+
+	    </RelativeLayout>   
+	</ScrollView>
+
+	
+
+</RelativeLayout>
