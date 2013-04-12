@@ -23,18 +23,14 @@ import android.widget.SearchView;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 
 public class MainActivity extends FragmentActivity{
 
 	public FacebookFragment facebookFragment;
-	private Fragment appFragment;
-	public Fragment listFragment;
-	public Fragment mapFragment;
-	public Fragment eventFragment;
-	public Fragment bookmarksFragment;
-	public Fragment searchFragment;
-	public Fragment addPhotoFragment;
+	public Fragment appFragment;
+	private Fragment searchFragment;
+	private Fragment listViewFragment;
+	private Fragment googleMapFragment;
 	public String mQuery;
 	public String mLoc;
 	private GoogleMap mMap;
@@ -47,7 +43,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public final static String serverURL = "http://192.168.5.188:3000";
+	public final static String serverURL = "http://10.0.0.25:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 	@Override
@@ -58,7 +54,8 @@ public class MainActivity extends FragmentActivity{
 //		fragStack = new Stack<String>();
 		//fragStack.push("navi");
 		if (savedInstanceState == null) {
-			// Add the fragment on initial activity setup	
+			// Add the fragment on initial activity setup
+			Log.v("MainActivity On Create", "No Restored State Info");
 			appFragment = new NavigationFragment();
 			getSupportFragmentManager()
 			.beginTransaction()
@@ -67,7 +64,12 @@ public class MainActivity extends FragmentActivity{
 			facebookFragment = new FacebookFragment();
 			getSupportFragmentManager()
 			.beginTransaction()
-			.add(android.R.id.content, facebookFragment)
+			.add(R.id.facebookFragment, facebookFragment)
+			.commit();
+			searchFragment = new SearchFragment();
+			getSupportFragmentManager()
+			.beginTransaction()
+			.add(R.id.searchFragment, searchFragment)
 			.commit();
 			//			getSupportFragmentManager()
 			//			.beginTransaction().hide(appFragment).commit();
@@ -75,18 +77,16 @@ public class MainActivity extends FragmentActivity{
 			//hideFacebookFragment();//temporary	
 		} else {
 			// Or set the fragment from restored state info
+			Log.v("MainActivity On Create", "Restored State Info");
 			appFragment = getSupportFragmentManager()
 					.findFragmentById(R.id.mainAppFragment);
 			facebookFragment = (FacebookFragment) getSupportFragmentManager()
-					.findFragmentById(android.R.id.content);
+					.findFragmentById(R.id.facebookFragment);
+			searchFragment = getSupportFragmentManager()
+					.findFragmentById(R.id.searchFragment);
 
 			//	hideFacebookFragment();//temporary
 		}
-		searchFragment = new SearchFragment();
-		getSupportFragmentManager()
-		.beginTransaction()
-		.add(R.id.searchFragment, searchFragment)
-		.commit();
 		//		if(user!=null || session != null){
 		//			hideFacebookFragment();
 		//		}
@@ -138,22 +138,20 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	public void hideFacebookFragment() {
-		getSupportFragmentManager()
-		.beginTransaction().hide(facebookFragment).commit();
-		getSupportFragmentManager()
-		.beginTransaction()
-		.show(appFragment)
-		.commit();
+		FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+		tx.hide(facebookFragment);
+		tx.show(appFragment);
+		tx.show(searchFragment);
+		tx.commit();
 	}
 
 
 	public void showFacebookFragment() {
-		getSupportFragmentManager()
-		.beginTransaction().show(facebookFragment).commit();
-		getSupportFragmentManager()
-		.beginTransaction()
-		.hide(appFragment)
-		.commit();
+		FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+		tx.show(facebookFragment);
+		tx.hide(appFragment);
+		tx.hide(searchFragment);
+		tx.commit();
 	}
 
 	public void setFacebookUser(GraphUser _user) {
@@ -228,29 +226,46 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("showing navi");
 		appFragment = new NavigationFragment();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(R.id.mainAppFragment,appFragment).commit();
+		ft.replace(R.id.mainAppFragment,appFragment).commit();
 //		fragStack.push("navi");
 	}
 
 	public void hideListviewFrag(){
 		System.out.println("hiding listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(listFragment);
-		ft.remove(listFragment).commit();
+		ft.hide(appFragment);
+		ft.remove(appFragment).commit();
 	}
 
-	public void showListviewFrag(){
+	public void createListviewFrag(){
 		System.out.println("showing listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Bundle data = new Bundle();
 		System.out.println("mQuery: "+ mQuery);
 		data.putString("query",mQuery);
 		data.putString("location",mLoc);
-		listFragment = new ListviewFragment();
-		listFragment.setArguments(data);
-		ft.add(R.id.mainAppFragment, listFragment);
-		ft.show(listFragment).commit();
+		listViewFragment = new ListviewFragment();
+		listViewFragment.setArguments(data);
+		Fragment lastAppFragment = appFragment;
+		appFragment = listViewFragment;
+		if (lastAppFragment instanceof NavigationFragment) {
+			ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);			
+		} else {
+			ft.replace(R.id.mainAppFragment, appFragment);
+		}
+		removeMapFragment();
+		ft.commit();
 //		fragStack.push("list");
+	}
+	
+	public void toggleListviewFrag() {
+		System.out.println("toggling mapview");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = listViewFragment;
+		ft.replace(R.id.mainAppFragment, appFragment);
+		ft.remove(getSupportFragmentManager()
+				.findFragmentById(R.id.map));
+		ft.commit();
 	}
 
 
@@ -258,26 +273,30 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("hiding mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.hide(getSupportFragmentManager().findFragmentById(R.id.map));
-		ft.hide(mapFragment);
+		ft.hide(appFragment);
 		ft.remove(getSupportFragmentManager().findFragmentById(R.id.map));
-		ft.remove(mapFragment).commit();
+		ft.remove(appFragment).commit();
 	}
 
-	public void showMapviewFrag(){
-		System.out.println("showing mapview");
+	public void createMapviewFrag(Bundle bundle){
+		googleMapFragment = new GoogMapFragment();
+		googleMapFragment.setArguments(bundle);
+		//		fragStack.push("map");
+	}
+	
+	public void toggleMapviewFrag() {
+		System.out.println("toggling mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			mapFragment = new GoogMapFragment();
-			ft.add(R.id.mainAppFragment, mapFragment);
-			ft.show(mapFragment).commit();
-		
-//		fragStack.push("map");
+		appFragment = googleMapFragment;
+		ft.replace(R.id.mainAppFragment, appFragment);
+		ft.commit();
 	}
 
 	public void hideEventFrag(){
 		System.out.println("hiding event page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(eventFragment);
-		ft.remove(eventFragment).commit();
+		ft.hide(appFragment);
+		ft.remove(appFragment).commit();
 	}
 
 	public void showEventFrag(String eventID, String prev){
@@ -287,17 +306,18 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("eventID: "+eventID + ", prev: "+prev);
 		data.putString("prev", prev);
 		data.putString("event_id",eventID);
-		eventFragment = new EventFragment();
-		eventFragment.setArguments(data);
-		ft.add(android.R.id.content, eventFragment).commit();
+		appFragment = new EventFragment();
+		appFragment.setArguments(data);
+		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.commit();
 //		fragStack.push("event");
 	}
 
 	public void hideBookmarksFrag(){
 		System.out.println("hiding bookmarks page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(bookmarksFragment);
-		ft.remove(bookmarksFragment).commit();
+		ft.hide(appFragment);
+		ft.remove(appFragment).commit();
 	}
 
 	public void showBookmarksFrag(){
@@ -306,16 +326,16 @@ public class MainActivity extends FragmentActivity{
 		//		Bundle data = new Bundle();
 		//		data.putString("prev", prev);
 		//		data.putString("event_id",eventID);
-		bookmarksFragment = new BookmarksFragment();
-		//		eventFragment.setArguments(data);
-		ft.add(android.R.id.content, bookmarksFragment).commit();
+		appFragment = new BookmarksFragment();
+		//		appFragment.setArguments(data);
+		ft.replace(R.id.mainAppFragment, appFragment).commit();
 //		fragStack.push("bookmark");
 	}
 	
 	public void hideAddPhotoFragFrag(){
 		System.out.println("hiding add photo page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.remove(addPhotoFragment).commit();
+		ft.remove(facebookFragment).commit();
 	}
 
 	public void showAddPhotoFrag(){
@@ -324,10 +344,20 @@ public class MainActivity extends FragmentActivity{
 		//		Bundle data = new Bundle();
 		//		data.putString("prev", prev);
 		//		data.putString("event_id",eventID);
-		addPhotoFragment = new AddPhotoFragment();
-		//		eventFragment.setArguments(data);
-		ft.add(android.R.id.content, addPhotoFragment).commit();
+		appFragment = new AddPhotoFragment();
+		//		appFragment.setArguments(data);
+		ft.replace(R.id.mainAppFragment, appFragment).commit();
 //		fragStack.push("bookmark");
+	}
+	
+	public void createAddCommentFrag(Bundle bundle) {
+		Log.i("createAddCommentFrag", "Created comment frag");
+		AddCommentFragment commFragment = new AddCommentFragment();
+		commFragment.setArguments(bundle);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = commFragment;
+		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.commit();
 	}
 	
 
@@ -363,5 +393,34 @@ public class MainActivity extends FragmentActivity{
 ////			}
 //		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	private void removeMapFragment() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		Fragment mapFragment = getSupportFragmentManager()
+				.findFragmentById(R.id.map);
+		if (mapFragment == null) {
+		} else {
+			ft.hide(mapFragment);
+			ft.remove(mapFragment);
+		}
+		ft.commit();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Log.i("onBackPressed", "Back Pressed");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		removeMapFragment();
+		ft.hide(appFragment);
+		ft.remove(appFragment);
+		Log.v("onBackPressed", "Old Fragment: " + appFragment.toString());
+		super.onBackPressed();
+		appFragment = getSupportFragmentManager()
+				.findFragmentById(R.id.mainAppFragment);
+		ft.replace(R.id.mainAppFragment, appFragment);
+		ft.show(appFragment);
+		ft.commit();
+		Log.v("onBackPressed", "New Fragment: " + appFragment.toString());
 	}
 }

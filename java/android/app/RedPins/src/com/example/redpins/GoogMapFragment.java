@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,6 +54,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Log.i("GoogMapFragment On Create", "ON CREATE");
 		// TODO Auto-generated method stub
 		//		if(savedInstanceState==null){
 		View view = inflater.inflate(R.layout.map_fragment, container, false);
@@ -100,7 +102,6 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		System.out.println("WINDOW CLICKED");
 		String event_id = hash.get(marker.getId());
 		System.out.println("event_idMAP: "+event_id);
-		((MainActivity) getActivity()).hideMapviewFrag();
 		((MainActivity) getActivity()).showEventFrag(event_id, "map");
 	}
 
@@ -177,8 +178,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 			break;
 		case R.id.button_to_listview:
 			//go to viewView
-			((MainActivity) getActivity()).hideMapviewFrag();
-			((MainActivity) getActivity()).showListviewFrag();
+			((MainActivity) getActivity()).toggleListviewFrag();
 			break;
 
 		}

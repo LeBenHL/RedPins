@@ -29,6 +29,7 @@ public class NavigationFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, 
 	        ViewGroup container, 
 	        Bundle savedInstanceState) {
+		Log.i("NavigationFragment On Create", "ON CREATE");
 	    View view = inflater.inflate(R.layout.navigation_fragment, container, false);
 	    nearbyButton = view.findViewById(R.id.Nearby);
 	    recommendationsButton = view.findViewById(R.id.Recommendations);
