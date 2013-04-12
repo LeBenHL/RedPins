@@ -17,7 +17,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.redpins.AddCommentFragment.AddCommentTask;
 import com.facebook.Response;
 
 import android.content.Context;
