@@ -129,13 +129,13 @@ public class EventFragment extends Fragment implements OnClickListener{
 		switch(v.getId()){
 		case R.id.home_button:
 			if(linkBack.equals("map")){
-				((MainActivity) getActivity()).showMapviewFrag();
+				//((MainActivity) getActivity()).createMapviewFrag();
 			}else if(linkBack.equals("list")){
-				((MainActivity) getActivity()).showListviewFrag();
+				((MainActivity) getActivity()).createListviewFrag();
 			}else{
 				((MainActivity) getActivity()).showNaviFrag();
 			}
-			((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction().hide(((MainActivity) getActivity()).eventFragment).commit();
+			((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction().hide(((MainActivity) getActivity()).appFragment).commit();
 			break;
 		case R.id.event_url:
 			//takes user to web browser with given link
@@ -143,13 +143,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 			startActivity(myIntent);
 			break;
 		case R.id.add_comment_button:
-			AddCommentFragment commFragment = new AddCommentFragment();
 			Bundle bundle = new Bundle();
 			bundle.putString("event_id", event_id);
 			bundle.putString("callback", linkBack);
-			commFragment.setArguments(bundle);
-			getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content,commFragment).commit();
-			((MainActivity)getActivity()).hideEventFrag();
+			((MainActivity) getActivity()).createAddCommentFrag(bundle);
 			break;
 		case R.id.like_button:
 			System.out.println("LIKE");

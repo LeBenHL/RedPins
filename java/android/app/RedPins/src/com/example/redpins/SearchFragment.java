@@ -23,7 +23,7 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) view.findViewById(R.id.search_view);
 		searchView.setOnQueryTextListener(this);
-		searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+		//searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 		searchView.setSubmitButtonEnabled(true); // Enable a submit button
 		locInput = (EditText) view.findViewById(R.id.location_input);
@@ -43,11 +43,11 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		Log.v("MainActivity", "THIS IS THE QUERY: " + query);
 		((MainActivity) getActivity()).mQuery = query;
 		((MainActivity) getActivity()).mLoc = locInput.getText().toString();
-		if(((MainActivity)getActivity()).listFragment != null){
-			((MainActivity) getActivity()).hideListviewFrag();
-		}
-		((MainActivity) getActivity()).showListviewFrag();
-		((MainActivity) getActivity()).hideNaviFrag();
+		//if(((MainActivity)getActivity()).appFragment != null){
+			//((MainActivity) getActivity()).hideListviewFrag();
+		//}
+		((MainActivity) getActivity()).createListviewFrag();
+		//((MainActivity) getActivity()).hideNaviFrag();
 		return false;
 	}
 }

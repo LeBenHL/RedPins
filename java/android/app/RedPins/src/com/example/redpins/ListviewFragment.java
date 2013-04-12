@@ -69,8 +69,9 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Log.i("Listview On Create", "ON CREATE");
 		View view = inflater.inflate(R.layout.listview_fragment, container, false);
-		((MainActivity) getActivity()).hideNaviFrag();
+		//((MainActivity) getActivity()).hideNaviFrag();
 		homeButton = (ImageButton) view.findViewById(R.id.home_button);
 		homeButton.setOnClickListener(this);
 		mapviewButton = (Button) view.findViewById(R.id.button_to_mapview);
@@ -97,6 +98,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			}
 
 		});
+		Log.v("Listview OnCreate", "View Returned");
 		return view;
 	}
 
@@ -110,13 +112,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			break;
 		case R.id.button_to_mapview:
 			//go to mapView
-			Bundle bundle = new Bundle();
-			bundle.putString("JSONArr", jsonArr.toString());
-			((MainActivity)getActivity()).mapFragment = new GoogMapFragment();
-			((MainActivity)getActivity()).mapFragment.setArguments(bundle);
-			((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction().add(android.R.id.content, ((MainActivity)getActivity()).mapFragment).commit();
-			((MainActivity) getActivity()).hideListviewFrag();
-			((MainActivity) getActivity()).showMapviewFrag();
+			((MainActivity) getActivity()).toggleMapviewFrag();
 			break;
 		}
 	}
@@ -134,6 +130,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 	};
 
 	private void populateList(){
+		Log.v("Populate List", "Populate List");
 		ListAdapter adapter = new ListAdapter() {
 
 			@Override
@@ -200,6 +197,10 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 					eventDesc.setText(json.getString("url"));
 					eventAddr.setText(json.getString("location"));
 					eventTime.setText(json.getString("start_time"));
+					// Create Map Fragment version of it
+					Bundle bundle = new Bundle();
+					bundle.putString("JSONArr", jsonArr.toString());
+					((MainActivity)getActivity()).createMapviewFrag(bundle);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
