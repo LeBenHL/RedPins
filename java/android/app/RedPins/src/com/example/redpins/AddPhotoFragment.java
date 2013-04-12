@@ -118,7 +118,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener{
 	public void executeMultipartPost() throws Exception {
 		System.out.println("executing multipart post now!");
 		HttpClient httpclient = new DefaultHttpClient();
-		HttpPost httppost = new HttpPost("http://10.0.1.10:3000/users/uploadPhoto");
+		HttpPost httppost = new HttpPost(MainActivity.serverURL + "/users/uploadPhoto");
 		try {
 			  MultipartEntity entity = new MultipartEntity();
 			 
@@ -166,7 +166,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener{
 		protected Void doInBackground(Void... params) {
 			System.out.println("executing multipart post now!");
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost("http://10.0.1.10:3000/users/uploadPhoto");
+			HttpPost httppost = new HttpPost(MainActivity.serverURL + "/users/uploadPhoto");
 			try {
 				  MultipartEntity entity = new MultipartEntity();
 				 
