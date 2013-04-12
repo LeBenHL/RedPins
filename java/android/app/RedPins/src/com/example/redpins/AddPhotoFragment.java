@@ -115,51 +115,6 @@ public class AddPhotoFragment extends Fragment implements OnClickListener{
 		
 	}
 	
-	public void executeMultipartPost() throws Exception {
-		System.out.println("executing multipart post now!");
-		HttpClient httpclient = new DefaultHttpClient();
-		HttpPost httppost = new HttpPost(MainActivity.serverURL + "/users/uploadPhoto");
-		try {
-			  MultipartEntity entity = new MultipartEntity();
-			 
-			  entity.addPart("type", new StringBody("photo"));
-			  //File f = new File(context.getCacheDir(), "uploadPhoto.jpeg");
-			  
-			  
-			  ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			  bm.compress(Bitmap.CompressFormat.PNG, 85, bos);
-			  byte[] data = bos.toByteArray();
-			  
-			  String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/RedPins_temp";
-			  File dir = new File(file_path);
-			  if(!dir.exists()) {
-			      dir.mkdirs();
-			  }
-			  File file = new File(dir, "sample001" + ".png");
-			  FileOutputStream fOut = new FileOutputStream(file);
-			  fOut.write(data);
-			  fOut.flush();
-			  fOut.close();
-			  
-			  
-			  // ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			  // bm.compress(CompressFormat.JPEG, 100, bos);
-			  
-			  //FileOutputStream fos = new FileOutputStream();
-			  entity.addPart("photo", new FileBody(file));
-			  entity.addPart("photoCaption", new StringBody("Uploaded with RedPins Android"));
-			  entity.addPart("facebook_id", new StringBody(((MainActivity)getActivity()).getFacebookId()));
-			  entity.addPart("session_token", new StringBody(((MainActivity)getActivity()).getFacebookSessionToken()));
-			  httppost.setEntity(entity);
-			  HttpResponse postResponse = httpclient.execute(httppost);
-			} catch (ClientProtocolException e) {
-				System.out.println("Client Protocol Exception");
-			} catch (IOException e) {
-				System.out.println("IOException");
-			}
-			System.out.println("Finished post request");
-	}
-	
 	public class AddPhotoTask extends AsyncTask<Void, Void, Void>{
 
 		@Override

@@ -5,6 +5,7 @@ import java.util.Stack;
 
 import org.apache.http.HttpClientConnection;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
@@ -26,7 +27,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 
 public class MainActivity extends FragmentActivity{
-
+	
+	static Activity activity;
 	public FacebookFragment facebookFragment;
 	private Fragment appFragment;
 	public Fragment listFragment;
@@ -47,13 +49,15 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public final static String serverURL = "http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public final static String serverURL = "http://10.0.0.20:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		System.out.println("GOT CREATED");
 		super.onCreate(savedInstanceState);
+		activity = this;
 		setContentView(R.layout.main_activity);
 //		fragStack = new Stack<String>();
 		//fragStack.push("navi");

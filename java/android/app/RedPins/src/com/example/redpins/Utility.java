@@ -14,21 +14,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
 import android.util.Log;
 
 public class Utility{
-	//takes care of sending and receiving json data
-
+	//requestServer: Takes care of sending and receiving JSON data
 	public static JSONObject requestServer(String url,JSONObject jsonInput){
 		HttpPost request = new HttpPost(url);
 		Log.v("UTILITY", "API REQUEST: " + url);
@@ -107,4 +100,19 @@ public class Utility{
 		}
 		return jsonOutput;
 	}
+	
+	public static void addComment(NetworkFragment networkFragment, String eventID, String comment) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+			requestJSON.put("comment", comment);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, requestJSON, "/users/postComment.json");
+	}
 }
+	

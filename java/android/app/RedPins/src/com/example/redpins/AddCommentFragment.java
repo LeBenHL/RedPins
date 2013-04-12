@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-public class AddCommentFragment extends Fragment implements OnClickListener{
+public class AddCommentFragment extends NetworkFragment implements OnClickListener{
 	private EditText commentText;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,39 +32,17 @@ public class AddCommentFragment extends Fragment implements OnClickListener{
 	}
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		AddCommentTask task = new AddCommentTask();
-		task.execute();
+		Utility.addComment(this, getArguments().getString("event_id"), commentText.getText().toString());
 		((MainActivity)getActivity()).showEventFrag(getArguments().getString("event_id"), getArguments().getString("callback"));
 		getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-		
 	}
 
-	public class AddCommentTask extends AsyncTask<Void, Void, Void>{
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			// TODO Auto-generated method stub
-			JSONObject json = new JSONObject();
-			try {
-				//adds input values into JSON data object
-				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
-				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
-				json.put("event_id", getArguments().getString("event_id"));
-				json.put("comment", commentText.getText().toString());
-				System.out.println(getArguments().getString("event_id"));
-				System.out.println(commentText.getText().toString());
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-			JSONObject ret = null;
-			try {
-				//sends requests to server and receives
-				ret = Utility.requestServer(MainActivity.serverURL+"/users/postComment.json", json);
-			System.out.println(ret.toString());
-			} catch (Throwable e) {
-			}
-			return null;
-		}
+	@Override
+	public void onNetworkSuccess(JSONObject json) {
+		System.out.println("Successfully posted a comment");
+	}
+	@Override
+	public void onNetworkFailure(JSONObject json) {
+		// TODO Auto-generated method stub
 	}
 }
