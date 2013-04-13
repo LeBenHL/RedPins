@@ -55,12 +55,8 @@ import android.widget.TextView;
 
 
 public class ListviewFragment extends ListFragment implements OnClickListener{
-	private Button listviewButton;
 	private Button mapviewButton;
-	private LinearLayout listviewLayout;
-	private LinearLayout mapviewLayout;
 	private ListView listView;
-	private ActionBar actionBar;
 	private ImageButton homeButton;
 	protected JSONArray jsonArr;
 	private String searchTerm;
@@ -93,8 +89,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 				View view = (View) listView.getItemAtPosition(position);
 				System.out.println("CLICKED");
 				((MainActivity) getActivity()).hideListviewFrag();
-				//		showMapviewFrag();
-				((MainActivity) getActivity()).showEventFrag(view.getTag().toString(),"list");
+				((MainActivity) getActivity()).showEventFrag(view.getTag().toString());
 			}
 
 		});
@@ -125,7 +120,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			System.out.println("CLICKED");
 			((MainActivity) getActivity()).hideListviewFrag();
 			//		showMapviewFrag();
-			((MainActivity) getActivity()).showEventFrag(v.getTag().toString(),"list");
+			((MainActivity) getActivity()).showEventFrag(v.getTag().toString());
 		}
 	};
 
@@ -249,14 +244,8 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			}
 		};
 		listView.setAdapter(adapter);
-		//		GetEventListTask task = new GetEventListTask();
-		//		task.execute();
 	}
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		((MainActivity) getActivity()).showEventFrag("eventID","list");
-	}
 
 	public class GetEventListTask extends AsyncTask<Void, Void, JSONArray>{
 

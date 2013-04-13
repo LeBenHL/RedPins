@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.SearchView;
 
 import com.facebook.Session;
@@ -35,8 +36,6 @@ public class MainActivity extends FragmentActivity{
 	private Fragment googleMapFragment;
 	public String mQuery;
 	public String mLoc;
-	private GoogleMap mMap;
-//	private Stack<String> fragStack;
 
 	//Facebook User and Session
 	private static GraphUser user;
@@ -45,7 +44,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public final static String serverURL = "http://10.0.0.20:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public final static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 	
 
@@ -53,10 +52,9 @@ public class MainActivity extends FragmentActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		System.out.println("GOT CREATED");
 		super.onCreate(savedInstanceState);
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		activity = this;
 		setContentView(R.layout.main_activity);
-//		fragStack = new Stack<String>();
-		//fragStack.push("navi");
 		if (savedInstanceState == null) {
 			// Add the fragment on initial activity setup
 			Log.v("MainActivity On Create", "No Restored State Info");
@@ -75,10 +73,6 @@ public class MainActivity extends FragmentActivity{
 			.beginTransaction()
 			.add(R.id.searchFragment, searchFragment)
 			.commit();
-			//			getSupportFragmentManager()
-			//			.beginTransaction().hide(appFragment).commit();
-			//			
-			//hideFacebookFragment();//temporary	
 		} else {
 			// Or set the fragment from restored state info
 			Log.v("MainActivity On Create", "Restored State Info");
@@ -88,14 +82,7 @@ public class MainActivity extends FragmentActivity{
 					.findFragmentById(R.id.facebookFragment);
 			searchFragment = getSupportFragmentManager()
 					.findFragmentById(R.id.searchFragment);
-
-			//	hideFacebookFragment();//temporary
 		}
-		//		if(user!=null || session != null){
-		//			hideFacebookFragment();
-		//		}
-		// handle the search intent
-		//handleIntent(getIntent());
 	}
 
 	@Override
@@ -103,14 +90,6 @@ public class MainActivity extends FragmentActivity{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		_menu = menu;
-
-		// Get the SearchView and set the searchable configuration
-		//		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		//		SearchView searchView = (SearchView) findViewById(R.id.search_view);
-		//		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-		//		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-		//		searchView.setSubmitButtonEnabled(true); // Enable a submit button
-
 		return true;
 	}
 
@@ -175,26 +154,6 @@ public class MainActivity extends FragmentActivity{
 		return session.getAccessToken();
 	}
 
-	//
-	//	@Override
-	//	protected void onNewIntent(Intent intent) {
-	//		setIntent(intent);
-	//		handleIntent(intent);
-	//	}
-	//
-	//	// handle the search query intent
-	//	private void handleIntent(Intent intent) {
-	//
-	//		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	//			String query = intent.getStringExtra(SearchManager.QUERY);
-	//			//use the query to search your data somehow
-	//			Log.v("MainActivity", "THIS IS THE QUERY: " + query);
-	//			mQuery = query;
-	//			showListviewFrag();
-	//			hideNaviFrag();
-	//		}
-	//	}
-
 	public void nearbyOnClick(View view) {
 		((NavigationFragment) appFragment).nearbyOnClick(view); 
 	}
@@ -231,7 +190,6 @@ public class MainActivity extends FragmentActivity{
 		appFragment = new NavigationFragment();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.mainAppFragment,appFragment).commit();
-//		fragStack.push("navi");
 	}
 
 	public void hideListviewFrag(){
@@ -303,12 +261,10 @@ public class MainActivity extends FragmentActivity{
 		ft.remove(appFragment).commit();
 	}
 
-	public void showEventFrag(String eventID, String prev){
+	public void showEventFrag(String eventID){
 		System.out.println("showing event page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Bundle data = new Bundle();
-		System.out.println("eventID: "+eventID + ", prev: "+prev);
-		data.putString("prev", prev);
 		data.putString("event_id",eventID);
 		appFragment = new EventFragment();
 		appFragment.setArguments(data);

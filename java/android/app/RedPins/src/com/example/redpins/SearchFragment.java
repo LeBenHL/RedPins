@@ -15,13 +15,14 @@ import android.widget.SearchView.OnQueryTextListener;
 
 public class SearchFragment extends Fragment implements OnQueryTextListener{
 	private EditText locInput;
+	private SearchView searchView;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.search_fragment, container, false);
 		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) view.findViewById(R.id.search_view);
+		searchView = (SearchView) view.findViewById(R.id.search_view);
 		searchView.setOnQueryTextListener(this);
 		//searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
@@ -43,11 +44,7 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		Log.v("MainActivity", "THIS IS THE QUERY: " + query);
 		((MainActivity) getActivity()).mQuery = query;
 		((MainActivity) getActivity()).mLoc = locInput.getText().toString();
-		//if(((MainActivity)getActivity()).appFragment != null){
-			//((MainActivity) getActivity()).hideListviewFrag();
-		//}
 		((MainActivity) getActivity()).createListviewFrag();
-		//((MainActivity) getActivity()).hideNaviFrag();
 		return false;
 	}
 }

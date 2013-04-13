@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.google.android.gms.maps.SupportMapFragment;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.method.HideReturnsTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,10 +56,11 @@ public class EventFragment extends Fragment implements OnClickListener{
 	private Button bookmarkButton;
 	private boolean bookmarked;
 	private ImageButton deleteEventButton;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		System.out.println("CREATED");
 		View view = inflater.inflate(R.layout.event_fragment, container, false);
 		homeButton = (ImageButton) view.findViewById(R.id.home_button);
 		homeButton.setOnClickListener(this);
@@ -77,18 +76,18 @@ public class EventFragment extends Fragment implements OnClickListener{
 		commentsList = (ListView) view.findViewById(R.id.comment_listview);
 		addCommentButton = (Button) view.findViewById(R.id.add_comment_button);
 		addCommentButton.setOnClickListener(this);
-		
-		
+
+
 		removeEventButton = (ImageButton) view.findViewById(R.id.removeEventButton);
 		removeEventButton.setOnClickListener(this);
 		deleteEventButton = (ImageButton) view.findViewById(R.id.deleteEventButton);
 		deleteEventButton.setOnClickListener(this);
-		
+
 		if(!((MainActivity)getActivity()).getFacebookId().equals(((MainActivity)getActivity()).getFacebookId())){
 			removeEventButton.setVisibility(View.INVISIBLE);
 			deleteEventButton.setVisibility(View.INVISIBLE);
 		}
-		
+
 		likeButton = (ImageButton) view.findViewById(R.id.like_button);
 		likeButton.setOnClickListener(this);
 		dislikeButton = (ImageButton) view.findViewById(R.id.dislike_button);
@@ -111,31 +110,13 @@ public class EventFragment extends Fragment implements OnClickListener{
 		commentsTask.execute();
 		return view;
 	}
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		if(event_id==null){
-			event_id = getArguments().getString("event_id");
-		}
-		System.out.println("event_id2: "+event_id);
-		//		GetCommentTask task = new GetCommentTask();
-		//		task.execute();
-	}
 
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch(v.getId()){
 		case R.id.home_button:
-			if(linkBack.equals("map")){
-				//((MainActivity) getActivity()).createMapviewFrag();
-			}else if(linkBack.equals("list")){
-				((MainActivity) getActivity()).createListviewFrag();
-			}else{
-				((MainActivity) getActivity()).showNaviFrag();
-			}
-			((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction().hide(((MainActivity) getActivity()).appFragment).commit();
+			((MainActivity) getActivity()).showNaviFrag();
 			break;
 		case R.id.event_url:
 			//takes user to web browser with given link
@@ -203,6 +184,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 				//sends requests to server and receive
 				ret = Utility.requestServer(MainActivity.serverURL+"/events/getEvent.json", json);
 			} catch (Throwable e) {
+				Toast toast = Toast.makeText(getActivity(), "GetEventTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 			return ret;
 		}
@@ -231,16 +214,11 @@ public class EventFragment extends Fragment implements OnClickListener{
 					eventTime.setText("Time: " + time);
 					System.out.println("Description: "+desc);
 					eventDesc.setText("Description: "+desc);
-					
+
 				}
-				//???eventImg.setImageURI(uri);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			//			GetLikesTask task = new GetLikesTask();
-			//			task.execute();
-			//	GetCommentTask commentTask = new GetCommentTask();
-			//	commentTask.execute();
 		}
 	}
 
@@ -260,8 +238,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 				ret.toString().replace("]", "");
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
-				System.out.println("caught exception in getcommentask and error: " + e.toString());
-				e.printStackTrace();
+				Toast toast = Toast.makeText(getActivity(), "GetCommentTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 			//sends requests to server and receives
 			return ret;
@@ -428,7 +406,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 				eventLikes.setText("LIKES: "+result.getInt("likes"));
 				eventDislikes.setText("DISLIKES: " + result.getInt("dislikes"));
 				progressBar.setProgress((100*result.getInt("likes"))/(result.getInt("likes")+result.getInt("dislikes")));
-				
+
 				if(result.getString("alreadyLikedEvent").equals("true")) {
 					if (result.getString("rating").equals("true")) {
 						likeButton.setBackgroundColor(Color.GREEN);
@@ -448,7 +426,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			}
 		}
 	}
-	
+
 	public class removeEvent extends AsyncTask<Void, Void, JSONObject>{
 
 		@Override
@@ -463,7 +441,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 				// sends requests to server and receives
 				ret = Utility.requestServer(MainActivity.serverURL + "/users/cancelEvent.json", json);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				Toast toast = Toast.makeText(getActivity(), "RemoveEventTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 
 			return ret;
@@ -477,7 +456,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 			System.out.println("The event has been removed.");
 		}
 	}
-	
+
 	public class deleteEvent extends AsyncTask<Void, Void, JSONObject>{
 
 		@Override
@@ -492,7 +471,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 				// sends requests to server and receives
 				ret = Utility.requestServer(MainActivity.serverURL + "/users/deleteEvent.json", json);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				Toast toast = Toast.makeText(getActivity(), "deletEventTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 
 			return ret;
@@ -506,10 +486,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 			System.out.println("The event has been removed.");
 		}
 	}
-	
-	
 
-	
+
+
+
 	public void removeComment(String comment_user_id, int position){
 		if(comment_user_id.equals(((MainActivity)getActivity()).getFacebookId())){
 			final int pos = position;
@@ -553,21 +533,19 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected Void doInBackground(Void... arg0) {
 			// TODO Auto-generated method stub
 			JSONObject json = new JSONObject();
-			JSONObject ret = null;
-			JSONObject temp;
 			try {
 				json.put("event_id", event_id);
 				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
-				//	json.put(name, value)
 				// sends requests to server and receives
 				if(likeButton.isPressed() || dislikeButton.isPressed()){
 					Utility.requestServer(MainActivity.serverURL + "/users/removeLike.json", json);
 				}
 				json.put("like", true);
-				ret = Utility.requestServer(MainActivity.serverURL + "/users/likeEvent.json", json);
+				Utility.requestServer(MainActivity.serverURL + "/users/likeEvent.json", json);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				Toast toast = Toast.makeText(getActivity(), "likeTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 			return null;
 		}
@@ -585,13 +563,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected Void doInBackground(Void... arg0) {
 			// TODO Auto-generated method stub
 			JSONObject json = new JSONObject();
-			JSONObject ret = null;
-			JSONObject temp;
 			try {
 				json.put("event_id", event_id);
 				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
-				//	json.put(name, value)
 				// sends requests to server and receives
 				if(likeButton.isPressed() || dislikeButton.isPressed()){
 					Utility.requestServer(MainActivity.serverURL + "/users/removeLike.json", json);
@@ -599,7 +574,8 @@ public class EventFragment extends Fragment implements OnClickListener{
 				json.put("like", false);
 				Utility.requestServer(MainActivity.serverURL + "/users/likeEvent.json", json);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				Toast toast = Toast.makeText(getActivity(), "dislikeTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 			return null;
 		}
@@ -617,16 +593,15 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected Void doInBackground(Void... arg0) {
 			// TODO Auto-generated method stub
 			JSONObject json = new JSONObject();
-			JSONObject ret = null;
-			JSONObject temp;
 			try {
 				json.put("event_id", event_id);
 				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
 				// sends requests to server and receives
-				ret = Utility.requestServer(MainActivity.serverURL + "/users/bookmarkEvent.json", json);
+				Utility.requestServer(MainActivity.serverURL + "/users/bookmarkEvent.json", json);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				Toast toast = Toast.makeText(getActivity(), "BookmarkTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 			return null;
 		}
@@ -637,16 +612,15 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected Void doInBackground(Void... arg0) {
 			// TODO Auto-generated method stub
 			JSONObject json = new JSONObject();
-			JSONObject ret = null;
-			JSONObject temp;
 			try {
 				json.put("event_id", event_id);
 				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
 				// sends requests to server and receives
-				ret = Utility.requestServer(MainActivity.serverURL + "/users/removeBookmark.json", json);//remove bookmark
+				Utility.requestServer(MainActivity.serverURL + "/users/removeBookmark.json", json);//remove bookmark
 			} catch (Throwable e) {
-				e.printStackTrace();
+				Toast toast = Toast.makeText(getActivity(), "UnbookmarkTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 			return null;
 		}
@@ -657,20 +631,20 @@ public class EventFragment extends Fragment implements OnClickListener{
 		protected Void doInBackground(Void... arg0) {
 			// TODO Auto-generated method stub
 			JSONObject json = new JSONObject();
-			JSONObject ret = null;
 			try {
 				json.put("event_id", event_id);
 				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
 				// sends requests to server and receives
-				ret = Utility.requestServer(MainActivity.serverURL + "/users/removeComment.json", json);//remove bookmark
+				Utility.requestServer(MainActivity.serverURL + "/users/removeComment.json", json);//remove bookmark
 			} catch (Throwable e) {
-				e.printStackTrace();
+				Toast toast = Toast.makeText(getActivity(), "RemoveCommentTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
 			}
 			return null;
 		}
 	}
-	
+
 	private void bookmarkEvent(){
 		if(!bookmarked){
 			bookmarked = true;
@@ -682,5 +656,5 @@ public class EventFragment extends Fragment implements OnClickListener{
 			task.execute();
 		}
 	}
-	
+
 }

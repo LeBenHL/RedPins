@@ -55,10 +55,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.i("GoogMapFragment On Create", "ON CREATE");
-		// TODO Auto-generated method stub
-		//		if(savedInstanceState==null){
 		View view = inflater.inflate(R.layout.map_fragment, container, false);
-		//Fragment mapFrag = (Fragment) getFragmentManager().findFragmentById(R.id.map);
 		mMap = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		mMap.setOnInfoWindowClickListener(this);
 		homeButton = (ImageButton) view.findViewById(R.id.home_button);
@@ -102,7 +99,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		System.out.println("WINDOW CLICKED");
 		String event_id = hash.get(marker.getId());
 		System.out.println("event_idMAP: "+event_id);
-		((MainActivity) getActivity()).showEventFrag(event_id, "map");
+		((MainActivity) getActivity()).showEventFrag(event_id);
 	}
 
 	private void addPins(JSONObject json){
@@ -146,21 +143,10 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 					String event_id = jsonObj.getString("id");
 					System.out.println("MARKER ID: "+marker.getId());
 					hash.put(marker.getId(), event_id);
-					//					v.setOnClickListener(new OnClickListener() {
-					//					
-					//						@Override
-					//						public void onClick(View v) {
-					//							// TODO Auto-generated method stub
-					//							System.out.println("WINDOW CLICKED");
-					//							((MainActivity) getActivity()).showEventFrag(event_id, "map");
-					//						}
-					//					});
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//	v.setTag(1, event_id);
-				// Returning the view containing InfoWindow contents
 				return v;
 			}
 		});

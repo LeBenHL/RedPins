@@ -33,7 +33,7 @@ public class AddCommentFragment extends NetworkFragment implements OnClickListen
 	@Override
 	public void onClick(View v) {
 		Utility.addComment(this, getArguments().getString("event_id"), commentText.getText().toString());
-		((MainActivity)getActivity()).showEventFrag(getArguments().getString("event_id"), getArguments().getString("callback"));
+		((MainActivity)getActivity()).showEventFrag(getArguments().getString("event_id"));
 		getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 	}
 
