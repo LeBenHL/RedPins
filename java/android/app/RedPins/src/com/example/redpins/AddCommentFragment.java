@@ -33,16 +33,29 @@ public class AddCommentFragment extends NetworkFragment implements OnClickListen
 	@Override
 	public void onClick(View v) {
 		Utility.addComment(this, getArguments().getString("event_id"), commentText.getText().toString());
-		((MainActivity)getActivity()).showEventFrag(getArguments().getString("event_id"));
+		((MainActivity) MainActivity.activity).showEventFrag(getArguments().getString("event_id"));
 		getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 	}
 
 	@Override
-	public void onNetworkSuccess(JSONObject json) {
-		System.out.println("Successfully posted a comment");
+	public void onNetworkSuccess(int requestCode, JSONObject json) {
+		switch (requestCode) {
+			case Utility.REQUEST_ADD_COMMENT:
+				System.out.println("Successfully posted a comment");
+				break;
+			default:
+				System.out.println("onNetworkSuccess does not know what to do with result of network request");
+		}
 	}
+	
 	@Override
-	public void onNetworkFailure(JSONObject json) {
-		// TODO Auto-generated method stub
+	public void onNetworkFailure(int requestCode, JSONObject json) {
+		switch (requestCode) {
+			case Utility.REQUEST_ADD_COMMENT:
+				System.out.println("Failed to post a comment");
+				break;
+			default:
+				System.out.println("onNetworkSuccess does not know what to do with result of network request");
+		}
 	}
 }

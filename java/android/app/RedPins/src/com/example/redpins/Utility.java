@@ -21,7 +21,13 @@ import org.json.JSONStringer;
 import android.util.Log;
 
 public class Utility{
-	//requestServer: Takes care of sending and receiving JSON data
+	
+	public static final int REQUEST_ADD_COMMENT = 100;
+	public static final int REQUEST_ADD_EVENT= 101;
+	public static final int REQUEST_ADD_PHOTO = 102;
+	public static final int REQUEST_ADD_BOOKMARK = 103;
+	public static final int REQUEST_GET_EVENT = 200;
+	
 	public static JSONObject requestServer(String url,JSONObject jsonInput){
 		HttpPost request = new HttpPost(url);
 		Log.v("UTILITY", "API REQUEST: " + url);
@@ -112,7 +118,18 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, requestJSON, "/users/postComment.json");
+		jsonTask.executeTask(networkFragment, REQUEST_ADD_COMMENT, requestJSON, "/users/postComment.json");
+	}
+	
+	public static void getEvent(NetworkFragment networkFragment, String eventID) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_GET_EVENT, requestJSON, "/events/get.json");
 	}
 }
 	
