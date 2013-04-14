@@ -321,11 +321,12 @@ public class EventFragment extends Fragment implements OnClickListener{
 					commentDate.setText(json.getString("created_at"));
 					commentContent.setText(json.getString("comment"));
 					final String facebook_id = json.getString("facebook_id");
+					final String comment_id = json.getString("comment_id");
 					v.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							System.out.println("item clicked: " + facebook_id);
-							removeComment(facebook_id, pos);
+							removeComment(facebook_id, comment_id, pos);
 						}
 					});
 				} catch (JSONException e) {
@@ -490,9 +491,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 
 
 
-	public void removeComment(String comment_user_id, int position){
+	public void removeComment(String comment_user_id, String _comment_id, int position){
 		if(comment_user_id.equals(((MainActivity)getActivity()).getFacebookId())){
 			final int pos = position;
+			final String comment_id = _comment_id;
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle("Remove Comment")
 			.setMessage("Would you like to remove this comment?")
@@ -511,7 +513,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 					// TODO Auto-generated method stub
 					commentArr.remove(pos);
 					populateCommentList();
-					RemoveCommentTask task = new RemoveCommentTask();
+					RemoveCommentTask task = new RemoveCommentTask(comment_id);
 					task.execute();
 				}
 			});
@@ -627,12 +629,20 @@ public class EventFragment extends Fragment implements OnClickListener{
 	}
 
 	public class RemoveCommentTask extends AsyncTask<Void, Void, Void>{
+		
+		private String comment_id;
+		
+		public RemoveCommentTask(String _comment_id) {
+			super();
+			comment_id = _comment_id;
+		}
+		
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			// TODO Auto-generated method stub
 			JSONObject json = new JSONObject();
 			try {
-				json.put("event_id", event_id);
+				json.put("comment_id", comment_id);
 				json.put("facebook_id",((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
 				// sends requests to server and receives
