@@ -42,7 +42,9 @@ public class Utility{
 	public static final int REQUEST_GET_RATINGS = 203;
 	public static final int REQUEST_GET_BOOKMARKS = 204;
 	public static final int REQUEST_CANCEL_EVENT = 301;
+	public static final int REQUEST_DELETE_COMMENT = 400;
 	public static final int REQUEST_DELETE_EVENT = 401;
+	public static final int REQUEST_DELETE_BOOKMARK = 403;
 	public static final int REQUEST_MODIFY_LIKE = 504;
 	
 	public static JSONObject requestServer(String url, JSONObject jsonInput) {
@@ -140,6 +142,19 @@ public class Utility{
 		jsonTask.executeTask(networkFragment, REQUEST_ADD_COMMENT, requestJSON, "/users/postComment.json");
 	}
 	
+	public static void addBookmark(NetworkFragment networkFragment, String eventID) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_ADD_BOOKMARK, requestJSON, "/users/bookmarkEvent.json");
+	}
+	
 	// Methods for REQUEST_GET_[A-Z]+ = 2[0-9][0-9]
 	public static void getComments(NetworkFragment networkFragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
@@ -191,10 +206,24 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/cancelEvent.json");
+		jsonTask.executeTask(networkFragment, REQUEST_CANCEL_EVENT, requestJSON, "/users/cancelEvent.json");
 	}
 	
 	// Methods for REQUEST_DELETE_[A-Z]+ = 4[0-9][0-9]
+	public static void deleteComment(NetworkFragment networkFragment, String eventID) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+			//TODO: Require comment_id?
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_DELETE_COMMENT, requestJSON, "/users/removeComment.json");
+	}
+	
 	public static void deleteEvent(NetworkFragment networkFragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
@@ -205,7 +234,20 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/deleteEvent.json");
+		jsonTask.executeTask(networkFragment, REQUEST_DELETE_EVENT, requestJSON, "/users/deleteEvent.json");
+	}
+	
+	public static void deleteBookmark(NetworkFragment networkFragment, String eventID) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_DELETE_BOOKMARK, requestJSON, "/users/removeBookmark.json");
 	}
 	
 	// Methods for REQUEST_MODIFY_[A-Z]+ = 5[0-9][0-9]
@@ -220,7 +262,7 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/likeEvent.json");
+		jsonTask.executeTask(networkFragment, REQUEST_MODIFY_LIKE, requestJSON, "/users/likeEvent.json");
 	}
 	
 	public static JSONObject getBookmarks(NetworkFragment networkFragment, int page_num) {
