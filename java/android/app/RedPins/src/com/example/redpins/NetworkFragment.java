@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 
 public abstract class NetworkFragment extends Fragment{
 	
-	public abstract void onNetworkSuccess (JSONObject json);
-	public abstract void onNetworkFailure (JSONObject json);
+	public abstract void onNetworkSuccess (int requestCode, JSONObject json);
+	public abstract void onNetworkFailure (int requestCode, JSONObject json);
 	
 }

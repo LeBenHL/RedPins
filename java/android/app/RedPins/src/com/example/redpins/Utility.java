@@ -21,21 +21,43 @@ import org.json.JSONStringer;
 import android.util.Log;
 
 public class Utility{
-	//requestServer: Takes care of sending and receiving JSON data
-	public static JSONObject requestServer(String url,JSONObject jsonInput){
+	
+	
+	/**
+	 * Request Codes
+	 * REQUEST_ADD_[A-Z]+ = 1[0-9][0-9]
+	 * REQUEST_GET_[A-Z]+ = 2[0-9][0-9]
+	 * REQUEST_CANCEL_[A-Z]+ = 3[0-9][0-9]
+	 * REQUEST_DELETE_[A-Z]+ = 4[0-9][0-9]
+	 * REQUEST_MODIFY_[A-Z]+ = 5[0-9][0-9]
+	 */
+	public static final int REQUEST_ADD_COMMENT = 100;
+	public static final int REQUEST_ADD_EVENT= 101;
+	public static final int REQUEST_ADD_PHOTO = 102;
+	public static final int REQUEST_ADD_BOOKMARK = 103;
+	public static final int REQUEST_GET_COMMENTS = 200;
+	public static final int REQUEST_GET_EVENT = 201;
+	public static final int REQUEST_GET_PHOTO = 202;
+	public static final int REQUEST_GET_RATINGS = 203;
+	public static final int REQUEST_CANCEL_EVENT = 301;
+	public static final int REQUEST_DELETE_EVENT = 401;
+	public static final int REQUEST_MODIFY_LIKE = 504;
+	
+	public static JSONObject requestServer(String url, JSONObject jsonInput) {
 		HttpPost request = new HttpPost(url);
 		Log.v("UTILITY", "API REQUEST: " + url);
 		Log.v("UTILITY", "JSON INPUT: " + jsonInput.toString());
 		JSONStringer jsonString = new JSONStringer();
-		if (jsonInput!=null){
+		if (jsonInput!=null) {
 			Iterator<String> iter = jsonInput.keys();
-			if(iter.hasNext())
+			if (iter.hasNext()) {
 				try {
 					jsonString.object();
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-			while (iter.hasNext()){
+			}
+			while (iter.hasNext()) {
 				String s =iter.next();
 				try {
 					jsonString.key(s).value(jsonInput.get(s));
@@ -57,14 +79,14 @@ public class Utility{
 			e1.printStackTrace();
 		}
 		entity.setContentType("application/json;charset=UTF-8");
-		entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
+		entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
 		request.setEntity(entity); 
 
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpConnectionParams.setSoTimeout(httpClient.getParams(), 50000); 
-		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(),50000); 
+		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 50000); 
 
-		HttpResponse response =null;
+		HttpResponse response = null;
 		try {
 			response = httpClient.execute(request);
 		} catch (ClientProtocolException e) {
@@ -81,10 +103,10 @@ public class Utility{
 			e.printStackTrace();
 		}
 		BufferedReader buffReader = new BufferedReader(read);
-		StringBuilder sBuilder =new StringBuilder();
+		StringBuilder sBuilder = new StringBuilder();
 		try {
 			String line = buffReader.readLine();
-			while(line != null){
+			while(line != null) {
 				sBuilder.append(line);
 				line = buffReader.readLine();
 			}
@@ -101,6 +123,7 @@ public class Utility{
 		return jsonOutput;
 	}
 	
+	// Methods for REQUEST_ADD_[A-Z]+ = 1[0-9][0-9]
 	public static void addComment(NetworkFragment networkFragment, String eventID, String comment) {
 		JSONObject requestJSON = new JSONObject();
 		try {
@@ -112,7 +135,90 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, requestJSON, "/users/postComment.json");
+		jsonTask.executeTask(networkFragment, REQUEST_ADD_COMMENT, requestJSON, "/users/postComment.json");
+	}
+	
+	// Methods for REQUEST_GET_[A-Z]+ = 2[0-9][0-9]
+	public static void getComments(NetworkFragment networkFragment, String eventID) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_GET_COMMENTS, requestJSON, "/events/getComments.json");
+	}
+	
+	public static void getEvent(NetworkFragment networkFragment, String eventID) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_GET_EVENT, requestJSON, "/events/get.json");
+	}
+	
+	public static void getRatings(NetworkFragment networkFragment, String eventID) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/alreadyLikedEvent.json");
+	}
+	
+	// Methods for REQUEST_CANCEL_[A-Z]+ = 3[0-9][0-9]
+	public static void cancelEvent(NetworkFragment networkFragment, String eventID) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/cancelEvent.json");
+	}
+	
+	// Methods for REQUEST_DELETE_[A-Z]+ = 4[0-9][0-9]
+	public static void deleteEvent(NetworkFragment networkFragment, String eventID) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/deleteEvent.json");
+	}
+	
+	// Methods for REQUEST_MODIFY_[A-Z]+ = 5[0-9][0-9]
+	public static void modifyLike(NetworkFragment networkFragment, String eventID, boolean likeStatus) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("event_id", eventID);
+			requestJSON.put("like", likeStatus);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/likeEvent.json");
 	}
 }
 	
