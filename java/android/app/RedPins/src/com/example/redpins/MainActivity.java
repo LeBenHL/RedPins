@@ -18,16 +18,20 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
+import com.google.android.gms.internal.ap;
 import com.google.android.gms.maps.GoogleMap;
 
 public class MainActivity extends FragmentActivity{
-	
+
 	static Activity activity;
 	public FacebookFragment facebookFragment;
 	public Fragment appFragment;
@@ -44,15 +48,14 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public final static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public final static String serverURL = "http://10.13.12.109:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
-	
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		System.out.println("GOT CREATED");
 		super.onCreate(savedInstanceState);
-		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		activity = this;
 		setContentView(R.layout.main_activity);
 		if (savedInstanceState == null) {
@@ -189,7 +192,8 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("showing navi");
 		appFragment = new NavigationFragment();
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.mainAppFragment,appFragment).commit();
+		ft.replace(R.id.mainAppFragment,appFragment);
+		ft.commit();
 	}
 
 	public void hideListviewFrag(){
@@ -206,28 +210,32 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("mQuery: "+ mQuery);
 		data.putString("query",mQuery);
 		data.putString("location",mLoc);
-		listViewFragment = new ListviewFragment();
+		listViewFragment = new ListviewFragment2();
 		listViewFragment.setArguments(data);
 		Fragment lastAppFragment = appFragment;
 		appFragment = listViewFragment;
 		if (lastAppFragment instanceof NavigationFragment) {
-			ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);			
+			ft.replace(R.id.mainAppFragment, appFragment);//.addToBackStack(null);			
 		} else {
 			ft.replace(R.id.mainAppFragment, appFragment);
 		}
-		removeMapFragment();
+		//removeMapFragment();
+		ft.addToBackStack(null);
 		ft.commit();
-//		fragStack.push("list");
+		//		fragStack.push("list");
 	}
-	
+
 	public void toggleListviewFrag() {
 		System.out.println("toggling mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		getSupportFragmentManager().popBackStack();
 		appFragment = listViewFragment;
 		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.remove(getSupportFragmentManager()
-				.findFragmentById(R.id.map));
+		//ft.remove(getSupportFragmentManager()
+		//		.findFragmentById(R.id.map));
+		ft.addToBackStack(null);
 		ft.commit();
+		System.out.println("BACKSTACK COUNT: " + getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 
@@ -243,15 +251,18 @@ public class MainActivity extends FragmentActivity{
 	public void createMapviewFrag(Bundle bundle){
 		googleMapFragment = new GoogMapFragment();
 		googleMapFragment.setArguments(bundle);
-		//		fragStack.push("map");
+
 	}
-	
+
 	public void toggleMapviewFrag() {
 		System.out.println("toggling mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		getSupportFragmentManager().popBackStack();
 		appFragment = googleMapFragment;
 		ft.replace(R.id.mainAppFragment, appFragment);
+		ft.addToBackStack(null);
 		ft.commit();
+		System.out.println("BACKSTACK COUNT: " + getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	public void hideEventFrag(){
@@ -268,9 +279,10 @@ public class MainActivity extends FragmentActivity{
 		data.putString("event_id",eventID);
 		appFragment = new EventFragment();
 		appFragment.setArguments(data);
-		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.replace(R.id.mainAppFragment, appFragment);
+		ft.addToBackStack(null);
 		ft.commit();
-//		fragStack.push("event");
+		//		fragStack.push("event");
 	}
 
 	public void hideBookmarksFrag(){
@@ -288,10 +300,13 @@ public class MainActivity extends FragmentActivity{
 		//		data.putString("event_id",eventID);
 		appFragment = new BookmarksFragment();
 		//		appFragment.setArguments(data);
-		ft.replace(R.id.mainAppFragment, appFragment).commit();
-//		fragStack.push("bookmark");
+		ft.replace(R.id.mainAppFragment, appFragment);
+		ft.addToBackStack(null);
+		ft.commit();
+		System.out.println("BACK STACK count: " + getSupportFragmentManager().getBackStackEntryCount());
+		//		fragStack.push("bookmark");
 	}
-	
+
 	public void hideAddPhotoFragFrag(){
 		System.out.println("hiding add photo page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -307,9 +322,9 @@ public class MainActivity extends FragmentActivity{
 		appFragment = new AddPhotoFragment();
 		//		appFragment.setArguments(data);
 		ft.replace(R.id.mainAppFragment, appFragment).commit();
-//		fragStack.push("bookmark");
+		//		fragStack.push("bookmark");
 	}
-	
+
 	public void createAddCommentFrag(Bundle bundle) {
 		Log.i("createAddCommentFrag", "Created comment frag");
 		AddCommentFragment commFragment = new AddCommentFragment();
@@ -319,42 +334,12 @@ public class MainActivity extends FragmentActivity{
 		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
 		ft.commit();
 	}
-	
+
 
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
 	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-//		if(keyCode == KeyEvent.KEYCODE_BACK){
-//			String currPage = fragStack.pop();
-//			if(fragStack.isEmpty()){
-//				return super.onKeyDown(keyCode, event);
-//			}
-//			String prevPage = fragStack.peek();
-//			System.out.println("PREV PAGE: "+prevPage);
-//			if(prevPage.equals("navi")){
-//				hideListviewFrag();
-//				showNaviFrag();
-//			}else if(prevPage.equals("list")){
-//				hideEventFrag();
-//				showListviewFrag();
-//			}else if(prevPage.equals("map")){
-//				hideEventFrag();
-//				showMapviewFrag();
-//			}
-////			else if(prevPage.equals("event")){
-////				showEventFrag(getArguments().getString("event_id"), getArguments().getString("callback"));
-////			}
-////			else if(prevPage.equals("bookmark")){
-////				hideBookmarksFrag();
-////			}
-//		}
-		return super.onKeyDown(keyCode, event);
-	}
-	
+
 	private void removeMapFragment() {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Fragment mapFragment = getSupportFragmentManager()
@@ -366,21 +351,18 @@ public class MainActivity extends FragmentActivity{
 		}
 		ft.commit();
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		Log.i("onBackPressed", "Back Pressed");
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		removeMapFragment();
-		ft.hide(appFragment);
-		ft.remove(appFragment);
 		Log.v("onBackPressed", "Old Fragment: " + appFragment.toString());
 		super.onBackPressed();
+		if(appFragment.equals(googleMapFragment)){
+			removeMapFragment();
+		}
+		getSupportFragmentManager().popBackStack();
 		appFragment = getSupportFragmentManager()
 				.findFragmentById(R.id.mainAppFragment);
-		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.show(appFragment);
-		ft.commit();
 		Log.v("onBackPressed", "New Fragment: " + appFragment.toString());
 	}
 }

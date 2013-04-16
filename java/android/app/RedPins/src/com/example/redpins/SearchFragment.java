@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
 import android.widget.EditText;
@@ -23,12 +27,36 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		View view = inflater.inflate(R.layout.search_fragment, container, false);
 		SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 		searchView = (SearchView) view.findViewById(R.id.search_view);
+		locInput = (EditText) view.findViewById(R.id.location_input);
 		searchView.setOnQueryTextListener(this);
 		//searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 		searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 		searchView.setSubmitButtonEnabled(true); // Enable a submit button
-		locInput = (EditText) view.findViewById(R.id.location_input);
+		searchView.setFocusable(false);
+		searchView.setFocusableInTouchMode(false);
+		locInput.setFocusableInTouchMode(false);
+		locInput.setOnTouchListener(new OnTouchListener() {
 
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				locInput.setFocusable(true);
+				locInput.setFocusableInTouchMode(true);
+				locInput.setEnabled(true);
+				return false;
+			}
+		});
+		locInput.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				// TODO Auto-generated method stub
+				if(!hasFocus){
+					locInput.setFocusable(false);
+					locInput.setFocusableInTouchMode(false);
+				}
+			}
+		});
 		return view;
 	}
 
@@ -44,6 +72,9 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		Log.v("MainActivity", "THIS IS THE QUERY: " + query);
 		((MainActivity) getActivity()).mQuery = query;
 		((MainActivity) getActivity()).mLoc = locInput.getText().toString();
+		searchView.setFocusableInTouchMode(false);
+		searchView.setFocusable(false);
+		searchView.setSelected(false);
 		((MainActivity) getActivity()).createListviewFrag();
 		return false;
 	}

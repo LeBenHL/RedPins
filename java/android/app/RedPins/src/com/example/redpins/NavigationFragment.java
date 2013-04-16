@@ -54,18 +54,17 @@ public class NavigationFragment extends Fragment{
 	
 	public void bookmarksOnClick(View view) {
 		Log.v("buttonClick", "BOOKMARKS");
-		((MainActivity)getActivity()).hideNaviFrag();
+		//((MainActivity)getActivity()).hideNaviFrag();
 		((MainActivity)getActivity()).showBookmarksFrag();
 	}
 	
 	public void profileOnClick(View view) {
 		Log.v("buttonClick", "PROFILE");
-		((MainActivity)getActivity()).hideNaviFrag();
+		//((MainActivity)getActivity()).hideNaviFrag();
 		((MainActivity)getActivity()).showAddPhotoFrag();
 	}
 	
 	public void historyOnClick(View view) {
 		Log.v("buttonClick", "HISTORY");
 	}
-	
 }
