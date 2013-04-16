@@ -164,7 +164,9 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 			break;
 		case R.id.button_to_listview:
 			//go to viewView
+			((MainActivity) getActivity()).removeMapFragment();
 			((MainActivity) getActivity()).toggleListviewFrag();
+//			((MainActivity) getActivity()).toggleListviewFrag();
 			break;
 
 		}

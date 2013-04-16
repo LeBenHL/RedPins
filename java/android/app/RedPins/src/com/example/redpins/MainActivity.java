@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public final static String serverURL = "http://10.13.12.109:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public final static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -243,8 +243,8 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("hiding mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.hide(getSupportFragmentManager().findFragmentById(R.id.map));
-		ft.hide(appFragment);
 		ft.remove(getSupportFragmentManager().findFragmentById(R.id.map));
+		ft.hide(appFragment);
 		ft.remove(appFragment).commit();
 	}
 
@@ -340,12 +340,11 @@ public class MainActivity extends FragmentActivity{
 		facebookFragment.authButton.callOnClick();
 	}
 
-	private void removeMapFragment() {
+	public void removeMapFragment() {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Fragment mapFragment = getSupportFragmentManager()
 				.findFragmentById(R.id.map);
-		if (mapFragment == null) {
-		} else {
+		if (mapFragment != null) {
 			ft.hide(mapFragment);
 			ft.remove(mapFragment);
 		}
@@ -357,9 +356,6 @@ public class MainActivity extends FragmentActivity{
 		Log.i("onBackPressed", "Back Pressed");
 		Log.v("onBackPressed", "Old Fragment: " + appFragment.toString());
 		super.onBackPressed();
-		if(appFragment.equals(googleMapFragment)){
-			removeMapFragment();
-		}
 		getSupportFragmentManager().popBackStack();
 		appFragment = getSupportFragmentManager()
 				.findFragmentById(R.id.mainAppFragment);

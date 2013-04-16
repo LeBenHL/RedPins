@@ -118,12 +118,11 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.home_button:
-			((MainActivity) getActivity()).hideListviewFrag();
-			((MainActivity) getActivity()).showNaviFrag();
-			break;
 		case R.id.button_to_mapview:
 			//go to mapView
+			Bundle bundle = new Bundle();
+			bundle.putString("JSONArr", jsonList.toString());
+			((MainActivity)getActivity()).createMapviewFrag(bundle);
 			((MainActivity) getActivity()).toggleMapviewFrag();
 			break;
 		}
@@ -211,9 +210,9 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 					eventAddr.setText(json.getString("location"));
 					eventTime.setText(json.getString("start_time"));
 					// Create Map Fragment version of it
-					Bundle bundle = new Bundle();
-					bundle.putString("JSONArr", jsonList.toString());
-					((MainActivity)getActivity()).createMapviewFrag(bundle);
+//					Bundle bundle = new Bundle();
+//					bundle.putString("JSONArr", jsonList.toString());
+//					((MainActivity)getActivity()).createMapviewFrag(bundle);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
