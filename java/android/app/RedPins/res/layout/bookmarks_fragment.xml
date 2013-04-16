@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <Button 
-        android:id="@+id/button"
-        android:layout_width="@dimen/mini_button"
-        android:layout_height="@dimen/mini_button"/>
+
+    <ListView
+        android:id="@+id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

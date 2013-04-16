@@ -210,13 +210,9 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("showing listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		System.out.println("mQuery: "+ mQuery);
-<<<<<<< HEAD
 		data.putString("query",mQuery);
 		data.putString("location",mLoc);
-		listViewFragment = new ListviewFragment2();
-=======
 		listViewFragment = new ListviewFragment();
->>>>>>> 6e9943a848695877a638add36f2cc079468c5eab
 		listViewFragment.setArguments(data);
 		Fragment lastAppFragment = appFragment;
 		appFragment = listViewFragment;

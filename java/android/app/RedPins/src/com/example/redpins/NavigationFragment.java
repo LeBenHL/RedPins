@@ -95,8 +95,6 @@ public class NavigationFragment extends Fragment{
 	public void historyOnClick(View view) {
 		Log.v("buttonClick", "HISTORY");
 	}
-<<<<<<< HEAD
-=======
 	
 	private final LocationListener locationListener = new LocationListener() {
 
@@ -130,6 +128,4 @@ public class NavigationFragment extends Fragment{
 		}
 
 	};
-	
->>>>>>> 6e9943a848695877a638add36f2cc079468c5eab
 }

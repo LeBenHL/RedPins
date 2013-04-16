@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -39,6 +40,7 @@ public class Utility{
 	public static final int REQUEST_GET_EVENT = 201;
 	public static final int REQUEST_GET_PHOTO = 202;
 	public static final int REQUEST_GET_RATINGS = 203;
+	public static final int REQUEST_GET_BOOKMARKS = 204;
 	public static final int REQUEST_CANCEL_EVENT = 301;
 	public static final int REQUEST_DELETE_EVENT = 401;
 	public static final int REQUEST_MODIFY_LIKE = 504;
@@ -219,6 +221,29 @@ public class Utility{
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/likeEvent.json");
+	}
+	
+	public static JSONObject getBookmarks(NetworkFragment networkFragment, int page_num) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("page", page_num);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_GET_BOOKMARKS, requestJSON, "/users/getBookmarks.json");
+		try {
+			return jsonTask.get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
 	
