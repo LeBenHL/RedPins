@@ -75,7 +75,10 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		searchView.setFocusableInTouchMode(false);
 		searchView.setFocusable(false);
 		searchView.setSelected(false);
-		((MainActivity) getActivity()).createListviewFrag();
+		Bundle data = new Bundle();
+		data.putString("query",((MainActivity) getActivity()).mQuery);
+		data.putString("location", ((MainActivity) getActivity()).mLoc);
+		((MainActivity) getActivity()).createListviewFrag(data);
 		return false;
 	}
 }

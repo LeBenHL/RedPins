@@ -10,6 +10,7 @@ import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -40,6 +41,7 @@ public class MainActivity extends FragmentActivity{
 	private Fragment googleMapFragment;
 	public String mQuery;
 	public String mLoc;
+	public LocationManager locationManager;
 
 	//Facebook User and Session
 	private static GraphUser user;
@@ -86,6 +88,7 @@ public class MainActivity extends FragmentActivity{
 			searchFragment = getSupportFragmentManager()
 					.findFragmentById(R.id.searchFragment);
 		}
+		locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 	}
 
 	@Override
@@ -203,14 +206,17 @@ public class MainActivity extends FragmentActivity{
 		ft.remove(appFragment).commit();
 	}
 
-	public void createListviewFrag(){
+	public void createListviewFrag(Bundle data){
 		System.out.println("showing listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		Bundle data = new Bundle();
 		System.out.println("mQuery: "+ mQuery);
+<<<<<<< HEAD
 		data.putString("query",mQuery);
 		data.putString("location",mLoc);
 		listViewFragment = new ListviewFragment2();
+=======
+		listViewFragment = new ListviewFragment();
+>>>>>>> 6e9943a848695877a638add36f2cc079468c5eab
 		listViewFragment.setArguments(data);
 		Fragment lastAppFragment = appFragment;
 		appFragment = listViewFragment;
