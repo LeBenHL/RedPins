@@ -61,6 +61,8 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 	protected JSONArray jsonArr;
 	private String searchTerm;
 	private String searchLoc;
+	private Double latitude;
+	private Double longitude;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +80,8 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		searchTerm = getArguments().getString("query");
 		searchText.setText(searchTerm);
 		searchLoc = getArguments().getString("location");
+		latitude = getArguments().getDouble("latitude");
+		longitude = getArguments().getDouble("longitude");
 		GetEventListTask task = new GetEventListTask();
 		task.execute();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -256,7 +260,12 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			JSONObject json = new JSONObject();
 			try {
 				json.put("search_query", searchTerm);
-				json.put("location_query", searchLoc);
+				if (searchLoc == null) {
+					json.put("latitude", latitude);
+					json.put("longitude", longitude);
+				} else {
+					json.put("location_query", searchLoc);
+				}
 				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
 				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
 				json.put("page", 1);
@@ -267,7 +276,12 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			JSONArray ret =null;
 			try {
 				//sends requests to server and receives
-				JSONObject jsonObj = Utility.requestServer(MainActivity.serverURL + "/events/search.json", json);
+				JSONObject jsonObj;
+				if (searchLoc == null) {
+					jsonObj = Utility.requestServer(MainActivity.serverURL + "/events/searchViaCoordinates.json", json);
+				} else {
+					jsonObj = Utility.requestServer(MainActivity.serverURL + "/events/search.json", json);
+				}
 				System.out.println("RESPONSE: " + jsonObj.toString());
 				ret = jsonObj.getJSONArray("events");
 				System.out.println("RET: " + ret);
