@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public final static String serverURL = "http://10.13.14.43:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public final static String serverURL = "http://10.10.66.47:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -221,21 +221,19 @@ public class MainActivity extends FragmentActivity{
 		} else {
 			ft.replace(R.id.mainAppFragment, appFragment);
 		}
-		//removeMapFragment();
 		ft.addToBackStack(null);
 		ft.commit();
-		//		fragStack.push("list");
 	}
 
 	public void toggleListviewFrag() {
 		System.out.println("toggling mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		getSupportFragmentManager().popBackStack();
+		//getSupportFragmentManager().popBackStack();
 		appFragment = listViewFragment;
 		ft.replace(R.id.mainAppFragment, appFragment);
 		//ft.remove(getSupportFragmentManager()
 		//		.findFragmentById(R.id.map));
-		ft.addToBackStack(null);
+		//ft.addToBackStack(null);
 		ft.commit();
 		System.out.println("BACKSTACK COUNT: " + getSupportFragmentManager().getBackStackEntryCount());
 	}
@@ -258,12 +256,11 @@ public class MainActivity extends FragmentActivity{
 	public void toggleMapviewFrag() {
 		System.out.println("toggling mapview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		getSupportFragmentManager().popBackStack();
+		//getSupportFragmentManager().popBackStack();
 		appFragment = googleMapFragment;
 		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.addToBackStack(null);
+		//ft.addToBackStack(null);
 		ft.commit();
-		System.out.println("BACKSTACK COUNT: " + getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	public void hideEventFrag(){
@@ -345,6 +342,7 @@ public class MainActivity extends FragmentActivity{
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Fragment mapFragment = getSupportFragmentManager()
 				.findFragmentById(R.id.map);
+		System.out.println("mapFragment: "+mapFragment);
 		if (mapFragment != null) {
 			ft.hide(mapFragment);
 			ft.remove(mapFragment);
@@ -357,9 +355,10 @@ public class MainActivity extends FragmentActivity{
 		Log.i("onBackPressed", "Back Pressed");
 		Log.v("onBackPressed", "Old Fragment: " + appFragment.toString());
 		super.onBackPressed();
-		getSupportFragmentManager().popBackStack();
+		getSupportFragmentManager().beginTransaction().hide(appFragment).remove(appFragment).commit();
 		appFragment = getSupportFragmentManager()
 				.findFragmentById(R.id.mainAppFragment);
+		getSupportFragmentManager().beginTransaction().add(R.id.mainAppFragment,appFragment).show(appFragment).commit();
 		Log.v("onBackPressed", "New Fragment: " + appFragment.toString());
 	}
 }

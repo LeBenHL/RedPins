@@ -60,6 +60,8 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		// TODO Auto-generated method stub
 		super.onResume();
 		Log.i("GoogMapFragment On Create", "ON RESUME");
+		System.out.println("MapFrag: "+mapFrag);
+		System.out.println("mMap: "+mMap);
 		//getFragmentManager().beginTransaction().add(R.id.map, mapFrag).commit();
 	}
 
@@ -67,9 +69,11 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.i("GoogMapFragment On Create", "ON CREATE VIEW");
-		container.removeAllViews();
+		//((MainActivity) getActivity()).removeMapFragment();
+		//container.removeAllViews();
 
 		View view = inflater.inflate(R.layout.map_fragment, container, false);
+		System.out.println("INFLATED");
 		mapFrag = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map));
 		mMap = mapFrag.getMap(); 
 		mMap.setOnInfoWindowClickListener(this);
@@ -79,7 +83,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		listviewButton.setOnClickListener(this);
 		locArray = new ArrayList<LatLng>();
 		JSONArray jsonArr = null;
-		System.out.println(getArguments().getString("JSONArr"));
+		//System.out.println("JSONArray received:" + getArguments().getString("JSONArr"));
 		try {
 			jsonArr = new JSONArray(getArguments().getString("JSONArr"));
 		} catch (JSONException e1) {
@@ -106,7 +110,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		double avgLng = sumLng/(double) jsonArr.length();
 		mapView = view;
 		mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(avgLat,avgLng) , 14.0f) );
-		savedView = view;
+		System.out.println("End of onCreateView");
 		return view;
 	}
 
@@ -196,7 +200,17 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		// TODO Auto-generated method stub
 		super.onDestroyView();
 		System.out.println("DESTROY VIEw");
-		((MainActivity) getActivity()).removeMapFragment();
-
+		SupportMapFragment f = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
+		if (f != null) {
+			getFragmentManager().beginTransaction().remove(f).commit();
+		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		System.out.println("ON DESTROY");
+		getActivity().getSupportFragmentManager().beginTransaction().hide(this).remove(this).commit();
 	}
 }
