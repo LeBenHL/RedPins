@@ -406,8 +406,11 @@ public class EventFragment extends Fragment implements OnClickListener{
 			try {
 				eventLikes.setText("LIKES: "+result.getInt("likes"));
 				eventDislikes.setText("DISLIKES: " + result.getInt("dislikes"));
-				progressBar.setProgress((100*result.getInt("likes"))/(result.getInt("likes")+result.getInt("dislikes")));
-
+				if(result.getInt("likes")+result.getInt("dislikes") != 0){
+					progressBar.setProgress((100*result.getInt("likes"))/(result.getInt("likes")+result.getInt("dislikes")));
+				}else{
+					progressBar.setProgress(50);
+				}
 				if(result.getString("alreadyLikedEvent").equals("true")) {
 					if (result.getString("rating").equals("true")) {
 						likeButton.setBackgroundColor(Color.GREEN);
