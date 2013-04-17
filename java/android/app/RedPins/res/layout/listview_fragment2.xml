@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="asdfghjkl" />
     </LinearLayout>
-
+<!--
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/events_listview"
@@ -49,5 +49,6 @@
         ptr:ptrHeaderBackground="@android:color/darker_gray"
         ptr:ptrHeaderTextColor="@android:color/white"
         ptr:ptrMode="pullUpFromBottom" />
+ -->
 
 </LinearLayout>
