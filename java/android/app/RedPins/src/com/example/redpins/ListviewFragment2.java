@@ -61,7 +61,7 @@ import android.widget.TextView;
 
 public class ListviewFragment2 extends ListFragment implements OnClickListener{
 	private Button mapviewButton;
-	private PullToRefreshListView listView;
+	//private PullToRefreshListView listView;
 	private ImageButton homeButton;
 	protected ArrayList<JSONObject> jsonList;
 	private String searchTerm;

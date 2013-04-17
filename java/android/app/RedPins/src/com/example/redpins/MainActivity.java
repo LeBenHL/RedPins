@@ -6,9 +6,11 @@ import java.util.Stack;
 import org.apache.http.HttpClientConnection;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
@@ -50,7 +53,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public final static String serverURL = "http://10.13.14.43:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://10.13.14.43:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -339,6 +342,33 @@ public class MainActivity extends FragmentActivity{
 
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
+	}
+	
+	public void setRailsAppUrlDialog(MenuItem item) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+		alert.setTitle("Set Rails App URL");
+		alert.setMessage("URL");
+
+		// Set an EditText view to get user input 
+		final EditText input = new EditText(this);
+		alert.setView(input);
+
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialog, int whichButton) {
+		  serverURL = input.getText().toString();
+		  Log.i("serverURL", serverURL);
+		  // Do something with value!
+		  }
+		});
+
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  public void onClick(DialogInterface dialog, int whichButton) {
+		    // Canceled.
+		  }
+		});
+
+		alert.show();
 	}
 
 	public void removeMapFragment() {
