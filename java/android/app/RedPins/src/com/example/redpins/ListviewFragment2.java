@@ -79,37 +79,37 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 		mapviewButton = (Button) view.findViewById(R.id.button_to_mapview);
 		mapviewButton.setOnClickListener(this);
 		jsonList = new ArrayList<JSONObject>();
-		listView = (PullToRefreshListView) view.findViewById(R.id.events_listview);
-		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
-
-			@Override
-			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub
-				page++;
-				GetEventListTask task = new GetEventListTask();
-				task.execute();
-			}
-		});//setClickable(true);
-		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
-		searchTerm = getArguments().getString("query");
-		searchText.setText(searchTerm);
-		searchLoc = getArguments().getString("location");
-		page = 1;
-		GetEventListTask task = new GetEventListTask();
-		task.execute();
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long arg3) {
-				// TODO Auto-generated method stub
-				//View view = (View) listView.getItemAtPosition(position);
-				System.out.println("CLICKED");
-				//	((MainActivity) getActivity()).hideListviewFrag();
-				//((MainActivity) getActivity()).showEventFrag(view.getTag().toString());
-			}
-
-		});
+//		listView = (PullToRefreshListView) view.findViewById(android.R.id.list);
+//		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+//
+//			@Override
+//			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+//				// TODO Auto-generated method stub
+//				page++;
+//				GetEventListTask task = new GetEventListTask();
+//				task.execute();
+//			}
+//		});//setClickable(true);
+//		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
+//		searchTerm = getArguments().getString("query");
+//		searchText.setText(searchTerm);
+//		searchLoc = getArguments().getString("location");
+//		page = 1;
+//		GetEventListTask task = new GetEventListTask();
+//		task.execute();
+//		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> arg0, View v, int position,
+//					long arg3) {
+//				// TODO Auto-generated method stub
+//				//View view = (View) listView.getItemAtPosition(position);
+//				System.out.println("CLICKED");
+//				//	((MainActivity) getActivity()).hideListviewFrag();
+//				//((MainActivity) getActivity()).showEventFrag(view.getTag().toString());
+//			}
+//
+//		});
 		Log.v("Listview OnCreate", "View Returned");
 		return view;
 	}
@@ -256,7 +256,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 				return false;
 			}
 		};
-		listView.setAdapter(adapter);
+		//listView.setAdapter(adapter);
 	}
 
 
