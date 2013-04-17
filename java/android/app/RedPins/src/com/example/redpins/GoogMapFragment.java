@@ -43,20 +43,35 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	private View mapView;
 	private HashMap<String, String> hash;
 	private ArrayList <LatLng> locArray;
+	private SupportMapFragment mapFrag;
+	private View savedView;
+	private boolean recreate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		Log.i("GoogMapFragment On Create", "ON CREATE");
 		hash = new HashMap<String, String>();
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.i("GoogMapFragment On Create", "ON RESUME");
+		//getFragmentManager().beginTransaction().add(R.id.map, mapFrag).commit();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.i("GoogMapFragment On Create", "ON CREATE");
+		Log.i("GoogMapFragment On Create", "ON CREATE VIEW");
+		container.removeAllViews();
+
 		View view = inflater.inflate(R.layout.map_fragment, container, false);
-		mMap = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+		mapFrag = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map));
+		mMap = mapFrag.getMap(); 
 		mMap.setOnInfoWindowClickListener(this);
 		homeButton = (ImageButton) view.findViewById(R.id.home_button);
 		homeButton.setOnClickListener(this);
@@ -79,7 +94,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 				e.printStackTrace();
 			}
 		}
-		
+
 		double sumLat = 0;
 		double sumLng = 0;
 		for(int i = 0; i < jsonArr.length();i++){
@@ -91,6 +106,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		double avgLng = sumLng/(double) jsonArr.length();
 		mapView = view;
 		mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(avgLat,avgLng) , 14.0f) );
+		savedView = view;
 		return view;
 	}
 
@@ -99,6 +115,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		System.out.println("WINDOW CLICKED");
 		String event_id = hash.get(marker.getId());
 		System.out.println("event_idMAP: "+event_id);
+		//((MainActivity)getActivity()).removeMapFragment();
 		((MainActivity) getActivity()).showEventFrag(event_id);
 	}
 
@@ -164,12 +181,22 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 			break;
 		case R.id.button_to_listview:
 			//go to viewView
-			((MainActivity) getActivity()).removeMapFragment();
+			//((MainActivity) getActivity()).removeMapFragment();
 			((MainActivity) getActivity()).toggleListviewFrag();
-//			((MainActivity) getActivity()).toggleListviewFrag();
+			//			((MainActivity) getActivity()).toggleListviewFrag();
 			break;
 
 		}
 	}
 
+	//	public void onDestroy() {};
+
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+		System.out.println("DESTROY VIEw");
+		((MainActivity) getActivity()).removeMapFragment();
+
+	}
 }

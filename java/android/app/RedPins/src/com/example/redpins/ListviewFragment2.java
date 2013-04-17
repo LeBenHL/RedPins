@@ -277,7 +277,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
-			JSONArray ret =null;
+			JSONArray ret =null; 
 			try {
 				//sends requests to server and receives
 				JSONObject jsonObj = Utility.requestServer(MainActivity.serverURL + "/events/search.json", json);

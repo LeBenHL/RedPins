@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public final static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public final static String serverURL = "http://10.13.14.43:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -253,7 +253,6 @@ public class MainActivity extends FragmentActivity{
 	public void createMapviewFrag(Bundle bundle){
 		googleMapFragment = new GoogMapFragment();
 		googleMapFragment.setArguments(bundle);
-
 	}
 
 	public void toggleMapviewFrag() {
