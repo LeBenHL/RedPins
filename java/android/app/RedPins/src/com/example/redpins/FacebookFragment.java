@@ -9,8 +9,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.redpins.EventFragment.GetCommentTask;
 import com.facebook.*;
 import com.facebook.model.*;
 import com.facebook.widget.LoginButton;
@@ -26,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class FacebookFragment extends Fragment {
 	
@@ -38,6 +42,12 @@ public class FacebookFragment extends Fragment {
 	private Session _session;
 	//The LoginButton
 	protected LoginButton authButton;
+	//Error Codes
+	private static final int SUCCESS = 1;
+	private static final int ERR_NO_USER_EXISTS = -1;
+	private static final int ERR_USER_EXISTS = -2;
+	private static final int ERR_BAD_EMAIL = -3;
+	private static final int ERR_BAD_FACEBOOK_ID = -4;
 	
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 	    @Override
@@ -84,8 +94,9 @@ public class FacebookFragment extends Fragment {
 	        		            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         		       if (networkInfo != null && networkInfo.isConnected()) {
-        		            new postJSON(_user).execute("loginUser");
-        		           ((MainActivity) getActivity()).hideFacebookFragment();
+        		    		   LoginTask task = new LoginTask();
+        		    		   task.execute();
+	        		           ((MainActivity) getActivity()).hideFacebookFragment();
         		        } else {
         		        }
         		       ((MainActivity) getActivity()).setFacebookMenuLogout();
@@ -172,7 +183,7 @@ public class FacebookFragment extends Fragment {
     // Uses AsyncTask to create a task away from the main UI thread. This task takes a 
     // action we want to perform and calls on the appropriate API of our RedPins server to
 	// perform the action.
-    private class postJSON extends AsyncTask {
+    private class LoginTask extends AsyncTask<Void, Void, JSONObject> {
     	
     	private static final int SUCCESS = 1;
 		private static final int ERR_NO_USER_EXISTS = -1;
@@ -180,136 +191,35 @@ public class FacebookFragment extends Fragment {
 		private static final int ERR_BAD_EMAIL = -3;
 		private static final int ERR_BAD_FACEBOOK_ID = -4;
     	
-    	//The base URL we are trying to post to
-    	//private static final String baseUrl = "http://nameless-brook-4178.herokuapp.com";
-    	//private static final String baseUrl = "http://safe-savannah-1864.herokuapp.com";
-	private String baseUrl = MainActivity.serverURL;
-    	
-    	//The facebook session we are working on
-    	private GraphUser _user;
-    	//The action we are trying to perform
-    	private String _action;
-    	
-    	public postJSON(GraphUser user) {
-    		super();
-    		_user = user;
-    		
-    	}
-      
-    	protected JSONObject doInBackground(Object... actions) {
-           // params comes from the execute() call: params[0] is the action we want to perform.
-           try {
-        	   _action = (String) actions[0];
-               return postUrl((String) actions[0]);
-           } catch (IOException e) {
-               return null;
-           }
-       }
-       // onPostExecute reads JSON Object and responds appropriately to the error messages.
-       protected void onPostExecute(Object o) {
-		   Log.v("onPostExecute", _action);
-    	   try {
-	           JSONObject json = (JSONObject) o; 
-	    	   if (json != null) {
-        		   Log.v("onPostExecute", json.toString());
-	    		   switch (Actions.valueOf(_action.toUpperCase())) {
-	        		case LOGINUSER:
-	 	    		   switch (json.getInt("errCode")) {
-		 	    		   case ERR_NO_USER_EXISTS:
-		 	    			   new postJSON(_user).execute("addUser");
-		 	    			   break;
-	 	    			   default:
-	 	    				   break;
-			    		}
-	        			break;
-	        		case ADDUSER:
-	        			break;
-	        		default:
-	        			//Should not reach this case EVER
-	        			throw new Exception();
-	        	}
-	    	   }
-    	   } catch (Exception e) {
-    		   Log.v("onPostExecute", e.getMessage());
-    	   }
-       }
-       
-	    // Given a URL, establishes an HttpUrlConnection, POSTS JSON data
-	    // and retrieves the JSON Object back from the server
-	    private JSONObject postUrl(String action) throws IOException {
-	        InputStream is = null;   
-	        try {
-	        	String myUrl;
-	        	switch (Actions.valueOf(action.toUpperCase())) {
-	        		case LOGINUSER:
-	        			myUrl = baseUrl + "/users/login.json";
-	        			break;
-	        		case ADDUSER:
-	        			myUrl = baseUrl + "/users/add.json";
-	        			break;
-	        		default:
-	        			//Should not reach this case EVER
-	        			throw new Exception();
-	        	}
-	        	Log.v("postUrl", myUrl);
-	            URL url = new URL(myUrl);
-	            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	            conn.setDoOutput(true);
-	            conn.setReadTimeout(10000 /* milliseconds */);
-	            conn.setConnectTimeout(15000 /* milliseconds */);
-	            conn.setRequestProperty("Content-Type", "application/json");
-	            conn.setRequestProperty("Accept", "application/json");
-	            conn.setRequestMethod("POST");
-	            conn.setDoInput(true);
-	            // Starts the query
-	            Log.v("postUrl", "Connecting");
-	            conn.connect();
-	            Log.v("postUrl", "Done");
-	        	// Post JSON data
+		@Override
+		protected JSONObject doInBackground(Void... arg0) {
+			JSONObject response = null;
+		    try {
 	            JSONObject jsonToSend = new JSONObject();
-	        	switch (Actions.valueOf(action.toUpperCase())) {
-	        		case LOGINUSER:
-	    	            jsonToSend.put("email", _user.getProperty("email").toString());
-	    	            jsonToSend.put("facebook_id", _user.getProperty("id").toString());
-	    	            jsonToSend.put("session_token", _session.getAccessToken());
-	        			break;
-	        		case ADDUSER:
-	    	            jsonToSend.put("email", _user.getProperty("email").toString());
-	    	            jsonToSend.put("facebook_id", _user.getProperty("id").toString());
-	    	            jsonToSend.put("firstname", _user.getFirstName());
-	    	            jsonToSend.put("lastname", _user.getLastName());
-	    	            jsonToSend.put("session_token", _session.getAccessToken());
-	        			break;
-	        		default:
-	        			//Should not reach this case EVER
-	        			throw new Exception();
-	        	}
-	        	//byte[] outputBytes = jsonString.getBytes("UTF-8");
-	        	Log.v("postUrl", jsonToSend.toString());
-	        	OutputStream os = conn.getOutputStream();
-	        	os.write(jsonToSend.toString().getBytes());
-	         	Log.v("postUrl", Integer.valueOf(conn.getResponseCode()).toString());
-	            if(conn.getResponseCode() == 200) {
-	                // Connection was established. Get the content. 
-	            	is = conn.getInputStream();
-	            	String jsonString = convertStreamToString(is);
-	            	Log.v("postUrl", jsonString);
-		            // Convert the InputStream into a JSON Object
-		            return new JSONObject(jsonString);
-	            } else {
-	            	return null;
-	            }
-	            
-	        // Makes sure that the InputStream is closed after the app is
-	        // finished using it.
-	        } catch (Exception e) {
-	        	return null;
-	    	} finally {
-	            if (is != null) {
-	                is.close();
-	            } 
-	        }
-	    }
+				jsonToSend.put("facebook_id", _user.getProperty("id").toString());
+				jsonToSend.put("session_token", _session.getAccessToken());
+				jsonToSend.put("email", _user.getProperty("email").toString());
+				response = Utility.requestServer(MainActivity.serverURL + "/users/login.json", jsonToSend);
+				switch (response.getInt("errCode")) {
+				  case ERR_NO_USER_EXISTS:
+					   jsonToSend = new JSONObject();
+		  	           jsonToSend.put("email", _user.getProperty("email").toString());
+	    	           jsonToSend.put("facebook_id", _user.getProperty("id").toString());
+	    	           jsonToSend.put("firstname", _user.getFirstName());
+	    	           jsonToSend.put("lastname", _user.getLastName());
+	    	           jsonToSend.put("session_token", _session.getAccessToken());
+	    	           response = Utility.requestServer(MainActivity.serverURL + "/users/add.json", jsonToSend);
+ 	    			   break;
+	    			   default:
+	    				   break;
+				}
+			} catch (JSONException e) {
+				Toast toast = Toast.makeText(getActivity(), "GetCommentTask: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
+			}
+		    return response;
+		}
+		
     }
     
     public enum Actions {

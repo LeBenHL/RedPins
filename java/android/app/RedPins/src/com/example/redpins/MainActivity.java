@@ -53,7 +53,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public static String serverURL = "http://10.13.14.43:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://192.168.0.12:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -212,9 +212,6 @@ public class MainActivity extends FragmentActivity{
 	public void createListviewFrag(Bundle data){
 		System.out.println("showing listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		System.out.println("mQuery: "+ mQuery);
-		data.putString("query",mQuery);
-		data.putString("location",mLoc);
 		listViewFragment = new ListviewFragment();
 		listViewFragment.setArguments(data);
 		Fragment lastAppFragment = appFragment;
