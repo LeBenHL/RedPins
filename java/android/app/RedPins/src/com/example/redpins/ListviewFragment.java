@@ -78,7 +78,6 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		listView.setClickable(true);
 		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
 		searchTerm = getArguments().getString("query");
-		Log.i("searchTerm", searchTerm.toString());
 		searchText.setText(searchTerm);
 		searchLoc = getArguments().getString("location");
 		latitude = getArguments().getDouble("latitude");
