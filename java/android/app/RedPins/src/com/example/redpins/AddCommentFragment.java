@@ -1,13 +1,7 @@
 package com.example.redpins;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.redpins.EventFragment.GetCommentTask;
-import com.google.android.gms.maps.SupportMapFragment;
-
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,9 +10,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
-public class AddCommentFragment extends NetworkFragment implements OnClickListener{
+public class AddCommentFragment extends Fragment implements OnClickListener, JSONResponseHandler {
 	private EditText commentText;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

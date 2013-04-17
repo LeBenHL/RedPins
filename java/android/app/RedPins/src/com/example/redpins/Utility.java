@@ -143,7 +143,7 @@ public class Utility{
 	}
 	
 	// Methods for REQUEST_ADD_[A-Z]+ = 1[0-9][0-9]
-	public static void addComment(NetworkFragment networkFragment, String eventID, String comment) {
+	public static void addComment(JSONResponseHandler fragment, String eventID, String comment) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -154,10 +154,10 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_ADD_COMMENT, requestJSON, "/users/postComment.json");
+		jsonTask.executeTask(fragment, REQUEST_ADD_COMMENT, requestJSON, "/users/postComment.json");
 	}
 	
-	public static void addBookmark(NetworkFragment networkFragment, String eventID) {
+	public static void addBookmark(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -167,11 +167,11 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_ADD_BOOKMARK, requestJSON, "/users/bookmarkEvent.json");
+		jsonTask.executeTask(fragment, REQUEST_ADD_BOOKMARK, requestJSON, "/users/bookmarkEvent.json");
 	}
 	
 	// Methods for REQUEST_GET_[A-Z]+ = 2[0-9][0-9]
-	public static void getComments(NetworkFragment networkFragment, String eventID) {
+	public static void getComments(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -181,10 +181,10 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_GET_COMMENTS, requestJSON, "/events/getComments.json");
+		jsonTask.executeTask(fragment, REQUEST_GET_COMMENTS, requestJSON, "/events/getComments.json");
 	}
 	
-	public static void getEvent(NetworkFragment networkFragment, String eventID) {
+	public static void getEvent(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -194,10 +194,10 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_GET_EVENT, requestJSON, "/events/get.json");
+		jsonTask.executeTask(fragment, REQUEST_GET_EVENT, requestJSON, "/events/get.json");
 	}
 	
-	public static void getRatings(NetworkFragment networkFragment, String eventID) {
+	public static void getRatings(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -207,10 +207,10 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/alreadyLikedEvent.json");
+		jsonTask.executeTask(fragment, REQUEST_GET_RATINGS, requestJSON, "/users/alreadyLikedEvent.json");
 	}
 	
-	public static void getEventList(NetworkFragment networkFragment, String searchQuery, String locationQuery, int pageOffset) {
+	public static void getEventList(JSONResponseHandler fragment, String searchQuery, String locationQuery, int pageOffset) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -222,11 +222,11 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/alreadyLikedEvent.json");
+		jsonTask.executeTask(fragment, REQUEST_GET_RATINGS, requestJSON, "/users/alreadyLikedEvent.json");
 	}
 	
 	// Methods for REQUEST_CANCEL_[A-Z]+ = 3[0-9][0-9]
-	public static void cancelEvent(NetworkFragment networkFragment, String eventID) {
+	public static void cancelEvent(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -236,11 +236,11 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_CANCEL_EVENT, requestJSON, "/users/cancelEvent.json");
+		jsonTask.executeTask(fragment, REQUEST_CANCEL_EVENT, requestJSON, "/users/cancelEvent.json");
 	}
 	
 	// Methods for REQUEST_DELETE_[A-Z]+ = 4[0-9][0-9]
-	public static void deleteComment(NetworkFragment networkFragment, String eventID, String commentID) {
+	public static void deleteComment(JSONResponseHandler fragment, String eventID, String commentID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -251,10 +251,10 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_DELETE_COMMENT, requestJSON, "/users/removeComment.json");
+		jsonTask.executeTask(fragment, REQUEST_DELETE_COMMENT, requestJSON, "/users/removeComment.json");
 	}
 	
-	public static void deleteEvent(NetworkFragment networkFragment, String eventID) {
+	public static void deleteEvent(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -264,10 +264,10 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_DELETE_EVENT, requestJSON, "/users/deleteEvent.json");
+		jsonTask.executeTask(fragment, REQUEST_DELETE_EVENT, requestJSON, "/users/deleteEvent.json");
 	}
 	
-	public static void deleteBookmark(NetworkFragment networkFragment, String eventID) {
+	public static void deleteBookmark(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -277,11 +277,11 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_DELETE_BOOKMARK, requestJSON, "/users/removeBookmark.json");
+		jsonTask.executeTask(fragment, REQUEST_DELETE_BOOKMARK, requestJSON, "/users/removeBookmark.json");
 	}
 	
 	// Methods for REQUEST_MODIFY_[A-Z]+ = 5[0-9][0-9]
-	public static void modifyLike(NetworkFragment networkFragment, String eventID, boolean likeStatus) {
+	public static void modifyLike(JSONResponseHandler fragment, String eventID, boolean likeStatus) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -292,10 +292,10 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_MODIFY_LIKE, requestJSON, "/users/likeEvent.json");
+		jsonTask.executeTask(fragment, REQUEST_MODIFY_LIKE, requestJSON, "/users/likeEvent.json");
 	}
 	
-	public static JSONObject getBookmarks(NetworkFragment networkFragment, int page_num) {
+	public static JSONObject getBookmarks(JSONResponseHandler fragment, int page_num) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
@@ -305,7 +305,7 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(networkFragment, REQUEST_GET_BOOKMARKS, requestJSON, "/users/getBookmarks.json");
+		jsonTask.executeTask(fragment, REQUEST_GET_BOOKMARKS, requestJSON, "/users/getBookmarks.json");
 		try {
 			return jsonTask.get();
 		} catch (InterruptedException e) {
