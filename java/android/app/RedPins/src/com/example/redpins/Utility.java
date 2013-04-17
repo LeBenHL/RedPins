@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
@@ -22,7 +23,6 @@ import org.json.JSONStringer;
 import android.util.Log;
 
 public class Utility{
-	
 	
 	/**
 	 * Request Codes
@@ -39,14 +39,16 @@ public class Utility{
 	public static final int REQUEST_GET_COMMENTS = 200;
 	public static final int REQUEST_GET_EVENT = 201;
 	public static final int REQUEST_GET_PHOTO = 202;
-	public static final int REQUEST_GET_RATINGS = 203;
-	public static final int REQUEST_GET_BOOKMARKS = 204;
+	public static final int REQUEST_GET_BOOKMARKS = 203;
+	public static final int REQUEST_GET_RATINGS = 204;
+	public static final int REQUEST_GET_EVENTLIST = 205;
 	public static final int REQUEST_CANCEL_EVENT = 301;
 	public static final int REQUEST_DELETE_COMMENT = 400;
 	public static final int REQUEST_DELETE_EVENT = 401;
 	public static final int REQUEST_DELETE_BOOKMARK = 403;
 	public static final int REQUEST_MODIFY_LIKE = 504;
 	
+	// Helper methods
 	public static JSONObject requestServer(String url, JSONObject jsonInput) {
 		HttpPost request = new HttpPost(url);
 		Log.v("UTILITY", "API REQUEST: " + url);
@@ -127,6 +129,19 @@ public class Utility{
 		return jsonOutput;
 	}
 	
+	public static JSONArray getJSONArrayFromJSONObject(JSONObject jsonInput, String key) {
+		JSONArray jsonArrayInput = null;
+		try {
+			jsonArrayInput = jsonInput.getJSONArray(key);
+			jsonArrayInput.toString().replace("[", "");
+			jsonArrayInput.toString().replace("]", "");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonArrayInput;
+	}
+	
 	// Methods for REQUEST_ADD_[A-Z]+ = 1[0-9][0-9]
 	public static void addComment(NetworkFragment networkFragment, String eventID, String comment) {
 		JSONObject requestJSON = new JSONObject();
@@ -195,6 +210,21 @@ public class Utility{
 		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/alreadyLikedEvent.json");
 	}
 	
+	public static void getEventList(NetworkFragment networkFragment, String searchQuery, String locationQuery, int pageOffset) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
+			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+			requestJSON.put("search_query", searchQuery);
+			requestJSON.put("location_query", locationQuery);
+			requestJSON.put("page", pageOffset);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(networkFragment, REQUEST_GET_RATINGS, requestJSON, "/users/alreadyLikedEvent.json");
+	}
+	
 	// Methods for REQUEST_CANCEL_[A-Z]+ = 3[0-9][0-9]
 	public static void cancelEvent(NetworkFragment networkFragment, String eventID) {
 		JSONObject requestJSON = new JSONObject();
@@ -210,13 +240,13 @@ public class Utility{
 	}
 	
 	// Methods for REQUEST_DELETE_[A-Z]+ = 4[0-9][0-9]
-	public static void deleteComment(NetworkFragment networkFragment, String eventID) {
+	public static void deleteComment(NetworkFragment networkFragment, String eventID, String commentID) {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
 			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
-			//TODO: Require comment_id?
+			requestJSON.put("comment_id", commentID);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
