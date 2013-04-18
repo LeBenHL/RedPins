@@ -6,6 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.location.Location;
@@ -19,12 +24,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-
+import android.widget.ListView;
 
 public class ListviewFragment2 extends ListFragment implements OnClickListener{
 	private Button mapviewButton;
@@ -34,6 +40,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 	private String searchTerm;
 	private String searchLoc;
 	private int page;
+	private PullToRefreshListView listView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,37 +53,36 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 		mapviewButton = (Button) view.findViewById(R.id.button_to_mapview);
 		mapviewButton.setOnClickListener(this);
 		jsonList = new ArrayList<JSONObject>();
-//		listView = (PullToRefreshListView) view.findViewById(android.R.id.list);
-//		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
-//
-//			@Override
-//			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-//				// TODO Auto-generated method stub
-//				page++;
-//				GetEventListTask task = new GetEventListTask();
-//				task.execute();
-//			}
-//		});//setClickable(true);
-//		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
-//		searchTerm = getArguments().getString("query");
-//		searchText.setText(searchTerm);
-//		searchLoc = getArguments().getString("location");
-//		page = 1;
-//		GetEventListTask task = new GetEventListTask();
-//		task.execute();
-//		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View v, int position,
-//					long arg3) {
-//				// TODO Auto-generated method stub
-//				//View view = (View) listView.getItemAtPosition(position);
-//				System.out.println("CLICKED");
-//				//	((MainActivity) getActivity()).hideListviewFrag();
-//				//((MainActivity) getActivity()).showEventFrag(view.getTag().toString());
-//			}
-//
-//		});
+		listView = (PullToRefreshListView) view.findViewById(android.R.id.list);
+		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				// TODO Auto-generated method stub
+				page++;
+				GetEventListTask task = new GetEventListTask();
+				task.execute();
+			}
+		});//setClickable(true);
+		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
+		searchTerm = getArguments().getString("query");
+		searchText.setText(searchTerm);
+		searchLoc = getArguments().getString("location");
+		page = 1;
+		GetEventListTask task = new GetEventListTask();
+		task.execute();
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long arg3) {
+				//View view = (View) listView.getItemAtPosition(position);
+				System.out.println("CLICKED");
+				//((MainActivity) getActivity()).hideListviewFrag();
+				//((MainActivity) getActivity()).showEventFrag(view.getTag().toString());
+			}
+
+		});
 		Log.v("Listview OnCreate", "View Returned");
 		return view;
 	}
@@ -223,7 +229,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 				return false;
 			}
 		};
-		//listView.setAdapter(adapter);
+		listView.setAdapter(adapter);
 	}
 
 
