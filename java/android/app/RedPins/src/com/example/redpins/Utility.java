@@ -243,6 +243,25 @@ public class Utility{
 		jsonTask.executeTask(fragment, REQUEST_ADD_COMMENT, requestJSON, "/users/postComment.json");
 	}
 	
+	public static void addEvent(JSONResponseHandler fragment, String title, String startTime, String endTime, String location, String url, double latitude, double longitude) {
+		System.out.println("Adding event now in Utility");
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			requestJSON.put("title", title);
+			requestJSON.put("start_time", startTime);
+			requestJSON.put("end_time", endTime);
+			requestJSON.put("location", location);
+			requestJSON.put("url", url);
+			requestJSON.put("latitude", latitude);
+			requestJSON.put("longitude", longitude);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_ADD_EVENT, requestJSON, "/events/add.json");
+	}
+	
+	
 	public static void addBookmark(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {

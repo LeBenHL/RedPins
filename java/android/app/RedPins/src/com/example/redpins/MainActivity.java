@@ -53,7 +53,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://10.0.1.9:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -327,6 +327,16 @@ public class MainActivity extends FragmentActivity{
 		ft.commit();
 		//		fragStack.push("bookmark");
 	}
+	
+	public void createAddEventMapFrag(Bundle bundle, AddEventFragment addEventFragment) {
+		Log.i("createAddEventMapFrag", "Created addEventMap frag");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = new AddEventMapFragment();
+		((AddEventMapFragment) appFragment).parent = addEventFragment;
+		appFragment.setArguments(bundle);
+		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.commit();
+	}
 
 	public void createAddCommentFrag(Bundle bundle) {
 		Log.i("createAddCommentFrag", "Created comment frag");
@@ -337,8 +347,7 @@ public class MainActivity extends FragmentActivity{
 		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
 		ft.commit();
 	}
-
-
+	
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
 	}

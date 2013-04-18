@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
@@ -20,13 +22,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-public class AddEventFragment extends Fragment implements OnClickListener{
+public class AddEventFragment extends Fragment implements OnClickListener, JSONResponseHandler, MapPicker {
 	private String locationName;
 	private EditText titleField;
 	private AutoCompleteTextView locationField;
 	private String startTime, endTime;
-	private double latitude, longitude;
-	private Button startDateButton, endDateButton, startTimeButton, endTimeButton;
+	private double latitude = -360.0;
+	private double longitude = -360.0;
+	private Button startDateButton, endDateButton, startTimeButton, endTimeButton, mapButton, createButton;
 	private AddEventFragmentButtonListener dateTimeButtonListener;
 	private int startYear;
 	private int startMonth;
@@ -95,6 +98,33 @@ public class AddEventFragment extends Fragment implements OnClickListener{
 			}
 		});
 		
+		createButton = (Button) view.findViewById(R.id.newevent_create_btn);
+		createButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("clicked the create button");
+				String defaultTime = "2013-04-19T00:00:00Z";
+				startTime = defaultTime;
+				endTime = defaultTime;
+				//Utility.addEvent(AddEventFragment.this, AddEventFragment.this.titleField.toString() , startTime, endTime, AddEventFragment.this.locationField.toString(), "", latitude, longitude);
+				Utility.addEvent(AddEventFragment.this, AddEventFragment.this.titleField.toString(), defaultTime, defaultTime, AddEventFragment.this.locationField.toString(), "http://www.google.com", AddEventFragment.this.latitude, AddEventFragment.this.longitude);
+			}
+		});
+		
+		mapButton = (Button) view.findViewById(R.id.newevent_mapButton);
+		mapButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				System.out.println("clicked the map button");
+				System.out.println("lat long is currently at " + Double.toString(latitude) + "," + Double.toString(longitude));
+				
+				Bundle data = new Bundle();
+				((MainActivity) getActivity()).createAddEventMapFrag(data, AddEventFragment.this);
+			}
+		});
+		
+		
+		
 		Calendar cal = Calendar.getInstance();
 		
 		cal.add(Calendar.MINUTE, NEWEVENT_TIME_OFFSET_DEFAULT);
@@ -105,6 +135,12 @@ public class AddEventFragment extends Fragment implements OnClickListener{
 		updateTimeDisplay(cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE), startID);
 		
 		return view;
+	}
+	
+	public void setLatitudeLongitude(double lat, double lng) {
+		this.latitude = lat;
+		this.longitude = lng;
+		System.out.println("Location now set to " + Double.toString(lat) + "," + Double.toString(lng));
 	}
 	
 	/**
@@ -276,4 +312,16 @@ public class AddEventFragment extends Fragment implements OnClickListener{
     public interface AddEventFragmentButtonListener{
     	public void onSetDateButtonClicked(Calendar date);
     }
+	@Override
+	public void onNetworkSuccess(int requestCode, JSONObject json) {
+		// TODO Auto-generated method stub
+		System.out.println(json.toString());
+		System.out.println("Response after creating event!");
+	}
+
+	@Override
+	public void onNetworkFailure(int requestCode, JSONObject json) {
+		// TODO Auto-generated method stub
+		
+	}
 }
