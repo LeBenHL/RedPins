@@ -21,7 +21,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class BookmarksFragment extends NetworkFragment implements OnClickListener{
+public class BookmarksFragment extends Fragment implements OnClickListener, JSONResponseHandler {
 
 	private ListView listview;
 	private JSONArray jsonArr;
@@ -30,17 +30,7 @@ public class BookmarksFragment extends NetworkFragment implements OnClickListene
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.bookmarks_fragment, container, false);
 		listview = (ListView) view.findViewById(android.R.id.list);
-		JSONObject returnJSON = Utility.getBookmarks(this, 1);
-		JSONArray eventsJSON = null;
-		try {
-			jsonArr = returnJSON.getJSONArray("events");
-			jsonArr.toString().replace("[", "");
-			jsonArr.toString().replace("]", "");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		populateList();
+		Utility.getBookmarks(this, 1);
 		return view;
 	}
 
@@ -185,6 +175,8 @@ public class BookmarksFragment extends NetworkFragment implements OnClickListene
 	public void onNetworkSuccess(int requestCode, JSONObject json) {
 		switch (requestCode) {
 		case Utility.REQUEST_GET_BOOKMARKS:
+			jsonArr = Utility.getJSONArrayFromJSONObject(json, "events");
+			populateList();
 			System.out.println("Successfully get bookmarks");
 			break;
 		default:

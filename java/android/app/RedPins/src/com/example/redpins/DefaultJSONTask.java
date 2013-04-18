@@ -4,8 +4,8 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 
-public class DefaultJSONTask extends AsyncTask<Void, Void, JSONObject>{
-	NetworkFragment networkFragment;
+public class DefaultJSONTask extends AsyncTask<Void, Void, JSONObject> {
+	JSONResponseHandler fragment;
 	int requestCode;
 	JSONObject requestJSON;
 	String requestPath;
@@ -17,7 +17,7 @@ public class DefaultJSONTask extends AsyncTask<Void, Void, JSONObject>{
 			responseJSON = Utility.requestServer(MainActivity.serverURL + requestPath, requestJSON);
 		} catch (Throwable e) {
 			// TODO Exception: Handle the exception for the server request.
-			networkFragment.onNetworkFailure(requestCode, responseJSON);
+			fragment.onNetworkFailure(requestCode, responseJSON);
 		}
 		return responseJSON;
 	}
@@ -25,11 +25,11 @@ public class DefaultJSONTask extends AsyncTask<Void, Void, JSONObject>{
 	@Override
 	protected void onPostExecute(JSONObject responseJSON) {
 		super.onPostExecute(responseJSON);
-		networkFragment.onNetworkSuccess(requestCode, responseJSON);
+		fragment.onNetworkSuccess(requestCode, responseJSON);
 	}
 	
-	protected void executeTask(NetworkFragment networkFragment, int requestCode, JSONObject requestJSON, String requestPath) {
-		this.networkFragment = networkFragment;
+	protected void executeTask(JSONResponseHandler fragment, int requestCode, JSONObject requestJSON, String requestPath) {
+		this.fragment = fragment;
 		this.requestCode = requestCode;
 		this.requestJSON = requestJSON;
 		this.requestPath = requestPath;
