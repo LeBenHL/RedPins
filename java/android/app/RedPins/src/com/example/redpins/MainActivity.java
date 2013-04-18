@@ -53,7 +53,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public static String serverURL = "http://10.10.66.47:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -194,13 +194,13 @@ public class MainActivity extends FragmentActivity{
 		ft.remove(appFragment).commit();
 	}
 
-	public void showNaviFrag(){
-		System.out.println("showing navi");
-		appFragment = new NavigationFragment();
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.mainAppFragment,appFragment);
-		ft.commit();
-	}
+//	public void showNaviFrag(){
+//		System.out.println("showing navi");
+//		appFragment = new NavigationFragment();
+//		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//		ft.replace(R.id.mainAppFragment,appFragment);
+//		ft.commit();
+//	}
 
 	public void hideListviewFrag(){
 		System.out.println("hiding listview");
@@ -375,7 +375,8 @@ public class MainActivity extends FragmentActivity{
 		Log.i("onBackPressed", "Back Pressed");
 		Log.v("onBackPressed", "Old Fragment: " + appFragment.toString());
 		super.onBackPressed();
-		getSupportFragmentManager().beginTransaction().hide(appFragment).remove(appFragment).commit();
+		getSupportFragmentManager().beginTransaction().hide(appFragment).detach(appFragment).commit();
+		System.out.println("backstack count: "+getSupportFragmentManager().getBackStackEntryCount());
 		appFragment = getSupportFragmentManager()
 				.findFragmentById(R.id.mainAppFragment);
 		getSupportFragmentManager().beginTransaction().add(R.id.mainAppFragment, appFragment).show(appFragment).commit();

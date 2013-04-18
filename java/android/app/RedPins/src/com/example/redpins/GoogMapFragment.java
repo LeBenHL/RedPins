@@ -179,10 +179,6 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.home_button:
-			((MainActivity) getActivity()).hideMapviewFrag();
-			((MainActivity) getActivity()).showNaviFrag();
-			break;
 		case R.id.button_to_listview:
 			//go to viewView
 			//((MainActivity) getActivity()).removeMapFragment();

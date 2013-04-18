@@ -115,9 +115,6 @@ public class EventFragment extends Fragment implements OnClickListener{
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch(v.getId()){
-		case R.id.home_button:
-			((MainActivity) getActivity()).showNaviFrag();
-			break;
 		case R.id.event_url:
 			//takes user to web browser with given link
 			Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlLink));

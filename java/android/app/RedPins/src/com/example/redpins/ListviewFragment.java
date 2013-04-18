@@ -105,10 +105,6 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.home_button:
-			((MainActivity) getActivity()).hideListviewFrag();
-			((MainActivity) getActivity()).showNaviFrag();
-			break;
 		case R.id.button_to_mapview:
 			//go to mapView
 			((MainActivity) getActivity()).toggleMapviewFrag();
