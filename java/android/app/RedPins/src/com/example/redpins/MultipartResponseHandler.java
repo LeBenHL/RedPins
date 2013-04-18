@@ -1,6 +1,8 @@
 package com.example.redpins;
 
+import org.apache.http.HttpResponse;
 
 public interface MultipartResponseHandler {
-	//TODO: Decide on onNetworkSuccess and onNetworkFailure code signatures
+	public void onNetworkSuccess (int requestCode, HttpResponse response);
+	public void onNetworkFailure (int requestCode, HttpResponse response);
 }
