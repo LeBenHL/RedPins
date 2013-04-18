@@ -16,7 +16,6 @@ public class DefaultJSONTask extends AsyncTask<Void, Void, JSONObject> {
 		try {
 			responseJSON = Utility.requestServer(MainActivity.serverURL + requestPath, requestJSON);
 		} catch (Throwable e) {
-			// TODO Exception: Handle the exception for the server request.
 			fragment.onNetworkFailure(requestCode, responseJSON);
 		}
 		return responseJSON;

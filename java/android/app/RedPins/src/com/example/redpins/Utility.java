@@ -1,16 +1,22 @@
 package com.example.redpins;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpConnectionParams;
@@ -20,6 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Log;
 
 public class Utility{
@@ -142,6 +150,32 @@ public class Utility{
 		return jsonArrayInput;
 	}
 	
+	public static File convertBitmapToFile(Bitmap bitmap, int quality, String filename, String path) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, quality, bos);
+		byte[] data = bos.toByteArray();
+		String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + path;
+		File dir = new File(filePath);
+			if(!dir.exists()) {
+				dir.mkdirs();
+		 }
+		File file = new File(dir, filename + ".png");
+		FileOutputStream fOut;
+		try {
+			fOut = new FileOutputStream(file);
+			fOut.write(data);
+			fOut.flush();
+			fOut.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return file;
+	}
+	
 	public static JSONObject createJSONObjectWithFacebookIDAndSessionToken() {
 		JSONObject requestJSON = new JSONObject();
 		try {
@@ -152,6 +186,19 @@ public class Utility{
 		}
 		return requestJSON;
 	}
+	
+	public static MultipartEntity createMultipartEntityWithFacebookIDAndSessionToken() {
+		MultipartEntity requestEntity = new MultipartEntity();
+		try {
+			requestEntity.addPart("facebook_id", new StringBody(((MainActivity) MainActivity.activity).getFacebookId()));
+			requestEntity.addPart("session_token", new StringBody(((MainActivity) MainActivity.activity).getFacebookSessionToken()));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return requestEntity;
+	}
+	
 	
 	// Methods for REQUEST_ADD_[A-Z]+ = 1[0-9][0-9]
 	public static void addComment(JSONResponseHandler fragment, String eventID, String comment) {
@@ -177,6 +224,22 @@ public class Utility{
 		jsonTask.executeTask(fragment, REQUEST_ADD_BOOKMARK, requestJSON, "/users/bookmarkEvent.json");
 	}
 	
+	public static void addPhoto(MultipartResponseHandler fragment, String eventID, Bitmap bitmap, String captions) {
+		MultipartEntity requestEntity = createMultipartEntityWithFacebookIDAndSessionToken();
+		File photoFile = convertBitmapToFile(bitmap, 85, "newPhoto", "/RedPins/uploads");
+		try {
+			requestEntity.addPart("photo", new FileBody(photoFile));
+			requestEntity.addPart("photo_caption", new StringBody(captions));
+			requestEntity.addPart("type", new StringBody("photo"));
+			requestEntity.addPart("event_id", new StringBody(eventID));
+		} catch (UnsupportedEncodingException e) {
+			fragment.onNetworkFailure(REQUEST_ADD_PHOTO, null);
+		}
+		DefaultMultipartTask multipartTask = new DefaultMultipartTask();
+		multipartTask.executeTask(fragment, REQUEST_ADD_PHOTO, requestEntity, "/users/uploadPhoto");
+		
+	}
+	
 	// Methods for REQUEST_GET_[A-Z]+ = 2[0-9][0-9]
 	public static void getComments(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
@@ -198,6 +261,17 @@ public class Utility{
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_GET_EVENT, requestJSON, "/events/get.json");
+	}
+	
+	public static void getBookmarks(JSONResponseHandler fragment, int page_num) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			requestJSON.put("page", page_num);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_GET_BOOKMARKS, requestJSON, "/users/getBookmarks.json");
 	}
 	
 	public static void getRatings(JSONResponseHandler fragment, String eventID) {
@@ -283,16 +357,4 @@ public class Utility{
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_MODIFY_LIKE, requestJSON, "/users/likeEvent.json");
 	}
-	
-	public static void getBookmarks(JSONResponseHandler fragment, int page_num) {
-		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
-		try {
-			requestJSON.put("page", page_num);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(fragment, REQUEST_GET_BOOKMARKS, requestJSON, "/users/getBookmarks.json");
-	}
 }
-	

@@ -26,5 +26,6 @@
     <string name="search_hint">Search by tags</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="Set_Rails_App_Url">Set Rails App Url</string>
+    <string name="upload_photo">Upload Photo</string>
 
 </resources>

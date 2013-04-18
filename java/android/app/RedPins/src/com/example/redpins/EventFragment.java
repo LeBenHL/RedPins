@@ -53,9 +53,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 	private Context mContext; 
 	private ImageButton likeButton;
 	private ImageButton dislikeButton;
-	private Button bookmarkButton;
+	private ImageButton bookmarkButton;
 	private boolean bookmarked;
 	private ImageButton deleteEventButton;
+	private Button uploadPhotoButton;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +83,9 @@ public class EventFragment extends Fragment implements OnClickListener{
 		removeEventButton.setOnClickListener(this);
 		deleteEventButton = (ImageButton) view.findViewById(R.id.deleteEventButton);
 		deleteEventButton.setOnClickListener(this);
+		
+		uploadPhotoButton = (Button) view.findViewById(R.id.uploadPhoto);
+		uploadPhotoButton.setOnClickListener(this);
 
 		if(!((MainActivity)getActivity()).getFacebookId().equals(((MainActivity)getActivity()).getFacebookId())){
 			removeEventButton.setVisibility(View.INVISIBLE);
@@ -100,7 +104,7 @@ public class EventFragment extends Fragment implements OnClickListener{
 		progressBar = (ProgressBar) view.findViewById(R.id.event_progress);
 		mContext = getActivity().getApplicationContext();
 		commentArr = new ArrayList<JSONObject>();
-		bookmarkButton = (Button) view.findViewById(R.id.bookmark_button);
+		bookmarkButton = (ImageButton) view.findViewById(R.id.bookmark_button);
 		bookmarkButton.setOnClickListener(this);
 		GetEventTask task = new GetEventTask();
 		task.execute();
@@ -156,6 +160,10 @@ public class EventFragment extends Fragment implements OnClickListener{
 			System.out.println("Are you sure you want to delete the event?");
 			deleteEvent task4 = new deleteEvent();
 			task4.execute();
+			break;
+		case R.id.uploadPhoto:
+			Log.i("onClick", "UploadPhoto");
+			uploadPhoto(v);
 			break;
 		}
 	}
@@ -487,8 +495,12 @@ public class EventFragment extends Fragment implements OnClickListener{
 			System.out.println("The event has been removed.");
 		}
 	}
-
-
+	
+	public void uploadPhoto(View view) {
+		Bundle data = new Bundle();
+		data.putString("event_id", event_id);
+		((MainActivity) getActivity()).createAddPhotoFrag(data);
+	}
 
 
 	public void removeComment(String comment_user_id, String _comment_id, int position){
