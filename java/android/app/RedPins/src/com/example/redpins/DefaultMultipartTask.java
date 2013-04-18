@@ -12,8 +12,7 @@ public class DefaultMultipartTask extends AsyncTask<Void, Void, Void> {
 		return null;
 	}
 	
-	protected void executeTask(JSONNetworkFragment networkFragment, int requestCode, MultipartEntity requestEntity, String requestPath) {
-		
+	protected void executeTask(MultipartResponseHandler fragment, int requestCode, MultipartEntity requestEntity, String requestPath) {
 		this.execute();
 	}
 }

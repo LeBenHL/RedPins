@@ -142,12 +142,21 @@ public class Utility{
 		return jsonArrayInput;
 	}
 	
-	// Methods for REQUEST_ADD_[A-Z]+ = 1[0-9][0-9]
-	public static void addComment(JSONResponseHandler fragment, String eventID, String comment) {
+	public static JSONObject createJSONObjectWithFacebookIDAndSessionToken() {
 		JSONObject requestJSON = new JSONObject();
 		try {
 			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
 			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return requestJSON;
+	}
+	
+	// Methods for REQUEST_ADD_[A-Z]+ = 1[0-9][0-9]
+	public static void addComment(JSONResponseHandler fragment, String eventID, String comment) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
 			requestJSON.put("event_id", eventID);
 			requestJSON.put("comment", comment);
 		} catch (JSONException e) {
@@ -158,10 +167,8 @@ public class Utility{
 	}
 	
 	public static void addBookmark(JSONResponseHandler fragment, String eventID) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -172,10 +179,8 @@ public class Utility{
 	
 	// Methods for REQUEST_GET_[A-Z]+ = 2[0-9][0-9]
 	public static void getComments(JSONResponseHandler fragment, String eventID) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -185,10 +190,8 @@ public class Utility{
 	}
 	
 	public static void getEvent(JSONResponseHandler fragment, String eventID) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -198,10 +201,8 @@ public class Utility{
 	}
 	
 	public static void getRatings(JSONResponseHandler fragment, String eventID) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -211,10 +212,8 @@ public class Utility{
 	}
 	
 	public static void getEventList(JSONResponseHandler fragment, String searchQuery, String locationQuery, int pageOffset) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("search_query", searchQuery);
 			requestJSON.put("location_query", locationQuery);
 			requestJSON.put("page", pageOffset);
@@ -227,10 +226,8 @@ public class Utility{
 	
 	// Methods for REQUEST_CANCEL_[A-Z]+ = 3[0-9][0-9]
 	public static void cancelEvent(JSONResponseHandler fragment, String eventID) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -241,10 +238,8 @@ public class Utility{
 	
 	// Methods for REQUEST_DELETE_[A-Z]+ = 4[0-9][0-9]
 	public static void deleteComment(JSONResponseHandler fragment, String eventID, String commentID) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
 			requestJSON.put("comment_id", commentID);
 		} catch (JSONException e) {
@@ -255,10 +250,8 @@ public class Utility{
 	}
 	
 	public static void deleteEvent(JSONResponseHandler fragment, String eventID) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -268,10 +261,8 @@ public class Utility{
 	}
 	
 	public static void deleteBookmark(JSONResponseHandler fragment, String eventID) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -282,10 +273,8 @@ public class Utility{
 	
 	// Methods for REQUEST_MODIFY_[A-Z]+ = 5[0-9][0-9]
 	public static void modifyLike(JSONResponseHandler fragment, String eventID, boolean likeStatus) {
-		JSONObject requestJSON = new JSONObject();
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("event_id", eventID);
 			requestJSON.put("like", likeStatus);
 		} catch (JSONException e) {
@@ -295,27 +284,15 @@ public class Utility{
 		jsonTask.executeTask(fragment, REQUEST_MODIFY_LIKE, requestJSON, "/users/likeEvent.json");
 	}
 	
-	public static JSONObject getBookmarks(JSONResponseHandler fragment, int page_num) {
-		JSONObject requestJSON = new JSONObject();
+	public static void getBookmarks(JSONResponseHandler fragment, int page_num) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			requestJSON.put("facebook_id", ((MainActivity) MainActivity.activity).getFacebookId());
-			requestJSON.put("session_token", ((MainActivity) MainActivity.activity).getFacebookSessionToken());
 			requestJSON.put("page", page_num);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_GET_BOOKMARKS, requestJSON, "/users/getBookmarks.json");
-		try {
-			return jsonTask.get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 }
 	
