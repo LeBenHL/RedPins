@@ -1,7 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:id="@+id/newevent_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="0dp"
+    android:padding="10dp" >
     
+	<ScrollView
+	    android:id="@+id/newevent_scrollview"
+	    android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center">
+        
+	    <RelativeLayout
+            android:id="@+id/newevent_relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+			<EditText
+                android:id="@+id/newevent_title_field"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="15dp"
+                android:layout_marginTop="0dp"
+                android:gravity="center_vertical"
+                android:hint="Enter a name for this event"
+                android:lines="3"
+                android:paddingBottom="3dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="3dp"
+                android:paddingRight="3dp" >
+                <requestFocus />
+            </EditText>
+            
+			<RelativeLayout
+                android:id="@+id/newevent_relativeLayout1_1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newevent_title_field"
+				android:paddingTop="10dp"
+				android:paddingBottom="10dp"
+				android:paddingRight="10dp"
+				android:paddingLeft="10dp">
+				<LinearLayout
+                    android:id="@+id/newevent_startTimePanel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    
+                    
+                    android:weightSum="1"
+                    android:visibility="visible" >
+                    <Button
+                        android:id="@+id/newevent_startTimePicker"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center_vertical"
+                        android:gravity="left|center_vertical"
+                        android:minHeight="42dp"
+                        android:paddingBottom="7dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="7dp"
+                        android:text="Time"
+                        android:layout_weight="0.4"
+                        android:textSize="18sp" />
 
+                    <Button
+                        android:id="@+id/newevent_startDatePicker"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center_vertical"
+                        android:gravity="left|center_vertical"
+                        android:minHeight="42dp"
+                        android:paddingBottom="7dp"
+                        android:layout_weight="0.6"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="30dp"
+                        android:paddingTop="7dp"
+                        android:text="Date"
+                        android:textSize="18sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/newevent_endTimePanel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_below="@+id/newevent_startTimePanel"
+                    android:weightSum="1"
+                    android:visibility="visible" >
+                    <Button
+                        android:id="@+id/newevent_endTimePicker"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center_vertical"
+                        android:gravity="left|center_vertical"
+                        android:minHeight="42dp"
+                        android:paddingBottom="7dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="7dp"
+                        android:text="Time"
+                        android:layout_weight="0.4"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/newevent_endDatePicker"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center_vertical"
+                        android:gravity="left|center_vertical"
+                        android:minHeight="42dp"
+                        android:paddingBottom="7dp"
+                        android:layout_weight="0.6"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="30dp"
+                        android:paddingTop="7dp"
+                        android:text="Date"
+                        android:textSize="18sp" />
+                </LinearLayout>
+                <AutoCompleteTextView
+                    android:id="@+id/newevent_locationPanel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/newevent_endTimePanel"
+                    android:layout_marginBottom="1dp"
+                    android:hint="Type a location"
+                    android:minHeight="42dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:textSize="18sp" />
+			</RelativeLayout>
+			<LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_below="@+id/newevent_relativeLayout1_1" android:weightSum="1" android:padding="10dp">
+
+                <Button
+                    android:id="@+id/newevent_cancel_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight=".5"
+
+                    android:minHeight="40dp"
+                    android:text="Cancel"
+                    android:padding="15dp"/>
+
+                <Button
+                    android:id="@+id/newevent_create_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight=".5"
+                    
+                    android:minHeight="40dp"
+                    android:text="Create"/>
+
+            </LinearLayout>
+	    </RelativeLayout>   
+	</ScrollView>
 </RelativeLayout>

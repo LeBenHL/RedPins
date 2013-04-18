@@ -305,13 +305,23 @@ public class MainActivity extends FragmentActivity{
 		ft.remove(facebookFragment).commit();
 	}
 
-	public void createAddPhotoFrag(Bundle data){
+	public void createAddPhotoFrag(Bundle data) {
 		System.out.println("showing add photo page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		//		Bundle data = new Bundle();
 		//		data.putString("prev", prev);
 		//		data.putString("event_id",eventID);
 		appFragment = new AddPhotoFragment();
+		appFragment.setArguments(data);
+		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.commit();
+		//		fragStack.push("bookmark");
+	}
+	
+	public void createAddEventFrag(Bundle data) {
+		Log.i("Create Add Event Frag", "Showing Add Event page");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = new AddEventFragment();
 		appFragment.setArguments(data);
 		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
 		ft.commit();

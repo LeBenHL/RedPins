@@ -78,6 +78,7 @@ public class NavigationFragment extends Fragment{
 	
 	public void addEventOnClick(View view) {
 		Log.v("buttonClick", "ADDEVENT");
+		((MainActivity) getActivity()).createAddEventFrag(null);
 	}
 	
 	public void bookmarksOnClick(View view) {
