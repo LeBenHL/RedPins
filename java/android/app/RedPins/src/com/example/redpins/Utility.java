@@ -137,6 +137,36 @@ public class Utility{
 		return jsonOutput;
 	}
 	
+	public static JSONObject convertHttpResponseToJSONObject(HttpResponse httpResponse) {
+		InputStreamReader read = null;
+		try {
+			read = new InputStreamReader(httpResponse.getEntity().getContent());
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		BufferedReader buffReader = new BufferedReader(read);
+		StringBuilder sBuilder = new StringBuilder();
+		try {
+			String line = buffReader.readLine();
+			while(line != null) {
+				sBuilder.append(line);
+				line = buffReader.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JSONObject jsonOutput = null;
+		try {
+			System.out.println("Converted RESPONSE STRING: "+sBuilder.toString());
+			jsonOutput = new JSONObject(sBuilder.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonOutput;
+	}
+	
 	public static JSONArray getJSONArrayFromJSONObject(JSONObject jsonInput, String key) {
 		JSONArray jsonArrayInput = null;
 		try {
@@ -159,7 +189,7 @@ public class Utility{
 			if(!dir.exists()) {
 				dir.mkdirs();
 		 }
-		File file = new File(dir, filename + ".png");
+		File file = new File(dir, filename);
 		FileOutputStream fOut;
 		try {
 			fOut = new FileOutputStream(file);
@@ -226,11 +256,10 @@ public class Utility{
 	
 	public static void addPhoto(MultipartResponseHandler fragment, String eventID, Bitmap bitmap, String captions) {
 		MultipartEntity requestEntity = createMultipartEntityWithFacebookIDAndSessionToken();
-		File photoFile = convertBitmapToFile(bitmap, 85, "newPhoto", "/RedPins/uploads");
+		File photoFile = convertBitmapToFile(bitmap, 85, "newPhoto.JPEG", "/RedPins/uploads");
 		try {
 			requestEntity.addPart("photo", new FileBody(photoFile));
-			requestEntity.addPart("photo_caption", new StringBody(captions));
-			requestEntity.addPart("type", new StringBody("photo"));
+			requestEntity.addPart("caption", new StringBody(captions));
 			requestEntity.addPart("event_id", new StringBody(eventID));
 		} catch (UnsupportedEncodingException e) {
 			fragment.onNetworkFailure(REQUEST_ADD_PHOTO, null);

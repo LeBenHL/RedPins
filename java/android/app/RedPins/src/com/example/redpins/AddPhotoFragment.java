@@ -39,9 +39,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-public class AddPhotoFragment extends Fragment implements OnClickListener{
+public class AddPhotoFragment extends Fragment implements OnClickListener, MultipartResponseHandler {
 	private static final int SELECT_GALLERY_REQUEST_CODE = 0;
-	private static final int RESULT_OK = 1;
 	
 	Button uploadBtn, cancelBtn, selectBtn;
 	TextView photoPath;
@@ -74,11 +73,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener{
 			public void onClick(View view) {
 				System.out.println("uploading photo");
 				try {
-					//bm = BitmapFactory.decodeFile(currImageURI.getEncodedPath());
-					//executeMultipartPost();
-					//AddCommentTask task = new AddCommentTask();
-					AddPhotoTask task = new AddPhotoTask();
-					task.execute();
+					Utility.addPhoto(AddPhotoFragment.this, getArguments().getString("event_id"), bm, "uploaded with RedPins");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					System.out.println("Failed");
@@ -97,7 +92,6 @@ public class AddPhotoFragment extends Fragment implements OnClickListener{
 			Uri selectedImage = data.getData();
 			try {
 				bm = MediaStore.Images.Media.getBitmap(((MainActivity)getActivity()).getContentResolver(), selectedImage);
-				System.out.println("set bm");
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -113,79 +107,15 @@ public class AddPhotoFragment extends Fragment implements OnClickListener{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	public class AddPhotoTask extends AsyncTask<Void, Void, Void>{
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			System.out.println("executing multipart post now!");
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost(MainActivity.serverURL + "/users/uploadPhoto");
-			try {
-				  MultipartEntity entity = new MultipartEntity();
-				 
-				  entity.addPart("type", new StringBody("photo"));
-				  //File f = new File(context.getCacheDir(), "uploadPhoto.jpeg");
-				  
-				  
-				  ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				  bm.compress(Bitmap.CompressFormat.PNG, 85, bos);
-				  byte[] data = bos.toByteArray();
-				  
-				  String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/RedPins_temp";
-				  File dir = new File(file_path);
-				  if(!dir.exists()) {
-				      dir.mkdirs();
-				  }
-				  File file = new File(dir, "sample001" + ".png");
-				  FileOutputStream fOut = new FileOutputStream(file);
-				  fOut.write(data);
-				  fOut.flush();
-				  fOut.close();
-				  
-				  
-				  // ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				  // bm.compress(CompressFormat.JPEG, 100, bos);
-				  
-				  //FileOutputStream fos = new FileOutputStream();
-				  entity.addPart("photo", new FileBody(file));
-				  entity.addPart("photoCaption", new StringBody("Uploaded with RedPins Android"));
-				  entity.addPart("facebook_id", new StringBody(((MainActivity)getActivity()).getFacebookId()));
-				  entity.addPart("session_token", new StringBody(((MainActivity)getActivity()).getFacebookSessionToken()));
-				  httppost.setEntity(entity);
-				  HttpResponse postResponse = httpclient.execute(httppost);
-				} catch (ClientProtocolException e) {
-					System.out.println("Client Protocol Exception");
-				} catch (IOException e) {
-					System.out.println("IOException");
-				}
-				System.out.println("Finished post request");
-			/*
-			// TODO Auto-generated method stub
-			JSONObject json = new JSONObject();
-			try {
-				//adds input values into JSON data object
-				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
-				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
-				json.put("event_id", "1");
-				
-				System.out.println(getArguments().getString("event_id"));
-				
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-			JSONObject ret = null;
-			try {
-				//sends requests to server and receives
-				ret = Utility.requestServer(MainActivity.serverURL+"/users/uploadPhoto.json", json);
-			System.out.println(ret.toString());
-			} catch (Throwable e) {
-				
-			}
-			return null;
-			*/
-			return null;
-		}
+	@Override
+	public void onNetworkSuccess(int requestCode, HttpResponse response) {
+		JSONObject responseJSON = Utility.convertHttpResponseToJSONObject(response); // resulting JSONObject
+	}
+
+	@Override
+	public void onNetworkFailure(int requestCode, HttpResponse response) {
+		// TODO Auto-generated method stub
 		
 	}
 }
