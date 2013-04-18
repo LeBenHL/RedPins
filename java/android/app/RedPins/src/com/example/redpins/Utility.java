@@ -200,6 +200,17 @@ public class Utility{
 		jsonTask.executeTask(fragment, REQUEST_GET_EVENT, requestJSON, "/events/get.json");
 	}
 	
+	public static void getBookmarks(JSONResponseHandler fragment, int page_num) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			requestJSON.put("page", page_num);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_GET_BOOKMARKS, requestJSON, "/users/getBookmarks.json");
+	}
+	
 	public static void getRatings(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
@@ -284,15 +295,6 @@ public class Utility{
 		jsonTask.executeTask(fragment, REQUEST_MODIFY_LIKE, requestJSON, "/users/likeEvent.json");
 	}
 	
-	public static void getBookmarks(JSONResponseHandler fragment, int page_num) {
-		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
-		try {
-			requestJSON.put("page", page_num);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(fragment, REQUEST_GET_BOOKMARKS, requestJSON, "/users/getBookmarks.json");
-	}
+
 }
 	
