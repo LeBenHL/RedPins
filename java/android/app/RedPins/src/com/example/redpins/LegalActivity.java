@@ -1,11 +1,10 @@
 package com.example.redpins;
 
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
-import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
+import android.os.Bundle;
 import android.widget.TextView;
+
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class LegalActivity extends Activity {
 

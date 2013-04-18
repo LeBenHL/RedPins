@@ -1,38 +1,25 @@
 package com.example.redpins;
 
-import java.util.ArrayList;
-import java.util.Stack;
-
-import org.apache.http.HttpClientConnection;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.SearchView;
 
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
-import com.google.android.gms.internal.ap;
-import com.google.android.gms.maps.GoogleMap;
 
 public class MainActivity extends FragmentActivity{
 
@@ -53,7 +40,7 @@ public class MainActivity extends FragmentActivity{
 	private Menu _menu;
 
 	// public final static String serverURL = "http://nameless-brook-4178.herokuapp.com";
-	public static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://10.0.0.23:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -354,6 +341,7 @@ public class MainActivity extends FragmentActivity{
 		alert.setView(input);
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 		  serverURL = input.getText().toString();
 		  Log.i("serverURL", serverURL);
@@ -362,7 +350,8 @@ public class MainActivity extends FragmentActivity{
 		});
 
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
+		  @Override
+		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.
 		  }
 		});
@@ -379,6 +368,24 @@ public class MainActivity extends FragmentActivity{
 			ft.remove(mapFragment);
 		}
 		ft.commit();
+	}
+	
+	public void showTimePickerDialog(TimePick fragment, int id) {
+		Bundle data = new Bundle();
+		data.putInt("id", id);
+	    TimePickerFragment timeFragment = new TimePickerFragment();
+	    timeFragment.setArguments(data);
+	    timeFragment.fragment = fragment;
+	    timeFragment.show(getSupportFragmentManager(), "timePicker");
+	}
+	
+	public void showDatePickerDialog(DatePick fragment, int id) {
+		Bundle data = new Bundle();
+		data.putInt("id", id);
+	    DatePickerFragment dateFragment = new DatePickerFragment();
+	    dateFragment.setArguments(data);
+	    dateFragment.fragment = fragment;
+	    dateFragment.show(getSupportFragmentManager(), "datePicker");
 	}
 
 	@Override

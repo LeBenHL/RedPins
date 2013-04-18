@@ -1,16 +1,13 @@
 package com.example.redpins;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +17,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-public class AddEventFragment extends Fragment implements OnClickListener{
+public class AddEventFragment extends Fragment implements OnClickListener, TimePick, DatePick{
 	private String locationName;
 	private EditText titleField;
 	private AutoCompleteTextView locationField;
@@ -69,8 +66,7 @@ public class AddEventFragment extends Fragment implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				System.out.println("clicked the start date button");
-				showDateDialog();
-				//showDialog(startDateID);
+				((MainActivity) getActivity()).showDatePickerDialog((DatePick) AddEventFragment.this, startDateID);
 			}
 		});
 		startTimeButton = (Button) view.findViewById(R.id.newevent_startTimePicker);
@@ -78,13 +74,14 @@ public class AddEventFragment extends Fragment implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				System.out.println("clicked the start time button");
+				((MainActivity) getActivity()).showTimePickerDialog((TimePick) AddEventFragment.this, startTimeID);
 			}
 		});
 		endDateButton = (Button) view.findViewById(R.id.newevent_endDatePicker);
 		endDateButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				System.out.println("clicked the end date button");
+				((MainActivity) getActivity()).showDatePickerDialog((DatePick) AddEventFragment.this, endDateID);
 			}
 		});
 		endTimeButton = (Button) view.findViewById(R.id.newevent_endTimePicker);
@@ -92,6 +89,7 @@ public class AddEventFragment extends Fragment implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				System.out.println("clicked the end time button");
+				((MainActivity) getActivity()).showTimePickerDialog((TimePick) AddEventFragment.this, endTimeID);
 			}
 		});
 		
@@ -276,4 +274,33 @@ public class AddEventFragment extends Fragment implements OnClickListener{
     public interface AddEventFragmentButtonListener{
     	public void onSetDateButtonClicked(Calendar date);
     }
+	@Override
+	public void onTimeSet(int hourOfDay, int minute, int id) {
+		switch (id) {
+		
+		case startTimeID:
+			
+			break;
+		case endTimeID:
+			
+			break;
+		default:
+			break;
+		}
+		
+	}
+
+	@Override
+	public void onDateSet(int year, int month, int day, int id) {
+		switch (id) {	
+		case startDateID:
+			
+			break;
+		case endDateID:
+			
+			break;
+		default:
+			break;
+		}		
+	}
 }

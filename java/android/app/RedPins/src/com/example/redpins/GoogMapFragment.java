@@ -7,23 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +20,15 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoWindowClickListener{
@@ -106,8 +102,8 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 			sumLat += locInfo.latitude;
 			sumLng += locInfo.longitude;
 		}
-		double avgLat = sumLat/(double) jsonArr.length();
-		double avgLng = sumLng/(double) jsonArr.length();
+		double avgLat = sumLat/jsonArr.length();
+		double avgLng = sumLng/jsonArr.length();
 		mapView = view;
 		mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(avgLat,avgLng) , 14.0f) );
 		System.out.println("End of onCreateView");
