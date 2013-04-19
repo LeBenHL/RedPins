@@ -11,7 +11,9 @@ public class MockUtility extends Utility {
 		// switch statement between request URLs, return customized JSONs 
 		JSONObject response = null;
 		try{
-			if(url.equals(MainActivity.serverURL+"/users/postComment.json")){
+			if(url.equals(MainActivity.serverURL+"/users/login.json")){
+				response = new JSONObject("{\"errCode\":1}");
+			}else if(url.equals(MainActivity.serverURL+"/users/postComment.json")){
 				response = new JSONObject("{\"errCode\":1}");
 			}else if(url.equals(MainActivity.serverURL+"/users/bookmarkEvent.json")){
 				response = new JSONObject("{\"errCode\":1}");

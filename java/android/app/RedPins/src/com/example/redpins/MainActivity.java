@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
@@ -33,14 +34,9 @@ public class MainActivity extends FragmentActivity{
 	public String mLoc;
 	public LocationManager locationManager;
 
-	//Facebook User and Session
-	private static GraphUser user;
-	private static Session session;
-
 	private Menu _menu;
 
-	public static String serverURL = "http://192.168.1.36:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
-	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
+	public static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 
 
 	@Override
@@ -56,16 +52,20 @@ public class MainActivity extends FragmentActivity{
 			getSupportFragmentManager()
 			.beginTransaction()
 			.add(R.id.mainAppFragment, appFragment)
+			//.addToBackStack(null)
+			.disallowAddToBackStack()
 			.commit();
 			facebookFragment = new FacebookFragment();
 			getSupportFragmentManager()
 			.beginTransaction()
 			.add(R.id.facebookFragment, facebookFragment)
+			.disallowAddToBackStack()
 			.commit();
 			searchFragment = new SearchFragment();
 			getSupportFragmentManager()
 			.beginTransaction()
 			.add(R.id.searchFragment, searchFragment)
+			.disallowAddToBackStack()
 			.commit();
 		} else {
 			// Or set the fragment from restored state info
@@ -132,21 +132,16 @@ public class MainActivity extends FragmentActivity{
 		tx.commit();
 	}
 
-	public void setFacebookUser(GraphUser _user) {
-		user = _user;
-	}
-
-	public void setFacebookSession(Session _session) {
-		session = _session;
-	}
-
 	public String getFacebookId() {
-		return user.getProperty("id").toString();
+		if (facebookFragment._user.getProperty("id") == null) {
+			return null;
+		}
+		return facebookFragment._user.getProperty("id").toString();
 	}
 
 	public String getFacebookSessionToken() {
-		System.out.println(session.getAccessToken());
-		return session.getAccessToken();
+		System.out.println(facebookFragment._session.getAccessToken());
+		return facebookFragment._session.getAccessToken();
 	}
 
 	public void nearbyOnClick(View view) {
@@ -173,61 +168,32 @@ public class MainActivity extends FragmentActivity{
 		((NavigationFragment) appFragment).historyOnClick(view); 
 	}
 
-	public void hideNaviFrag(){
-		System.out.println("hiding navi");
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(appFragment);
-		ft.remove(appFragment).commit();
-	}
-
-//	public void showNaviFrag(){
-//		System.out.println("showing navi");
-//		appFragment = new NavigationFragment();
-//		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//		ft.replace(R.id.mainAppFragment,appFragment);
-//		ft.commit();
-//	}
-
-	public void hideListviewFrag(){
-		System.out.println("hiding listview");
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(appFragment);
-		ft.remove(appFragment).commit();
-	}
-
 	public void createListviewFrag(Bundle data){
 		System.out.println("showing listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		listViewFragment = new ListviewFragment();
 		listViewFragment.setArguments(data);
-		Fragment lastAppFragment = appFragment;
+		//Fragment lastAppFragment = appFragment;
 		appFragment = listViewFragment;
-		if (lastAppFragment instanceof NavigationFragment) {
-			ft.replace(R.id.mainAppFragment, appFragment);//.addToBackStack(null);			
-		} else {
-			ft.replace(R.id.mainAppFragment, appFragment);
-		}
-		ft.addToBackStack(null);
+		//		if (lastAppFragment instanceof NavigationFragment) {
+		ft.replace(R.id.mainAppFragment, appFragment);//.addToBackStack(null);			
+		//		} else {
+		//			ft.replace(R.id.mainAppFragment, appFragment);
+		//		}
+		ft.addToBackStack("list");
 		ft.commit();
+		Log.v("onBackPressed","backstack count after adding createListview: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	public void toggleListviewFrag() {
 		System.out.println("toggling mapview");
+		getSupportFragmentManager().popBackStack("map", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = listViewFragment;
 		ft.replace(R.id.mainAppFragment, appFragment);
+		ft.addToBackStack("list");
 		ft.commit();
-		System.out.println("BACKSTACK COUNT: " + getSupportFragmentManager().getBackStackEntryCount());
-	}
-
-
-	public void hideMapviewFrag(){
-		System.out.println("hiding mapview");
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(getSupportFragmentManager().findFragmentById(R.id.map));
-		ft.remove(getSupportFragmentManager().findFragmentById(R.id.map));
-		ft.hide(appFragment);
-		ft.remove(appFragment).commit();
+		Log.v("onBackPressed","backstack count after adding toggle: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	public void createMapviewFrag(Bundle bundle){
@@ -237,17 +203,13 @@ public class MainActivity extends FragmentActivity{
 
 	public void toggleMapviewFrag() {
 		System.out.println("toggling mapview");
+		getSupportFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = googleMapFragment;
 		ft.replace(R.id.mainAppFragment, appFragment);
+		ft.addToBackStack("map");
 		ft.commit();
-	}
-
-	public void hideEventFrag(){
-		System.out.println("hiding event page");
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(appFragment);
-		ft.remove(appFragment).commit();
+		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	public void showEventFrag(String eventID){
@@ -258,31 +220,19 @@ public class MainActivity extends FragmentActivity{
 		appFragment = new EventFragment();
 		appFragment.setArguments(data);
 		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.addToBackStack(null);
+		ft.addToBackStack("event");
 		ft.commit();
-		//		fragStack.push("event");
-	}
-
-	public void hideBookmarksFrag(){
-		System.out.println("hiding bookmarks page");
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.hide(appFragment);
-		ft.remove(appFragment).commit();
+		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	public void showBookmarksFrag(){
 		System.out.println("showing bookmarks page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		//		Bundle data = new Bundle();
-		//		data.putString("prev", prev);
-		//		data.putString("event_id",eventID);
 		appFragment = new BookmarksFragment();
-		//		appFragment.setArguments(data);
 		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.addToBackStack(null);
+		ft.addToBackStack("bookmark");
 		ft.commit();
-		System.out.println("BACK STACK count: " + getSupportFragmentManager().getBackStackEntryCount());
-		//		fragStack.push("bookmark");
+		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	public void hideAddPhotoFragFrag(){
@@ -303,7 +253,7 @@ public class MainActivity extends FragmentActivity{
 		ft.commit();
 		//		fragStack.push("bookmark");
 	}
-	
+
 	public void createTouchGalleryFrag(Bundle data) {
 		Log.i("createTouchGalleryFrag", "Created touch gallery");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -312,7 +262,7 @@ public class MainActivity extends FragmentActivity{
 		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
 		ft.commit();
 	}
-	
+
 	public void createAddEventFrag(Bundle data) {
 		Log.i("Create Add Event Frag", "Showing Add Event page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -320,7 +270,16 @@ public class MainActivity extends FragmentActivity{
 		appFragment.setArguments(data);
 		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
 		ft.commit();
-		//		fragStack.push("bookmark");
+	}
+	
+	public void createAddEventMapFrag(Bundle bundle, AddEventFragment addEventFragment) {
+		Log.i("createAddEventMapFrag", "Created addEventMap frag");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = new AddEventMapFragment();
+		((AddEventMapFragment) appFragment).parent = addEventFragment;
+		appFragment.setArguments(bundle);
+		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.commit();
 	}
 
 	public void createAddCommentFrag(Bundle bundle) {
@@ -329,15 +288,16 @@ public class MainActivity extends FragmentActivity{
 		commFragment.setArguments(bundle);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = commFragment;
-		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.replace(R.id.mainAppFragment, appFragment);
+		ft.addToBackStack(null);
+		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 		ft.commit();
 	}
-
-
+	
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
 	}
-	
+
 	public void setRailsAppUrlDialog(MenuItem item) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
@@ -349,19 +309,19 @@ public class MainActivity extends FragmentActivity{
 		alert.setView(input);
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int whichButton) {
-		  serverURL = input.getText().toString();
-		  Log.i("serverURL", serverURL);
-		  // Do something with value!
-		  }
+			@Override
+			public void onClick(DialogInterface dialog, int whichButton) {
+				serverURL = input.getText().toString();
+				Log.i("serverURL", serverURL);
+				// Do something with value!
+			}
 		});
 
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		  @Override
-		public void onClick(DialogInterface dialog, int whichButton) {
-		    // Canceled.
-		  }
+			@Override
+			public void onClick(DialogInterface dialog, int whichButton) {
+				// Canceled.
+			}
 		});
 
 		alert.show();
@@ -377,19 +337,42 @@ public class MainActivity extends FragmentActivity{
 		}
 		ft.commit();
 	}
-	
+
 	public void showTimePickerDialog(TimePick fragment, int id) {
 		Bundle data = new Bundle();
 		data.putInt("id", id);
+		TimePickerFragment timeFragment = new TimePickerFragment();
+		timeFragment.setArguments(data);
+		timeFragment.fragment = fragment;
+		timeFragment.show(getSupportFragmentManager(), "timePicker");
+	}
+
+	public void showDatePickerDialog(DatePick fragment, int id) {
+		Bundle data = new Bundle();
+		data.putInt("id", id);
+		DatePickerFragment dateFragment = new DatePickerFragment();
+		dateFragment.setArguments(data);
+		dateFragment.fragment = fragment;
+		dateFragment.show(getSupportFragmentManager(), "datePicker");
+	}
+	
+	public void showTimePickerDialog(TimePick fragment, int id, int currentHour, int currentMinute) {
+		Bundle data = new Bundle();
+		data.putInt("id", id);
+		data.putInt("hour", currentHour);
+		data.putInt("minute", currentMinute);
 	    TimePickerFragment timeFragment = new TimePickerFragment();
 	    timeFragment.setArguments(data);
 	    timeFragment.fragment = fragment;
 	    timeFragment.show(getSupportFragmentManager(), "timePicker");
 	}
 	
-	public void showDatePickerDialog(DatePick fragment, int id) {
+	public void showDatePickerDialog(DatePick fragment, int id, int currentYear, int currentMonth, int currentDay) {
 		Bundle data = new Bundle();
 		data.putInt("id", id);
+		data.putInt("year", currentYear);
+		data.putInt("month", currentMonth);
+		data.putInt("day", currentDay);
 	    DatePickerFragment dateFragment = new DatePickerFragment();
 	    dateFragment.setArguments(data);
 	    dateFragment.fragment = fragment;
@@ -401,11 +384,13 @@ public class MainActivity extends FragmentActivity{
 		Log.i("onBackPressed", "Back Pressed");
 		Log.v("onBackPressed", "Old Fragment: " + appFragment.toString());
 		super.onBackPressed();
-		getSupportFragmentManager().beginTransaction().hide(appFragment).remove(appFragment).detach(appFragment).commit();
-		System.out.println("backstack count: "+getSupportFragmentManager().getBackStackEntryCount());
+		getSupportFragmentManager().beginTransaction().hide(appFragment).remove(appFragment).commit();//hide(appFragment).remove(appFragment).commit();
+		//getSupportFragmentManager().popBackStack();
 		appFragment = getSupportFragmentManager()
 				.findFragmentById(R.id.mainAppFragment);
-		getSupportFragmentManager().beginTransaction().add(R.id.mainAppFragment, appFragment).show(appFragment).commit();
+		getSupportFragmentManager().beginTransaction().show(appFragment).add(R.id.mainAppFragment,appFragment).commit();
+		//getSupportFragmentManager().beginTransaction().show(appFragment).commit();
+		Log.v("onBackPressed","backstack count after: "+getSupportFragmentManager().getBackStackEntryCount());
 		Log.v("onBackPressed", "New Fragment: " + appFragment.toString());
 	}
 }

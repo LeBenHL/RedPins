@@ -221,7 +221,7 @@ public class Utility{
 		jsonTask.executeTask(fragment, REQUEST_ADD_COMMENT, requestJSON, "/users/postComment.json");
 	}
 	
-	public static void addEvent(JSONResponseHandler fragment, String title, String startTime, String endTime, String location, String url, double latitude, double longitude) {
+	public static void addEvent(JSONResponseHandler fragment, String title, String startTime, String endTime, String location, String url, double latitude, double longitude, String description) {
 		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
 			requestJSON.put("title", title);
@@ -229,8 +229,11 @@ public class Utility{
 			requestJSON.put("end_time", endTime);
 			requestJSON.put("location", location);
 			requestJSON.put("url", url);
-			requestJSON.put("latitude", latitude);
-			requestJSON.put("longitude", longitude);
+			requestJSON.put("description", description);
+			if ((latitude != -360.0) && (longitude != -360.0)) {
+				requestJSON.put("latitude", latitude);
+				requestJSON.put("longitude", longitude);	
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

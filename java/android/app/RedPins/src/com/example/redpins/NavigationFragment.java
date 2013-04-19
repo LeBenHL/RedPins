@@ -38,6 +38,19 @@ public class NavigationFragment extends Fragment{
 	    historyButton = view.findViewById(R.id.History);
 	    return view;
 	}
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Log.v("onBackPressed","Navi Destroyed");
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.v("onBackPressed","Navi Resumed");
+	}
 	
 	public void nearbyOnClick(View view) {
 		Log.v("buttonClick", "NEARBY");

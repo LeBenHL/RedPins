@@ -68,7 +68,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 				// TODO Auto-generated method stub
 				View view = (View) listView.getItemAtPosition(position);
 				System.out.println("CLICKED");
-				((MainActivity) getActivity()).hideListviewFrag();
+				//((MainActivity) getActivity()).hideListviewFrag();
 				((MainActivity) getActivity()).showEventFrag(view.getTag().toString());
 			}
 
@@ -94,7 +94,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			System.out.println("CLICKED");
-			((MainActivity) getActivity()).hideListviewFrag();
+			//((MainActivity) getActivity()).hideListviewFrag();
 			//		showMapviewFrag();
 			((MainActivity) getActivity()).showEventFrag(v.getTag().toString());
 		}

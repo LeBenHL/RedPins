@@ -1,154 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/GridLayout1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:columnCount="7"
-    android:orientation="horizontal" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <ImageButton
-        android:id="@+id/home_button"
-        android:layout_columnSpan="2"
-        android:layout_gravity="left"
-        android:src="@drawable/action_about"
-        android:text="@string/home" />
+    <GridLayout
+        android:id="@+id/GridLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="7"
+        android:orientation="horizontal" >
 
-    <ImageButton
-        android:id="@+id/bookmark_button"
-        android:layout_column="0"
-        android:layout_columnSpan="2"
-        android:layout_gravity="left"
-        android:src="@drawable/collections_labels" />
+        <ImageButton
+            android:id="@+id/home_button"
+            android:layout_columnSpan="2"
+            android:layout_gravity="left"
+            android:src="@drawable/action_about"
+            android:text="@string/home" />
 
-    <TextView
-        android:id="@+id/event_name"
-        android:layout_column="0"
-        android:layout_columnSpan="6"
-        android:layout_gravity="fill_horizontal"
-        android:padding="@dimen/object_padding"
-        android:text="Event Name"
-        android:textSize="@dimen/event_name" />
+        <ImageButton
+            android:id="@+id/bookmark_button"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_gravity="left"
+            android:src="@drawable/collections_labels" />
 
-    <ImageView
-        android:id="@+id/event_photo"
-        android:layout_width="98dp"
-        android:layout_height="98dp"
-        android:layout_column="0"
-        android:layout_columnSpan="2"
-        android:layout_gravity="left"
-        android:layout_rowSpan="4"
-        android:contentDescription="@string/null_val"
-        android:padding="@dimen/words"
-        android:src="@drawable/ic_launcher" />
+        <TextView
+            android:id="@+id/event_name"
+            android:layout_column="0"
+            android:layout_columnSpan="6"
+            android:layout_gravity="fill_horizontal"
+            android:padding="@dimen/object_padding"
+            android:text="Event Name"
+            android:textSize="@dimen/event_name" />
 
-    <TextView
-        android:id="@+id/event_url"
-        android:layout_columnSpan="4"
-        android:layout_gravity="left"
-        android:clickable="true"
-        android:text="Event URL"
-        android:textColor="#0032FF"
-        android:textSize="@dimen/words" />
-    
-   <TextView
-        android:id="@+id/event_description"
-        android:layout_columnSpan="4"
-        android:layout_gravity="left"
-        android:text="Event Description"
-        android:textSize="@dimen/words" />
+        <ImageView
+            android:id="@+id/event_photo"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_gravity="left"
+            android:layout_rowSpan="4"
+            android:contentDescription="@string/null_val"
+            android:padding="@dimen/words"
+            android:src="@drawable/ic_launcher" />
 
-    <TextView
-        android:id="@+id/event_location"
-        android:layout_column="2"
-        android:layout_columnSpan="4"
-        android:layout_gravity="left"
-        android:text="Event Location"
-        android:textSize="@dimen/words" />
+        <TextView
+            android:id="@+id/event_url"
+            android:layout_columnSpan="4"
+            android:layout_gravity="left"
+            android:clickable="true"
+            android:text="Event URL"
+            android:textColor="#0032FF"
+            android:textSize="@dimen/words" />
 
-    <TextView
-        android:id="@+id/event_time"
-        android:layout_column="2"
-        android:layout_columnSpan="4"
-        android:layout_gravity="left"
-        android:text="Event Time"
-        android:textSize="@dimen/words" />
+        <TextView
+            android:id="@+id/event_description"
+            android:layout_columnSpan="4"
+            android:layout_gravity="left"
+            android:text="Event Description"
+            android:textSize="@dimen/words" />
 
-    <TextView
-        android:id="@+id/event_like"
-        android:layout_column="4"
-        android:layout_gravity="left"
-        android:layout_margin="@dimen/object_padding"
-        android:text="LIKE"
-        android:textSize="@dimen/words" />
+        <TextView
+            android:id="@+id/event_location"
+            android:layout_column="2"
+            android:layout_columnSpan="4"
+            android:layout_gravity="left"
+            android:text="Event Location"
+            android:textSize="@dimen/words" />
 
-    <TextView
-        android:id="@+id/event_dislike"
-        android:layout_gravity="left"
-        android:layout_margin="@dimen/object_padding"
-        android:text="DISLIKE"
-        android:textSize="@dimen/words" />
+        <TextView
+            android:id="@+id/event_time"
+            android:layout_column="2"
+            android:layout_columnSpan="4"
+            android:layout_gravity="left"
+            android:text="Event Time"
+            android:textSize="@dimen/words" />
 
-    <ProgressBar
-        android:id="@+id/event_progress"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_column="0"
-        android:layout_columnSpan="6"
-        android:layout_gravity="fill_horizontal"
-        android:layout_margin="@dimen/object_padding"
-        android:progress="0" />
+        <TextView
+            android:id="@+id/event_like"
+            android:layout_column="4"
+            android:layout_gravity="left"
+            android:layout_margin="@dimen/object_padding"
+            android:text="LIKE"
+            android:textSize="@dimen/words" />
 
-    <ImageButton
-        android:id="@+id/like_button"
-        android:layout_column="0"
-        android:layout_gravity="left"
-        android:src="@drawable/rating_good" 
-        style="?android:attr/borderlessButtonStyle"/>
+        <TextView
+            android:id="@+id/event_dislike"
+            android:layout_gravity="left"
+            android:layout_margin="@dimen/object_padding"
+            android:text="DISLIKE"
+            android:textSize="@dimen/words" />
 
-    <ImageButton
-        android:id="@+id/dislike_button"
-        android:layout_gravity="left"
-        android:src="@drawable/rating_bad" 
-        style="?android:attr/borderlessButtonStyle"/>
+        <ProgressBar
+            android:id="@+id/event_progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_column="0"
+            android:layout_columnSpan="6"
+            android:layout_gravity="fill_horizontal"
+            android:layout_margin="@dimen/object_padding"
+            android:progress="0" />
 
-    <Button
-        android:id="@+id/add_comment_button"
-        android:layout_column="0"
-        android:layout_columnSpan="6"
-        android:layout_gravity="left"
-        android:layout_row="11"
-        android:text="Add Comment" />
+        <ImageButton
+            android:id="@+id/like_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_column="0"
+            android:layout_gravity="left"
+            android:src="@drawable/rating_good" />
+
+        <ImageButton
+            android:id="@+id/dislike_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_gravity="left"
+            android:src="@drawable/rating_bad" />
+
+        <Button
+            android:id="@+id/add_comment_button"
+            android:layout_column="0"
+            android:layout_columnSpan="6"
+            android:layout_gravity="left"
+            android:layout_row="11"
+            android:text="Add Comment" />
+
+        <Space
+            android:layout_column="6"
+            android:layout_gravity="fill_vertical"
+            android:layout_row="13" />
+
+        <ImageButton
+            android:id="@+id/deleteEventButton"
+            android:layout_column="3"
+            android:layout_gravity="left|top"
+            android:layout_row="1"
+            android:src="@drawable/content_discard" />
+
+        <ImageButton
+            android:id="@+id/removeEventButton"
+            android:layout_column="3"
+            android:layout_gravity="left|top"
+            android:layout_row="0"
+            android:src="@drawable/content_remove" />
+
+        <Button
+            android:id="@+id/uploadPhoto"
+            android:layout_column="5"
+            android:layout_gravity="left|top"
+            android:layout_row="1"
+            android:text="@string/upload_photo" />
+    </GridLayout>
 
     <ListView
         android:id="@+id/comment_listview"
-        android:layout_column="0"
-        android:layout_columnSpan="6"
-        android:layout_gravity="fill_horizontal" >
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
     </ListView>
 
-    <Space
-        android:layout_column="6"
-        android:layout_gravity="fill_vertical"
-        android:layout_row="13" />
-
-    <ImageButton
-        android:id="@+id/deleteEventButton"
-        android:layout_column="3"
-        android:layout_gravity="left|top"
-        android:layout_row="1"
-        android:src="@drawable/content_discard" />
-
-    <ImageButton
-        android:id="@+id/removeEventButton"
-        android:layout_column="3"
-        android:layout_gravity="left|top"
-        android:layout_row="0"
-        android:src="@drawable/content_remove" />
-
-    <Button
-        android:id="@+id/uploadPhoto"
-        android:layout_column="5"
-        android:layout_gravity="left|top"
-        android:layout_row="1"
-        android:text="@string/upload_photo" />
-
-</GridLayout>
+</LinearLayout>
