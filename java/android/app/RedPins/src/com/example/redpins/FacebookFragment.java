@@ -30,7 +30,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
-public class FacebookFragment extends Fragment {
+public class FacebookFragment extends Fragment implements JSONResponseHandler {
 	
 	private static final String TAG = "MainFragment";
 	private UiLifecycleHelper uiHelper;
@@ -93,9 +93,8 @@ public class FacebookFragment extends Fragment {
 	        		            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         		       if (networkInfo != null && networkInfo.isConnected()) {
-        		    		   LoginTask task = new LoginTask();
-        		    		   task.execute();
-	        		           ((MainActivity) getActivity()).hideFacebookFragment();
+        		    	   Utility.loginUser(FacebookFragment.this, _user.getProperty("email").toString(), _user.getProperty("id").toString(), _session.getAccessToken());
+        		    	   ((MainActivity) getActivity()).hideFacebookFragment();
         		        } else {
         		        }
         		       ((MainActivity) getActivity()).setFacebookMenuLogout();
@@ -179,52 +178,42 @@ public class FacebookFragment extends Fragment {
 	    uiHelper.onSaveInstanceState(outState);
 	}
 	
-    // Uses AsyncTask to create a task away from the main UI thread. This task takes a 
-    // action we want to perform and calls on the appropriate API of our RedPins server to
-	// perform the action.
-    private class LoginTask extends AsyncTask<Void, Void, JSONObject> {
-    	
-    	private static final int SUCCESS = 1;
-		private static final int ERR_NO_USER_EXISTS = -1;
-		private static final int ERR_USER_EXISTS = -2;
-		private static final int ERR_BAD_EMAIL = -3;
-		private static final int ERR_BAD_FACEBOOK_ID = -4;
-    	
-		@Override
-		protected JSONObject doInBackground(Void... arg0) {
-			JSONObject response = null;
-		    try {
-	            JSONObject jsonToSend = new JSONObject();
-				jsonToSend.put("facebook_id", _user.getProperty("id").toString());
-				jsonToSend.put("session_token", _session.getAccessToken());
-				jsonToSend.put("email", _user.getProperty("email").toString());
-				response = Utility.requestServer(MainActivity.serverURL + "/users/login.json", jsonToSend);
-				switch (response.getInt("errCode")) {
-				  case ERR_NO_USER_EXISTS:
-					   jsonToSend = new JSONObject();
-		  	           jsonToSend.put("email", _user.getProperty("email").toString());
-	    	           jsonToSend.put("facebook_id", _user.getProperty("id").toString());
-	    	           jsonToSend.put("firstname", _user.getFirstName());
-	    	           jsonToSend.put("lastname", _user.getLastName());
-	    	           jsonToSend.put("session_token", _session.getAccessToken());
-	    	           response = Utility.requestServer(MainActivity.serverURL + "/users/add.json", jsonToSend);
- 	    			   break;
-	    			   default:
-	    				   break;
-				}
-			} catch (JSONException e) {
-				Toast toast = Toast.makeText(getActivity(), "GetCommentTask: Could not connect to server", Toast.LENGTH_SHORT);
-				toast.show();
-			}
-		    return response;
-		}
-		
-    }
+    
     
     public enum Actions {
-
         LOGINUSER,
         ADDUSER
     }
+
+	@Override
+	public void onNetworkSuccess(int requestCode, JSONObject json) {
+		// TODO Auto-generated method stub
+		switch (requestCode) {
+		case Utility.REQUEST_LOGIN_USER:
+			try {
+				switch (json.getInt("errCode")) {
+				  case ERR_NO_USER_EXISTS:
+					  System.out.println("REQUEST_LOGIN_USER: User does not exist. Adding user now.");
+					  Utility.addUser(FacebookFragment.this, _user.getProperty("email").toString(), _user.getProperty("id").toString(), _session.getAccessToken(), _user.getFirstName(),  _user.getLastName());
+					  break;
+				  default:
+					  break;
+				}
+			} catch (JSONException e) {
+				Toast toast = Toast.makeText(getActivity(), "REQUEST_LOGIN_USER: Could not connect to server", Toast.LENGTH_SHORT);
+				toast.show();
+			}
+			break;
+		case Utility.REQUEST_ADD_USER:
+			System.out.println("REQUEST_ADD_USER: Created a new user");
+			break;
+		}
+	}
+
+	@Override
+	public void onNetworkFailure(int requestCode, JSONObject json) {
+		// TODO Auto-generated method stub
+		
+	}
 }
     

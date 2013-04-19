@@ -44,17 +44,21 @@ public class Utility{
 	public static final int REQUEST_ADD_EVENT= 101;
 	public static final int REQUEST_ADD_PHOTO = 102;
 	public static final int REQUEST_ADD_BOOKMARK = 103;
+	public static final int REQUEST_ADD_USER = 107;
 	public static final int REQUEST_GET_COMMENTS = 200;
 	public static final int REQUEST_GET_EVENT = 201;
 	public static final int REQUEST_GET_PHOTO = 202;
 	public static final int REQUEST_GET_BOOKMARKS = 203;
 	public static final int REQUEST_GET_RATINGS = 204;
 	public static final int REQUEST_GET_EVENTLIST = 205;
+	public static final int REQUEST_GET_NEARBYEVENTLIST = 206;
 	public static final int REQUEST_CANCEL_EVENT = 301;
 	public static final int REQUEST_DELETE_COMMENT = 400;
 	public static final int REQUEST_DELETE_EVENT = 401;
 	public static final int REQUEST_DELETE_BOOKMARK = 403;
+	public static final int REQUEST_DELETE_LIKE = 404;
 	public static final int REQUEST_MODIFY_LIKE = 504;
+	public static final int REQUEST_LOGIN_USER = 600;
 	
 	// Helper methods
 	public static JSONObject requestServer(String url, JSONObject jsonInput) {
@@ -108,33 +112,7 @@ public class Utility{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		InputStreamReader read = null;
-		try {
-			read = new InputStreamReader(response.getEntity().getContent());
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		BufferedReader buffReader = new BufferedReader(read);
-		StringBuilder sBuilder = new StringBuilder();
-		try {
-			String line = buffReader.readLine();
-			while(line != null) {
-				sBuilder.append(line);
-				line = buffReader.readLine();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		JSONObject jsonOutput = null;
-		try {
-			System.out.println("RESPONSE STRING: "+sBuilder.toString());
-			jsonOutput = new JSONObject(sBuilder.toString());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jsonOutput;
+		return convertHttpResponseToJSONObject(response);
 	}
 	
 	public static JSONObject convertHttpResponseToJSONObject(HttpResponse httpResponse) {
@@ -167,7 +145,7 @@ public class Utility{
 		return jsonOutput;
 	}
 	
-	public static JSONArray getJSONArrayFromJSONObject(JSONObject jsonInput, String key) {
+	public static JSONArray lookupJSONArrayFromJSONObject(JSONObject jsonInput, String key) {
 		JSONArray jsonArrayInput = null;
 		try {
 			jsonArrayInput = jsonInput.getJSONArray(key);
@@ -243,6 +221,38 @@ public class Utility{
 		jsonTask.executeTask(fragment, REQUEST_ADD_COMMENT, requestJSON, "/users/postComment.json");
 	}
 	
+	public static void addEvent(JSONResponseHandler fragment, String title, String startTime, String endTime, String location, String url, double latitude, double longitude) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			requestJSON.put("title", title);
+			requestJSON.put("start_time", startTime);
+			requestJSON.put("end_time", endTime);
+			requestJSON.put("location", location);
+			requestJSON.put("url", url);
+			requestJSON.put("latitude", latitude);
+			requestJSON.put("longitude", longitude);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_ADD_EVENT, requestJSON, "/events/add.json");
+	}
+	
+	public static void addUser(JSONResponseHandler fragment, String email, String facebookID, String sessionToken, String firstname, String lastname) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			 requestJSON.put("email", email);
+			 requestJSON.put("facebook_id", facebookID);
+			 requestJSON.put("firstname", firstname);
+			 requestJSON.put("lastname", lastname);
+			 requestJSON.put("session_token", sessionToken);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_ADD_USER, requestJSON, "/users/add.json");
+	}
+	
 	public static void addBookmark(JSONResponseHandler fragment, String eventID) {
 		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
@@ -289,7 +299,7 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(fragment, REQUEST_GET_EVENT, requestJSON, "/events/get.json");
+		jsonTask.executeTask(fragment, REQUEST_GET_EVENT, requestJSON, "/events/getEvent.json");
 	}
 	
 	public static void getBookmarks(JSONResponseHandler fragment, int page_num) {
@@ -324,7 +334,21 @@ public class Utility{
 			e.printStackTrace();
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
-		jsonTask.executeTask(fragment, REQUEST_GET_RATINGS, requestJSON, "/users/alreadyLikedEvent.json");
+		jsonTask.executeTask(fragment, REQUEST_GET_EVENTLIST, requestJSON, "/events/search.json");
+	}
+	
+	public static void getNearbyEventList(JSONResponseHandler fragment, String searchQuery, double latitude, double longitude, int pageOffset) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			requestJSON.put("search_query", searchQuery);
+			requestJSON.put("latitude", latitude);
+			requestJSON.put("longitude", longitude);
+			requestJSON.put("page", pageOffset);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_GET_NEARBYEVENTLIST, requestJSON, "/events/searchViaCoordinates.json");
 	}
 	
 	// Methods for REQUEST_CANCEL_[A-Z]+ = 3[0-9][0-9]
@@ -374,6 +398,17 @@ public class Utility{
 		jsonTask.executeTask(fragment, REQUEST_DELETE_BOOKMARK, requestJSON, "/users/removeBookmark.json");
 	}
 	
+	public static void deleteLike(JSONResponseHandler fragment, String eventID) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_DELETE_LIKE, requestJSON, "/users/removeLike.json");
+	}
+	
 	// Methods for REQUEST_MODIFY_[A-Z]+ = 5[0-9][0-9]
 	public static void modifyLike(JSONResponseHandler fragment, String eventID, boolean likeStatus) {
 		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
@@ -385,5 +420,19 @@ public class Utility{
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_MODIFY_LIKE, requestJSON, "/users/likeEvent.json");
+	}
+	
+	// Methods for REQUEST_LOGIN_[A-Z]+ = 6[0-9][0-9]
+	public static void loginUser(JSONResponseHandler fragment, String email, String facebookID, String sessionToken) {
+		JSONObject requestJSON = new JSONObject();
+		try {
+			 requestJSON.put("email", email);
+			 requestJSON.put("facebook_id", facebookID);
+			 requestJSON.put("session_token", sessionToken);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_LOGIN_USER, requestJSON, "/users/login.json");
 	}
 }
