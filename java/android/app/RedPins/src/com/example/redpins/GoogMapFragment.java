@@ -103,7 +103,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		System.out.println("WINDOW CLICKED");
 		String event_id = hash.get(marker.getId());
 		System.out.println("event_idMAP: "+event_id);
-		//((MainActivity)getActivity()).removeMapFragment();
+		((MainActivity)getActivity()).hideMapviewFrag();
 		((MainActivity) getActivity()).showEventFrag(event_id);
 	}
 
