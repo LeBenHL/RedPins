@@ -47,7 +47,7 @@ public class Utility{
 	public static final int REQUEST_ADD_USER = 107;
 	public static final int REQUEST_GET_COMMENTS = 200;
 	public static final int REQUEST_GET_EVENT = 201;
-	public static final int REQUEST_GET_PHOTO = 202;
+	public static final int REQUEST_GET_PHOTOS = 202;
 	public static final int REQUEST_GET_BOOKMARKS = 203;
 	public static final int REQUEST_GET_RATINGS = 204;
 	public static final int REQUEST_GET_EVENTLIST = 205;
@@ -300,6 +300,17 @@ public class Utility{
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_GET_EVENT, requestJSON, "/events/getEvent.json");
+	}
+	
+	public static void getPhotos(JSONResponseHandler fragment, String eventID) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_GET_PHOTOS, requestJSON, "/events/getPhotos.json");
 	}
 	
 	public static void getBookmarks(JSONResponseHandler fragment, int page_num) {
