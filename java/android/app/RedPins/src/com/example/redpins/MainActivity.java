@@ -397,11 +397,11 @@ public class MainActivity extends FragmentActivity{
 		Log.i("onBackPressed", "Back Pressed");
 		Log.v("onBackPressed", "Old Fragment: " + appFragment.toString());
 		super.onBackPressed();
-		getSupportFragmentManager().beginTransaction().remove(appFragment).commit();//hide(appFragment).remove(appFragment).commit();
+		getSupportFragmentManager().beginTransaction().hide(appFragment).remove(appFragment).commit();//hide(appFragment).remove(appFragment).commit();
 		//getSupportFragmentManager().popBackStack();
 		appFragment = getSupportFragmentManager()
 				.findFragmentById(R.id.mainAppFragment);
-		getSupportFragmentManager().beginTransaction().add(R.id.mainAppFragment,appFragment).commit();
+		getSupportFragmentManager().beginTransaction().show(appFragment).add(R.id.mainAppFragment,appFragment).commit();
 		//getSupportFragmentManager().beginTransaction().show(appFragment).commit();
 		Log.v("onBackPressed","backstack count after: "+getSupportFragmentManager().getBackStackEntryCount());
 		Log.v("onBackPressed", "New Fragment: " + appFragment.toString());
