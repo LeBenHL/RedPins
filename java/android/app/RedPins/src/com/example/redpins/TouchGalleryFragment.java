@@ -17,8 +17,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.widget.TextView;
 
 public class TouchGalleryFragment extends Fragment implements JSONResponseHandler {
+	
+	GalleryViewPager viewer;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, 
@@ -26,6 +30,7 @@ public class TouchGalleryFragment extends Fragment implements JSONResponseHandle
 	        Bundle savedInstanceState) {
 		Log.i("TouchGalleryFragment On Create", "ON CREATE");
 		View view = inflater.inflate(R.layout.touch_gallery_fragment, container, false);
+		viewer = (GalleryViewPager) view.findViewById(R.id.viewer);
 		Utility.getPhotos(this, getArguments().getString("event_id"));
 		return view;
 	}
@@ -48,10 +53,14 @@ public class TouchGalleryFragment extends Fragment implements JSONResponseHandle
 		}
 		Log.i("TouchGalleryFragment On Create", "GOT ALL URLS");
 		if (getActivity() != null) {
-			UrlPagerAdapter pagerAdapter = new UrlPagerAdapter(getActivity(), urlsList);  
-			GalleryViewPager mViewPager = (GalleryViewPager) getView().findViewById(R.id.viewer);
-			mViewPager.setOffscreenPageLimit(3);
-			mViewPager.setAdapter(pagerAdapter);
+			if (urlsList.size() != 0) {
+				UrlPagerAdapter pagerAdapter = new UrlPagerAdapter(getActivity(), urlsList);  
+				GalleryViewPager mViewPager = (GalleryViewPager) getView().findViewById(R.id.viewer);
+				mViewPager.setOffscreenPageLimit(3);
+				mViewPager.setAdapter(pagerAdapter);
+			} else {
+				((ViewManager) viewer.getParent()).removeView(viewer);
+			}
 		}
 		// TODO Auto-generated method stub
 		
