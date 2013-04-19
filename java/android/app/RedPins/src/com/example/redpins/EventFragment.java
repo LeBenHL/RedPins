@@ -68,7 +68,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		eventURL.setOnClickListener(this);
 		eventLoc = (TextView) view.findViewById(R.id.event_location);
 		eventTime = (TextView) view.findViewById(R.id.event_time);
-		eventImg = (ImageView) view.findViewById(R.id.event_image);
+		eventImg = (ImageView) view.findViewById(R.id.event_photo);
 		eventDesc = (TextView) view.findViewById(R.id.event_description);
 		eventLikes = (TextView) view.findViewById(R.id.event_like);
 		eventDislikes = (TextView) view.findViewById(R.id.event_dislike);
@@ -103,6 +103,8 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		commentArr = new ArrayList<JSONObject>();
 		bookmarkButton = (ImageButton) view.findViewById(R.id.bookmark_button);
 		bookmarkButton.setOnClickListener(this);
+		
+		eventImg.setOnClickListener(this);
 		
 		// API Requests
 		Utility.getEvent(this, event_id);
@@ -217,6 +219,10 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		case R.id.uploadPhoto:
 			Log.i("onClick", "UploadPhoto");
 			uploadPhoto(v);
+			break;
+		case R.id.event_photo:
+			Bundle data = new Bundle();
+			((MainActivity) getActivity()).createTouchGalleryFrag(data);
 			break;
 		}
 	}
