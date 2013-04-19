@@ -39,7 +39,8 @@ public class MainActivity extends FragmentActivity{
 
 	private Menu _menu;
 
-	public static String serverURL = "http://192.168.1.36:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+
+	public static String serverURL = "http://10.13.13.52:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -401,7 +402,7 @@ public class MainActivity extends FragmentActivity{
 		Log.i("onBackPressed", "Back Pressed");
 		Log.v("onBackPressed", "Old Fragment: " + appFragment.toString());
 		super.onBackPressed();
-		getSupportFragmentManager().beginTransaction().hide(appFragment).detach(appFragment).commit();
+		getSupportFragmentManager().beginTransaction().hide(appFragment).remove(appFragment).detach(appFragment).commit();
 		System.out.println("backstack count: "+getSupportFragmentManager().getBackStackEntryCount());
 		appFragment = getSupportFragmentManager()
 				.findFragmentById(R.id.mainAppFragment);
