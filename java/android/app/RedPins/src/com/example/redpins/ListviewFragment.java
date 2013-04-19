@@ -26,7 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class ListviewFragment extends ListFragment implements OnClickListener{
+public class ListviewFragment extends ListFragment implements OnClickListener, JSONResponseHandler {
 	private Button mapviewButton;
 	private ListView listView;
 	private ImageButton homeButton;
@@ -37,8 +37,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 	private Double longitude;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaZnceState) {
 		Log.i("Listview On Create", "ON CREATE");
 		View view = inflater.inflate(R.layout.listview_fragment, container, false);
 		//((MainActivity) getActivity()).hideNaviFrag();
@@ -54,8 +53,13 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		searchLoc = getArguments().getString("location");
 		latitude = getArguments().getDouble("latitude");
 		longitude = getArguments().getDouble("longitude");
-		GetEventListTask task = new GetEventListTask();
-		task.execute();
+		
+		if (searchLoc == null) {
+			Utility.getNearbyEventList(this, searchTerm, latitude, longitude, 1);
+		} else {
+			Utility.getEventList(this, searchTerm, searchLoc, 1);
+		}
+		
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
 			@Override
@@ -218,60 +222,6 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 		listView.setAdapter(adapter);
 	}
 
-
-	public class GetEventListTask extends AsyncTask<Void, Void, JSONArray>{
-
-		//how should i save comments
-
-		@Override
-		protected JSONArray doInBackground(Void... arg0) {
-			JSONObject json = new JSONObject();
-			try {
-				json.put("search_query", searchTerm);
-				if (searchLoc == null) {
-					json.put("latitude", latitude);
-					json.put("longitude", longitude);
-				} else {
-					json.put("location_query", searchLoc);
-				}
-				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
-				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
-				json.put("page", 1);
-				System.out.println("INPUT: " + json.toString());
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-			JSONArray ret =null;
-			try {
-				//sends requests to server and receives
-				JSONObject jsonObj;
-				if (searchLoc == null) {
-					jsonObj = Utility.requestServer(MainActivity.serverURL + "/events/searchViaCoordinates.json", json);
-				} else {
-					jsonObj = Utility.requestServer(MainActivity.serverURL + "/events/search.json", json);
-				}
-				System.out.println("RESPONSE: " + jsonObj.toString());
-				ret = jsonObj.getJSONArray("events");
-				System.out.println("RET: " + ret);
-				ret.toString().replace("[", "");
-				ret.toString().replace("]", "");
-			} catch (JSONException e) {
-				System.out.println("Caught Exception");
-				e.printStackTrace();
-			}
-			return ret;
-		}
-		@Override
-		protected void onPostExecute(JSONArray result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			jsonArr = result;
-			populateList();
-
-		}
-	}
-
-
 	private Location currLoc;
 	private LocationManager mLocationManager;
 	public void getCurrLocation(){
@@ -305,5 +255,30 @@ public class ListviewFragment extends ListFragment implements OnClickListener{
 			}
 		};
 		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locListener);
+	}
+
+
+	@Override
+	public void onNetworkSuccess(int requestCode, JSONObject json) {
+		switch (requestCode) {
+		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST:
+			jsonArr = Utility.lookupJSONArrayFromJSONObject(json, "events");
+			populateList();
+			break;
+		default:
+			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
+		}
+	}
+
+	@Override
+	public void onNetworkFailure(int requestCode, JSONObject json) {
+		// TODO Auto-generated method stub
+		switch (requestCode) {
+		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST:
+			System.out.println("Error loading list of events");
+			break;
+		default:
+			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
+		}
 	}
 }

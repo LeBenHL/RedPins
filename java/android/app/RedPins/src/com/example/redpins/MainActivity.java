@@ -39,7 +39,7 @@ public class MainActivity extends FragmentActivity{
 
 	private Menu _menu;
 
-	public static String serverURL = "http://10.0.0.23:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://10.0.1.9:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 

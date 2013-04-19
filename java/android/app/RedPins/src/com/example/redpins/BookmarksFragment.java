@@ -172,12 +172,12 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 	public void onNetworkSuccess(int requestCode, JSONObject json) {
 		switch (requestCode) {
 		case Utility.REQUEST_GET_BOOKMARKS:
-			jsonArr = Utility.getJSONArrayFromJSONObject(json, "events");
+			jsonArr = Utility.lookupJSONArrayFromJSONObject(json, "events");
 			populateList();
 			System.out.println("Successfully get bookmarks");
 			break;
 		default:
-			System.out.println("onNetworkSuccess does not know what to do with result of network request");
+			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
 	}
 
@@ -189,7 +189,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 			System.out.println("Failed to get bookmarks");
 			break;
 		default:
-			System.out.println("onNetworkSuccess does not know what to do with result of network request");
+			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
 	}
 }
