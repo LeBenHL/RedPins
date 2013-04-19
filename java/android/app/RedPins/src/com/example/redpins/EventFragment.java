@@ -162,10 +162,13 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		if(!bookmarked){
 			bookmarked = true;
 			Utility.addBookmark(this, event_id);
-			
+			Toast toast = Toast.makeText(getActivity(), "This event got bookmarked", Toast.LENGTH_SHORT);
+			toast.show();
 		}else{
 			bookmarked = false;
 			Utility.deleteBookmark(this, event_id);
+			Toast toast = Toast.makeText(getActivity(), "Bookmark for this event is removed", Toast.LENGTH_SHORT);
+			toast.show();
 		}
 	}
 	
@@ -478,5 +481,19 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
 		toast.show();
+	}
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Log.v("onBackPressed","Event Destroyed");
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.v("onBackPressed","Event Resumed");
 	}
 }
