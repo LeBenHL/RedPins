@@ -7,7 +7,6 @@ import android.test.ActivityInstrumentationTestCase2;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 	MainActivity main;
-	android.support.v4.app.Fragment appFrag;
 	private Solo solo;
 	
 	public MainActivityTest() {
@@ -19,7 +18,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
 		main = (MainActivity) getActivity();
-		appFrag = main.appFragment;
 	}
 	
 	@Override
@@ -35,6 +33,15 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		assertTrue(solo.searchText("History"));
 		assertTrue(solo.searchText("Bookmarks"));
 		assertTrue(solo.searchText("Recommended Events"));
+	}
+	
+	public void testAddEventButtonClick() throws Exception {
+		solo.clickOnText("Add Event");
+		assertTrue(solo.searchText("Cancel"));
+		assertTrue(solo.searchText("Create"));
+		assertTrue(solo.searchText("Map"));
+		solo.goBack();
+		assertEquals(solo.getCurrentActivity(), main);
 	}
 
 }
