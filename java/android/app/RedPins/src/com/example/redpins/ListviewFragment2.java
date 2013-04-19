@@ -107,7 +107,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			System.out.println("CLICKED");
-			((MainActivity) getActivity()).hideListviewFrag();
+			//((MainActivity) getActivity()).hideListviewFrag();
 			//		showMapviewFrag();
 			((MainActivity) getActivity()).showEventFrag(v.getTag().toString());
 		}
@@ -316,5 +316,12 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 			}
 		};
 		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locListener);
+	}
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Log.v("onBackPressed","Listview Destroyed");
 	}
 }

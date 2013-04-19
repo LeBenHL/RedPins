@@ -40,8 +40,6 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	private HashMap<String, String> hash;
 	private ArrayList <LatLng> locArray;
 	private SupportMapFragment mapFrag;
-	private View savedView;
-	private boolean recreate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,16 +47,6 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		super.onCreate(savedInstanceState);
 		Log.i("GoogMapFragment On Create", "ON CREATE");
 		hash = new HashMap<String, String>();
-	}
-
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		Log.i("GoogMapFragment On Create", "ON RESUME");
-		System.out.println("MapFrag: "+mapFrag);
-		System.out.println("mMap: "+mMap);
-		//getFragmentManager().beginTransaction().add(R.id.map, mapFrag).commit();
 	}
 
 	@Override
@@ -191,7 +179,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
-		System.out.println("DESTROY VIEw");
+		System.out.println("DESTROY View");
 		SupportMapFragment f = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
 		if (f != null) {
 			getFragmentManager().beginTransaction().remove(f).commit();
@@ -202,7 +190,13 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		System.out.println("ON DESTROY");
-		getActivity().getSupportFragmentManager().beginTransaction().hide(this).remove(this).commit();
+		Log.v("onBackPressed","GoogMap onDestroy");
+		//getActivity().getSupportFragmentManager().beginTransaction().hide(this).remove(this).commit();
+	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.v("onBackPressed","GoogMap onResume");
 	}
 }
