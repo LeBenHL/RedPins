@@ -89,7 +89,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			public void onClick(View v) {
 				System.out.println("clicked the create button");
 				updateTimestamps();
-				Utility.addEvent(AddEventFragment.this, titleField.getText().toString(), startTimestamp, endTimestamp, locationField.getText().toString(), "http://www.redpins.com", latitude, longitude);
+				Utility.addEvent(AddEventFragment.this, titleField.getText().toString(), startTimestamp, endTimestamp, locationField.getText().toString(), "http://www.redpins.com", latitude, longitude, "");
 			}
 		});
 		mapButton = (Button) view.findViewById(R.id.newevent_mapButton);
