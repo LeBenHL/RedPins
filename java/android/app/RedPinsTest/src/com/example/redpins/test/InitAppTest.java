@@ -1,9 +1,12 @@
 package com.example.redpins.test;
 
 import com.example.redpins.*;
+import com.example.redpins.R;
 import com.jayway.android.robotium.solo.Solo;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.ImageButton;
 
+// Integration Tests for the app
 public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 	private Solo solo;
 	
@@ -79,6 +82,29 @@ public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 		//"To the Map"
 		//click search button
 		//check that current fragment is ListviewFragment
+	}
+	
+	public void test6DislikeEvent() throws Throwable {
+		solo.clickOnScreen(500, 150);
+		solo.enterText(0, "food");
+		solo.clickOnScreen(730, 150);
+		solo.clickOnText("Off the Grid");
+		assertTrue(solo.searchText("Off The Grid"));
+		ImageButton dislikeButton = (ImageButton) solo.getCurrentActivity().findViewById(R.id.dislike_button);
+		solo.clickOnView(dislikeButton);
+		assertTrue(dislikeButton.isSelected());
+	}
+	
+	public void test7LikeEvent() throws Throwable {
+		solo.clickOnScreen(500, 150);
+		solo.enterText(0, "burger");
+		solo.clickOnScreen(730, 150);
+		solo.clickOnText("Eric's BBQ");
+		ImageButton dislikeButton = (ImageButton) solo.getCurrentActivity().findViewById(R.id.dislike_button);
+		ImageButton likeButton = (ImageButton) solo.getCurrentActivity().findViewById(R.id.like_button);
+		solo.clickOnView(likeButton);
+		assertTrue(likeButton.isSelected());
+		assertFalse(dislikeButton.isSelected());
 	}
 
 }

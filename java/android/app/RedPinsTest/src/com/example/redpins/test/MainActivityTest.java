@@ -5,6 +5,7 @@ import com.jayway.android.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
 
+// Unit Tests for MainActivity
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 	MainActivity main;
 	private Solo solo;
