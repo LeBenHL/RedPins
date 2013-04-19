@@ -427,9 +427,13 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 					if (json.getString("rating").equals("true")) {
 						likeButton.setBackgroundColor(Color.GREEN);
 						dislikeButton.setBackgroundColor(Color.TRANSPARENT);
+						likeButton.setSelected(true);
+						dislikeButton.setSelected(false);
 					} else {
 						likeButton.setBackgroundColor(Color.TRANSPARENT);
 						dislikeButton.setBackgroundColor(Color.RED);
+						likeButton.setSelected(false);
+						dislikeButton.setSelected(true);
 					}
 				}
 			} catch (JSONException e) {
