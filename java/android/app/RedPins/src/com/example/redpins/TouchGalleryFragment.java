@@ -33,7 +33,7 @@ public class TouchGalleryFragment extends Fragment {
 		List<String> items = new ArrayList<String>();
 		Collections.addAll(items, urls);
 		UrlPagerAdapter pagerAdapter = new UrlPagerAdapter(getActivity(), items);  
-		GalleryViewPager mViewPager = (GalleryViewPager)getActivity().findViewById(R.id.viewer);
+		GalleryViewPager mViewPager = (GalleryViewPager) view.findViewById(R.id.viewer);
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setAdapter(pagerAdapter);
 		

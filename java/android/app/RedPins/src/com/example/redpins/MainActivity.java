@@ -39,7 +39,7 @@ public class MainActivity extends FragmentActivity{
 
 	private Menu _menu;
 
-	public static String serverURL = "http://10.0.1.9:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://192.168.0.12:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
@@ -302,6 +302,15 @@ public class MainActivity extends FragmentActivity{
 		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
 		ft.commit();
 		//		fragStack.push("bookmark");
+	}
+	
+	public void createTouchGalleryFrag(Bundle data) {
+		Log.i("createTouchGalleryFrag", "Created touch gallery");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = new TouchGalleryFragment();
+		appFragment.setArguments(data);
+		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.commit();
 	}
 	
 	public void createAddEventFrag(Bundle data) {
