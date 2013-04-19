@@ -34,14 +34,9 @@ public class MainActivity extends FragmentActivity{
 	public String mLoc;
 	public LocationManager locationManager;
 
-	//Facebook User and Session
-	private static GraphUser user;
-	private static Session session;
-
 	private Menu _menu;
 
 	public static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
-	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
 
 	@Override
@@ -137,24 +132,16 @@ public class MainActivity extends FragmentActivity{
 		tx.commit();
 	}
 
-	public void setFacebookUser(GraphUser _user) {
-		user = _user;
-	}
-
-	public void setFacebookSession(Session _session) {
-		session = _session;
-	}
-
 	public String getFacebookId() {
-		if (user.getProperty("id") == null) {
+		if (facebookFragment._user.getProperty("id") == null) {
 			return null;
 		}
-		return user.getProperty("id").toString();
+		return facebookFragment._user.getProperty("id").toString();
 	}
 
 	public String getFacebookSessionToken() {
-		System.out.println(session.getAccessToken());
-		return session.getAccessToken();
+		System.out.println(facebookFragment._session.getAccessToken());
+		return facebookFragment._session.getAccessToken();
 	}
 
 	public void nearbyOnClick(View view) {

@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -18,12 +20,14 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,9 +41,9 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 	
 	Button uploadBtn, cancelBtn, selectBtn;
 	TextView photoPath;
-	Uri currImageURI;
 	Bitmap bm;
 	File finalFile;
+	File outputFileName;
 	
 	
 	@Override
@@ -55,7 +59,29 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 				intent.setAction(Intent.ACTION_GET_CONTENT);
 				startActivityForResult(Intent.createChooser(intent, "Select Photo"), 1);
 				*/
-				startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), SELECT_GALLERY_REQUEST_CODE);
+				//startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), SELECT_GALLERY_REQUEST_CODE);
+				Intent pickIntent = new Intent();
+				pickIntent.setType("image/*");
+				pickIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+				try {
+					outputFileName = createImageFile(".tmp");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFileName));
+
+				String pickTitle = "Select or take a new Picture"; // Or get from strings.xml
+				Intent chooserIntent = Intent.createChooser(pickIntent, pickTitle);
+				chooserIntent.putExtra
+				(
+				  Intent.EXTRA_INITIAL_INTENTS, 
+				  new Intent[] { takePhotoIntent }
+				);
+
+				startActivityForResult(chooserIntent, SELECT_GALLERY_REQUEST_CODE);
 			}
 		});
 		cancelBtn = (Button) view.findViewById(R.id.add_photo_cancel_btn);
@@ -83,18 +109,64 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == SELECT_GALLERY_REQUEST_CODE) {
-			Uri selectedImage = data.getData();
-			try {
-				bm = MediaStore.Images.Media.getBitmap(((MainActivity)getActivity()).getContentResolver(), selectedImage);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (data != null && data.getData() != null) {
+				Uri selectedImage = data.getData();
+				try {
+					bm = MediaStore.Images.Media.getBitmap(((MainActivity)getActivity()).getContentResolver(), selectedImage);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else if (outputFileName != null){
+				try {
+					bm = MediaStore.Images.Media.getBitmap(((MainActivity)getActivity()).getContentResolver(), Uri.fromFile(outputFileName));
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
+	
+	private File createImageFile(String fileExtensionToUse) throws IOException {
+
+	    File storageDir = new File(
+	            Environment.getExternalStoragePublicDirectory(
+	                Environment.DIRECTORY_PICTURES
+	            ), 
+	            "MyImages"
+	        );      
+
+	    if(!storageDir.exists())
+	    {
+	        if (!storageDir.mkdir())
+	        {
+	            Log.d("createImageFile","was not able to create it");
+	        }
+	    }
+	    if (!storageDir.isDirectory())
+	    {
+	        Log.d("createImageFile","Don't think there is a dir there.");
+	    }
+
+	    // Create an image file name
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+	    String imageFileName = "FOO_" + timeStamp + "_image";
+
+	    File image = File.createTempFile(
+	        imageFileName, 
+	        fileExtensionToUse, 
+	        storageDir
+	    );
+
+	    return image;
+	}    
 	
 	@Override
 	public void onClick(View v) {
