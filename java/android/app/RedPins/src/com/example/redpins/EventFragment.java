@@ -222,6 +222,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			break;
 		case R.id.event_photo:
 			Bundle data = new Bundle();
+			data.putString("event_id", event_id);
 			((MainActivity) getActivity()).createTouchGalleryFrag(data);
 			break;
 		}
