@@ -27,17 +27,19 @@ public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 		solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
 	}
 	
-	public void testLogin() throws Throwable{
-		
-//		solo.clickOnText("Log In");
+//	public void testLogin() throws Throwable{
+//		solo.clickOnMenuItem("Login");
+//		//solo.clickOnText("Log In");
 //		solo.enterText(0, "redpins.berkeley@gmail.com");
 //		solo.enterText(1, "lolnebkcuf");
 //		solo.clickOnText("Log In");
-	}
+//	}
 	
 	public void testSearch() throws Throwable{
-//		solo.enterText(0, "Korean");
-//		solo.clickOnScreen(730, 150);
+		solo.clickOnScreen(500, 150);
+		solo.enterText(0, "Korean");
+		solo.clickOnScreen(730, 150);
+		assertTrue(solo.searchText("To the Map"));
 		//"To the Map"
 		//click search button
 		//check that current fragment is ListviewFragment
