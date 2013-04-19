@@ -47,7 +47,7 @@ public class Utility{
 	public static final int REQUEST_ADD_USER = 107;
 	public static final int REQUEST_GET_COMMENTS = 200;
 	public static final int REQUEST_GET_EVENT = 201;
-	public static final int REQUEST_GET_PHOTO = 202;
+	public static final int REQUEST_GET_PHOTOS = 202;
 	public static final int REQUEST_GET_BOOKMARKS = 203;
 	public static final int REQUEST_GET_RATINGS = 204;
 	public static final int REQUEST_GET_EVENTLIST = 205;
@@ -221,7 +221,7 @@ public class Utility{
 		jsonTask.executeTask(fragment, REQUEST_ADD_COMMENT, requestJSON, "/users/postComment.json");
 	}
 	
-	public static void addEvent(JSONResponseHandler fragment, String title, String startTime, String endTime, String location, String url, double latitude, double longitude) {
+	public static void addEvent(JSONResponseHandler fragment, String title, String startTime, String endTime, String location, String url, double latitude, double longitude, String description) {
 		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
 			requestJSON.put("title", title);
@@ -229,8 +229,11 @@ public class Utility{
 			requestJSON.put("end_time", endTime);
 			requestJSON.put("location", location);
 			requestJSON.put("url", url);
-			requestJSON.put("latitude", latitude);
-			requestJSON.put("longitude", longitude);
+			requestJSON.put("description", description);
+			if ((latitude != -360.0) && (longitude != -360.0)) {
+				requestJSON.put("latitude", latitude);
+				requestJSON.put("longitude", longitude);	
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -300,6 +303,17 @@ public class Utility{
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_GET_EVENT, requestJSON, "/events/getEvent.json");
+	}
+	
+	public static void getPhotos(JSONResponseHandler fragment, String eventID) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			requestJSON.put("event_id", eventID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_GET_PHOTOS, requestJSON, "/events/getPhotos.json");
 	}
 	
 	public static void getBookmarks(JSONResponseHandler fragment, int page_num) {

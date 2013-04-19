@@ -188,24 +188,28 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			break;
 		case R.id.like_button:
 			System.out.println("LIKE");
-			likeButton.setSelected(true);
-			likeButton.setClickable(false);
-			dislikeButton.setSelected(false);
-			dislikeButton.setClickable(true);
-			if (likeButton.isPressed() || dislikeButton.isPressed()) {
+			if (likeButton.isSelected()){
+				likeButton.setSelected(false);
+				Utility.deleteLike(this, event_id);
+				break;
+			} else if (dislikeButton.isSelected()) {
 				Utility.deleteLike(this, event_id);
 			}
+			likeButton.setSelected(true);
+			dislikeButton.setSelected(false);
 			Utility.modifyLike(this, event_id, true);
 			break;
 		case R.id.dislike_button:
 			System.out.println("DISLIKE");
-			dislikeButton.setSelected(true);
-			dislikeButton.setClickable(false);
-			likeButton.setSelected(false);
-			likeButton.setClickable(true);
-			if (likeButton.isPressed() || dislikeButton.isPressed()) {
+			if (dislikeButton.isSelected()) {
+				dislikeButton.setSelected(false);
+				Utility.deleteLike(this, event_id);
+				break;
+			} else if (likeButton.isSelected()) {
 				Utility.deleteLike(this, event_id);
 			}
+			dislikeButton.setSelected(true);
+			likeButton.setSelected(false);
 			Utility.modifyLike(this, event_id, false);
 			break;
 		case R.id.bookmark_button:
@@ -225,6 +229,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			break;
 		case R.id.event_photo:
 			Bundle data = new Bundle();
+			data.putString("event_id", event_id);
 			((MainActivity) getActivity()).createTouchGalleryFrag(data);
 			break;
 		}
@@ -384,6 +389,22 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			Utility.getRatings(this, event_id);
 			break;
 			
+		case Utility.REQUEST_DELETE_LIKE:
+			try {
+				eventLikes.setText("LIKES: "+json.getInt("likes"));
+				eventDislikes.setText("DISLIKES: " + json.getInt("dislikes"));
+				if (json.getInt("likes")+json.getInt("dislikes") != 0) {
+					progressBar.setProgress((100*json.getInt("likes"))/(json.getInt("likes")+json.getInt("dislikes")));
+				} else {
+					progressBar.setProgress(50);
+				}
+				dislikeButton.setBackgroundColor(Color.TRANSPARENT);
+				likeButton.setBackgroundColor(Color.TRANSPARENT);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			break;
+			
 		case Utility.REQUEST_ADD_BOOKMARK:
 			System.out.println("Bookmarked event!");
 			break;
@@ -409,13 +430,13 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 					if (json.getString("rating").equals("true")) {
 						likeButton.setBackgroundColor(Color.GREEN);
 						dislikeButton.setBackgroundColor(Color.TRANSPARENT);
-						likeButton.setClickable(false);
-						dislikeButton.setClickable(true);
+						likeButton.setSelected(true);
+						dislikeButton.setSelected(false);
 					} else {
 						likeButton.setBackgroundColor(Color.TRANSPARENT);
 						dislikeButton.setBackgroundColor(Color.RED);
-						dislikeButton.setClickable(false);
-						likeButton.setClickable(true);
+						likeButton.setSelected(false);
+						dislikeButton.setSelected(true);
 					}
 				}
 			} catch (JSONException e) {

@@ -146,6 +146,9 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	public String getFacebookId() {
+		if (user.getProperty("id") == null) {
+			return null;
+		}
 		return user.getProperty("id").toString();
 	}
 
@@ -281,6 +284,16 @@ public class MainActivity extends FragmentActivity{
 		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
 		ft.commit();
 	}
+	
+	public void createAddEventMapFrag(Bundle bundle, AddEventFragment addEventFragment) {
+		Log.i("createAddEventMapFrag", "Created addEventMap frag");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = new AddEventMapFragment();
+		((AddEventMapFragment) appFragment).parent = addEventFragment;
+		appFragment.setArguments(bundle);
+		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.commit();
+	}
 
 	public void createAddCommentFrag(Bundle bundle) {
 		Log.i("createAddCommentFrag", "Created comment frag");
@@ -293,8 +306,7 @@ public class MainActivity extends FragmentActivity{
 		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 		ft.commit();
 	}
-
-
+	
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
 	}
@@ -355,6 +367,29 @@ public class MainActivity extends FragmentActivity{
 		dateFragment.setArguments(data);
 		dateFragment.fragment = fragment;
 		dateFragment.show(getSupportFragmentManager(), "datePicker");
+	}
+	
+	public void showTimePickerDialog(TimePick fragment, int id, int currentHour, int currentMinute) {
+		Bundle data = new Bundle();
+		data.putInt("id", id);
+		data.putInt("hour", currentHour);
+		data.putInt("minute", currentMinute);
+	    TimePickerFragment timeFragment = new TimePickerFragment();
+	    timeFragment.setArguments(data);
+	    timeFragment.fragment = fragment;
+	    timeFragment.show(getSupportFragmentManager(), "timePicker");
+	}
+	
+	public void showDatePickerDialog(DatePick fragment, int id, int currentYear, int currentMonth, int currentDay) {
+		Bundle data = new Bundle();
+		data.putInt("id", id);
+		data.putInt("year", currentYear);
+		data.putInt("month", currentMonth);
+		data.putInt("day", currentDay);
+	    DatePickerFragment dateFragment = new DatePickerFragment();
+	    dateFragment.setArguments(data);
+	    dateFragment.fragment = fragment;
+	    dateFragment.show(getSupportFragmentManager(), "datePicker");
 	}
 
 	@Override
