@@ -36,9 +36,9 @@ public class FacebookFragment extends Fragment implements JSONResponseHandler {
 	private UiLifecycleHelper uiHelper;
 	
 	//The facebook user of our app
-	private GraphUser _user;
+	protected GraphUser _user;
 	//The facebook session of the user using our app
-	private Session _session;
+	protected Session _session;
 	//The LoginButton
 	protected LoginButton authButton;
 	//Error Codes
@@ -77,7 +77,6 @@ public class FacebookFragment extends Fragment implements JSONResponseHandler {
 	}
 	
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-		((MainActivity) getActivity()).setFacebookSession(session);
 		_session = session;
 	    if (state.isOpened()) {
 	        // Request user data and show the results
@@ -87,7 +86,6 @@ public class FacebookFragment extends Fragment implements JSONResponseHandler {
 	            public void onCompleted(GraphUser user, Response response) {
 	                if (user != null) {
 	                	_user = user;
-	                	((MainActivity) getActivity()).setFacebookUser(user);
 	                	Log.v("onSessionStateChange", "GOT USER");
 	        	        ConnectivityManager connMgr = (ConnectivityManager) 
 	        		            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -104,7 +102,6 @@ public class FacebookFragment extends Fragment implements JSONResponseHandler {
 	        });
 	    } else if (state.isClosed()) {
 	    	_user = null;
-	    	((MainActivity) getActivity()).setFacebookUser(null);
 	    	((MainActivity) getActivity()).showFacebookFragment();
 	    	((MainActivity) getActivity()).setFacebookMenuLogin();
 	        Log.i(TAG, "Logged out...");
