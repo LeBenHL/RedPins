@@ -2,9 +2,18 @@
 <classpath>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK/library"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AndroidTouchGallery"/>
 	<classpathentry kind="lib" path="/Users/andylee/Workspace/CS169/RedPins/java/android/app/httpmime-4.2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="/Users/andylee/Workspace/CS169/RedPins/java/android/app/google-play-services_lib/libs/google-play-services.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/facebook"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/google-play-services_lib"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="src" path="/TouchGalleryLibrary"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PullToRefreshLibrary"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PullToRefreshListFragment"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/PullToRefreshViewPager"/>
+	<classpathentry kind="lib" path="/Users/andylee/Workspace/CS169/RedPins/java/android/app/TouchGallery"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

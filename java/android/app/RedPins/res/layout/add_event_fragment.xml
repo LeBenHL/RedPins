@@ -121,18 +121,40 @@
                         android:text="Date"
                         android:textSize="18sp" />
                 </LinearLayout>
-                <AutoCompleteTextView
-                    android:id="@+id/newevent_locationPanel"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/newevent_endTimePanel"
-                    android:layout_marginBottom="1dp"
-                    android:hint="Type a location"
-                    android:minHeight="42dp"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:textSize="18sp" />
+                
+                <LinearLayout
+                	android:id="@+id/linearLayout2"
+                	android:layout_width="match_parent"
+                	android:layout_height="wrap_content"
+                	android:orientation="horizontal" android:layout_below="@+id/newevent_endTimePanel" android:weightSum="1" android:padding="10dp">
+
+					<AutoCompleteTextView
+					    android:id="@+id/newevent_locationField"
+					    android:layout_width="486dp"
+					    android:layout_height="wrap_content"
+					    android:layout_below="@id/newevent_endTimePanel"
+					    android:layout_marginBottom="1dp"
+					    android:hint="Type a location"
+					    android:minHeight="42dp"
+					    android:paddingBottom="10dp"
+					    android:paddingLeft="10dp"
+					    android:paddingTop="10dp"
+					    android:textSize="18sp" />
+
+	                <Button
+	                    android:id="@+id/newevent_mapButton"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="left|center_vertical"
+	                    android:gravity="left|center_vertical"
+	                    android:minHeight="42dp"
+	                    android:paddingBottom="7dp"
+	                    android:paddingLeft="10dp"
+	                    android:paddingRight="10dp"
+	                    android:paddingTop="7dp"
+	                    android:text="Map"
+	                    android:textSize="18sp" />
+            	</LinearLayout>
 			</RelativeLayout>
 			<LinearLayout
                 android:id="@+id/linearLayout1"
@@ -146,20 +168,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:layout_weight=".5"
-
                     android:minHeight="40dp"
                     android:text="Cancel"
                     android:padding="15dp"/>
-
+                
                 <Button
                     android:id="@+id/newevent_create_btn"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight=".5"
-                    
                     android:minHeight="40dp"
                     android:text="Create"/>
-
             </LinearLayout>
 	    </RelativeLayout>   
 	</ScrollView>

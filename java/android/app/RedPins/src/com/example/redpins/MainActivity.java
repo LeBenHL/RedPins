@@ -39,7 +39,6 @@ public class MainActivity extends FragmentActivity{
 
 	private Menu _menu;
 
-
 	public static String serverURL = "http://10.13.13.52:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	// public final static String serverURL = "http://safe-savannah-1864.herokuapp.com";
 
@@ -142,6 +141,9 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	public String getFacebookId() {
+		if (user.getProperty("id") == null) {
+			return null;
+		}
 		return user.getProperty("id").toString();
 	}
 
@@ -323,6 +325,16 @@ public class MainActivity extends FragmentActivity{
 		ft.commit();
 		//		fragStack.push("bookmark");
 	}
+	
+	public void createAddEventMapFrag(Bundle bundle, AddEventFragment addEventFragment) {
+		Log.i("createAddEventMapFrag", "Created addEventMap frag");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = new AddEventMapFragment();
+		((AddEventMapFragment) appFragment).parent = addEventFragment;
+		appFragment.setArguments(bundle);
+		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.commit();
+	}
 
 	public void createAddCommentFrag(Bundle bundle) {
 		Log.i("createAddCommentFrag", "Created comment frag");
@@ -333,8 +345,7 @@ public class MainActivity extends FragmentActivity{
 		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
 		ft.commit();
 	}
-
-
+	
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
 	}
@@ -379,18 +390,23 @@ public class MainActivity extends FragmentActivity{
 		ft.commit();
 	}
 	
-	public void showTimePickerDialog(TimePick fragment, int id) {
+	public void showTimePickerDialog(TimePick fragment, int id, int currentHour, int currentMinute) {
 		Bundle data = new Bundle();
 		data.putInt("id", id);
+		data.putInt("hour", currentHour);
+		data.putInt("minute", currentMinute);
 	    TimePickerFragment timeFragment = new TimePickerFragment();
 	    timeFragment.setArguments(data);
 	    timeFragment.fragment = fragment;
 	    timeFragment.show(getSupportFragmentManager(), "timePicker");
 	}
 	
-	public void showDatePickerDialog(DatePick fragment, int id) {
+	public void showDatePickerDialog(DatePick fragment, int id, int currentYear, int currentMonth, int currentDay) {
 		Bundle data = new Bundle();
 		data.putInt("id", id);
+		data.putInt("year", currentYear);
+		data.putInt("month", currentMonth);
+		data.putInt("day", currentDay);
 	    DatePickerFragment dateFragment = new DatePickerFragment();
 	    dateFragment.setArguments(data);
 	    dateFragment.fragment = fragment;
