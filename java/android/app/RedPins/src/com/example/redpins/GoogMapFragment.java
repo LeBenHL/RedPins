@@ -182,7 +182,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		System.out.println("DESTROY View");
 		SupportMapFragment f = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
 		if (f != null) {
-			getFragmentManager().beginTransaction().remove(f).commit();
+			getFragmentManager().beginTransaction().hide(f).remove(f).commit();
 		}
 	}
 	
