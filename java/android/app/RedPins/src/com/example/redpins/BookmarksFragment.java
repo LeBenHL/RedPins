@@ -1,5 +1,7 @@
 package com.example.redpins;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,10 +11,14 @@ import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -22,6 +28,14 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 
 	private ListView listview;
 	private JSONArray jsonArr;
+	private ArrayList<Integer> remList;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		remList = new ArrayList<Integer>();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,11 +91,32 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 				LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View v;
 				if (convertView == null) {
-					v = inflater.inflate(R.layout.event_list, null); 
+					v = inflater.inflate(R.layout.bookmark_list, null); 
 				} else {
 					v = convertView;
 				}
 				v.setOnClickListener(listener);
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				int id = -1;
+				try {
+					id = jsonArr.getJSONObject(position).getInt("id");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				checkbox.setTag(id);
+				checkbox.setChecked(true);
+				checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						int id = (Integer) buttonView.getTag();
+						if(!isChecked){
+							remList.add(id);
+						}else{
+							remList.remove(new Integer(id));
+						}
+					}
+				});
 				TextView eventName = (TextView) v.findViewById(R.id.event_name);
 				ImageView eventImage = (ImageView) v.findViewById(R.id.event_image);
 				TextView eventDesc = (TextView) v.findViewById(R.id.event_description);
@@ -183,13 +218,20 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 
 	@Override
 	public void onNetworkFailure(int requestCode, JSONObject json) {
-		// TODO Auto-generated method stub
 		switch (requestCode) {
 		case Utility.REQUEST_GET_BOOKMARKS:
 			System.out.println("Failed to get bookmarks");
 			break;
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		for(int i = 0; i < remList.size();i++){
+			Utility.deleteBookmark(this, remList.get(i).toString());
 		}
 	}
 }
