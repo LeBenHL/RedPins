@@ -20,33 +20,25 @@ public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 		solo.finishOpenedActivities();
 	}
 
-//	public void test1OpenLegalActivity() throws Throwable{
-//		solo.clickOnMenuItem("Legal Notice");
-//		solo.assertCurrentActivity("Expected LegalActivity", "LegalActivity");
-//		solo.goBack();
-//		solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
-//	}
+	public void test1OpenLegalActivity() throws Throwable{
+		solo.clickOnMenuItem("Legal Notice");
+		solo.assertCurrentActivity("Expected LegalActivity", "LegalActivity");
+		solo.goBack();
+		solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
+	}
 	
-//	public void testLogin() throws Throwable{
-//		solo.clickOnMenuItem("Login");
-//		//solo.clickOnText("Log In");
-//		solo.enterText(0, "redpins.berkeley@gmail.com");
-//		solo.enterText(1, "lolnebkcuf");
-//		solo.clickOnText("Log In");
-//	}
+	public void test2Search() throws Throwable{
+		solo.clickOnScreen(500, 150);
+		solo.enterText(0, "Korean");
+		solo.clickOnScreen(730, 150);
+		assertTrue(solo.searchText("To the Map"));
+		assertTrue(solo.searchText("Eric's BBQ'"));
+		assertTrue(solo.searchText("Off The Grid"));
+		//"To the Map"
+		//click search button
+		//check that current fragment is ListviewFragment
+	}
 	
-//	public void test2Search() throws Throwable{
-//		solo.clickOnScreen(500, 150);
-//		solo.enterText(0, "Korean");
-//		solo.clickOnScreen(730, 150);
-//		assertTrue(solo.searchText("To the Map"));
-//		assertTrue(solo.searchText("Eric's BBQ'"));
-//		assertTrue(solo.searchText("Off The Grid"));
-//		//"To the Map"
-//		//click search button
-//		//check that current fragment is ListviewFragment
-//	}
-//	
 	public void test3Event() throws Throwable{
 		solo.clickOnScreen(500, 150);
 		solo.enterText(0, "Korean");
@@ -62,16 +54,31 @@ public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 		//click search button
 		//check that current fragment is ListviewFragment
 	}
-//	
-//	public void test4Map() throws Throwable{
-//		solo.clickOnScreen(500, 150);
-//		solo.enterText(0, "Korean");
-//		solo.clickOnScreen(730, 150);
-//		solo.clickOnText("To the Map");
-//		assertTrue(solo.searchText("To Search List"));
-//		;
-//		//"To the Map"
-//		//click search button
-//		//check that current fragment is ListviewFragment
-//	}
+	
+	public void test4Bookmark() throws Throwable{
+		solo.clickOnScreen(500, 150);
+		solo.enterText(0, "Korean");
+		solo.clickOnScreen(730, 150);
+		solo.clickOnText("Danceworks");
+		solo.clickOnScreen(50, 350);
+		solo.goBack();
+		solo.goBack();
+		solo.clickOnScreen(700, 900);
+		assertTrue(solo.searchText("Danceworks"));
+		solo.clickOnScreen(200, 50);
+		solo.goBack();
+		solo.clickOnScreen(700, 900);
+		assertFalse(solo.searchText("Danceworks"));
+	}
+	public void test5Map() throws Throwable{
+		solo.clickOnScreen(500, 150);
+		solo.enterText(0, "Korean");
+		solo.clickOnScreen(730, 150);
+		solo.clickOnText("To the Map");
+		assertTrue(solo.searchText("To Search List"));
+		//"To the Map"
+		//click search button
+		//check that current fragment is ListviewFragment
+	}
+
 }
