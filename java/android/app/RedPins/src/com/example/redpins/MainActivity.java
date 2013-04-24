@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -16,11 +15,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.Session;
-import com.facebook.model.GraphUser;
 
 public class MainActivity extends FragmentActivity{
 
@@ -36,7 +34,7 @@ public class MainActivity extends FragmentActivity{
 
 	private Menu _menu;
 
-	public static String serverURL = "http://192.168.1.112:3000"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://kantas92.pagekite.me"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 
 
 	@Override
@@ -77,6 +75,7 @@ public class MainActivity extends FragmentActivity{
 			searchFragment = getSupportFragmentManager()
 					.findFragmentById(R.id.searchFragment);
 		}
+		showFacebookFragment();
 		locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 	}
 
@@ -377,6 +376,11 @@ public class MainActivity extends FragmentActivity{
 	    dateFragment.setArguments(data);
 	    dateFragment.fragment = fragment;
 	    dateFragment.show(getSupportFragmentManager(), "datePicker");
+	}
+	
+	public void makeToast(String text, Integer length) {
+		Toast toast = Toast.makeText(this, "REQUEST_LOGIN_USER: Could not connect to server", Toast.LENGTH_SHORT);
+		toast.show();
 	}
 
 	@Override

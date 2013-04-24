@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -209,8 +208,8 @@ public class FacebookFragment extends Fragment implements JSONResponseHandler {
 
 	@Override
 	public void onNetworkFailure(int requestCode, JSONObject json) {
-		// TODO Auto-generated method stub
-		
+		((MainActivity) getActivity()).makeToast("REQUEST_LOGIN_USER: Could not connect to server", Toast.LENGTH_LONG);
+    	((MainActivity) getActivity()).showFacebookFragment();
 	}
 }
     

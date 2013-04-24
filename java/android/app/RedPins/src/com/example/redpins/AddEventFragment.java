@@ -57,7 +57,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			@Override
 			public void onClick(View v) {
 				System.out.println("clicked the start date button");
-				((MainActivity) getActivity()).showDatePickerDialog((DatePick) AddEventFragment.this, startDateID, startYear, startMonth, startDay);
+				((MainActivity) getActivity()).showDatePickerDialog(AddEventFragment.this, startDateID, startYear, startMonth, startDay);
 			}
 		});
 		startTimeButton = (Button) view.findViewById(R.id.newevent_startTimePicker);
@@ -65,14 +65,14 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			@Override
 			public void onClick(View v) {
 				System.out.println("clicked the start time button");
-				((MainActivity) getActivity()).showTimePickerDialog((TimePick) AddEventFragment.this, startTimeID, startHour, startMinute);
+				((MainActivity) getActivity()).showTimePickerDialog(AddEventFragment.this, startTimeID, startHour, startMinute);
 			}
 		});
 		endDateButton = (Button) view.findViewById(R.id.newevent_endDatePicker);
 		endDateButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((MainActivity) getActivity()).showDatePickerDialog((DatePick) AddEventFragment.this, endDateID, endYear, endMonth, endDay);
+				((MainActivity) getActivity()).showDatePickerDialog(AddEventFragment.this, endDateID, endYear, endMonth, endDay);
 			}
 		});
 		endTimeButton = (Button) view.findViewById(R.id.newevent_endTimePicker);
@@ -80,7 +80,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			@Override
 			public void onClick(View v) {
 				System.out.println("clicked the end time button");
-				((MainActivity) getActivity()).showTimePickerDialog((TimePick) AddEventFragment.this, endTimeID, endHour, endMinute);
+				((MainActivity) getActivity()).showTimePickerDialog(AddEventFragment.this, endTimeID, endHour, endMinute);
 			}
 		});
 		createButton = (Button) view.findViewById(R.id.newevent_create_btn);

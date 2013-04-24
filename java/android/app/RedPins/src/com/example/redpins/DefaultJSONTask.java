@@ -3,6 +3,7 @@ package com.example.redpins;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class DefaultJSONTask extends AsyncTask<Void, Void, JSONObject> {
 	JSONResponseHandler fragment;
@@ -16,15 +17,20 @@ public class DefaultJSONTask extends AsyncTask<Void, Void, JSONObject> {
 		try {
 			responseJSON = Utility.requestServer(MainActivity.serverURL + requestPath, requestJSON);
 		} catch (Throwable e) {
-			fragment.onNetworkFailure(requestCode, responseJSON);
+			responseJSON = null;
 		}
 		return responseJSON;
 	}
 	
 	@Override
 	protected void onPostExecute(JSONObject responseJSON) {
-		super.onPostExecute(responseJSON);
-		fragment.onNetworkSuccess(requestCode, responseJSON);
+		if (responseJSON != null ) {
+			Log.i("JSON RESPONSE", responseJSON.toString());
+			super.onPostExecute(responseJSON);
+			fragment.onNetworkSuccess(requestCode, responseJSON);
+		} else {
+			fragment.onNetworkFailure(requestCode, responseJSON);
+		}
 	}
 	
 	protected void executeTask(JSONResponseHandler fragment, int requestCode, JSONObject requestJSON, String requestPath) {

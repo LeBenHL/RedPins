@@ -1,7 +1,6 @@
 package com.example.redpins;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
-import android.widget.TextView;
 
 public class TouchGalleryFragment extends Fragment implements JSONResponseHandler {
 	
@@ -44,7 +42,7 @@ public class TouchGalleryFragment extends Fragment implements JSONResponseHandle
 			jsonArray = json.getJSONArray("urls");
 			for(int i = 0, count = jsonArray.length(); i< count; i++) {
 		        String path = jsonArray.getString(i);
-		        String fullUrl = ((MainActivity) getActivity()).serverURL + path;
+		        String fullUrl = MainActivity.serverURL + path;
 		        Log.i("Touch Gallery", fullUrl);
 		        urlsList.add(fullUrl);
 			}

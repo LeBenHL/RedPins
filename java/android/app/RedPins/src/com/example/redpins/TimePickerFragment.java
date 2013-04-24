@@ -1,12 +1,9 @@
 package com.example.redpins;
 
-import java.util.Calendar;
-
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.TimePicker;
@@ -27,7 +24,8 @@ public class TimePickerFragment extends DialogFragment
                 DateFormat.is24HourFormat(getActivity()));
     }
 
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    @Override
+	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
     	Log.i("TimePicker", "onTimeSet");
     	fragment.onTimeSet(hourOfDay, minute, getArguments().getInt("id"));
     }

@@ -1,7 +1,5 @@
 package com.example.redpins;
 
-import java.util.Calendar;
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -25,7 +23,8 @@ public class DatePickerFragment extends DialogFragment
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
 
-    public void onDateSet(DatePicker view, int year, int month, int day) {
+    @Override
+	public void onDateSet(DatePicker view, int year, int month, int day) {
     	Log.i("DatePicker", "onDateSet");
     	fragment.onDateSet(year, month, day, getArguments().getInt("id"));
     }
