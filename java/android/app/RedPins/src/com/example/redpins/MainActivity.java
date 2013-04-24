@@ -175,6 +175,7 @@ public class MainActivity extends FragmentActivity{
 		//Fragment lastAppFragment = appFragment;
 		appFragment = listViewFragment;
 		//		if (lastAppFragment instanceof NavigationFragment) {
+		ft.show(appFragment);
 		ft.replace(R.id.mainAppFragment, appFragment);//.addToBackStack(null);			
 		//		} else {
 		//			ft.replace(R.id.mainAppFragment, appFragment);
@@ -189,17 +190,28 @@ public class MainActivity extends FragmentActivity{
 		getSupportFragmentManager().popBackStack("map", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = listViewFragment;
+		ft.show(appFragment);
 		ft.replace(R.id.mainAppFragment, appFragment);
 		ft.addToBackStack("list");
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding toggle: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
-
+	public void hideListviewFrag(){
+		System.out.println("hiding mapview");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.hide(appFragment);
+		ft.commit();
+	}
 	public void createMapviewFrag(Bundle bundle){
 		googleMapFragment = new GoogMapFragment();
 		googleMapFragment.setArguments(bundle);
 	}
-
+	public void hideMapviewFrag(){
+		System.out.println("hiding mapview");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.hide(appFragment);
+		ft.commit();
+	}
 	public void toggleMapviewFrag() {
 		System.out.println("toggling mapview");
 		getSupportFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -218,6 +230,7 @@ public class MainActivity extends FragmentActivity{
 		data.putString("event_id",eventID);
 		appFragment = new EventFragment();
 		appFragment.setArguments(data);
+		ft.show(appFragment);
 		ft.replace(R.id.mainAppFragment, appFragment);
 		ft.addToBackStack("event");
 		ft.commit();
