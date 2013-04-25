@@ -23,6 +23,7 @@ import com.facebook.Session;
 public class MainActivity extends FragmentActivity{
 
 	static Activity activity;
+	static Utility utility;
 	public FacebookFragment facebookFragment;
 	public Fragment appFragment;
 	private Fragment searchFragment;
@@ -31,17 +32,15 @@ public class MainActivity extends FragmentActivity{
 	public String mQuery;
 	public String mLoc;
 	public LocationManager locationManager;
-
 	private Menu _menu;
-
 	public static String serverURL = "http://kantas92.pagekite.me"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		System.out.println("GOT CREATED");
 		super.onCreate(savedInstanceState);
 		activity = this;
+		utility = new Utility();
 		setContentView(R.layout.main_activity);
 		if (savedInstanceState == null) {
 			// Add the fragment on initial activity setup

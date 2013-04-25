@@ -54,9 +54,9 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 		longitude = getArguments().getDouble("longitude");
 		
 		if (searchLoc == null) {
-			Utility.getNearbyEventList(this, searchTerm, latitude, longitude, 1);
+			MainActivity.utility.getNearbyEventList(this, searchTerm, latitude, longitude, 1);
 		} else {
-			Utility.getEventList(this, searchTerm, searchLoc, 1);
+			MainActivity.utility.getEventList(this, searchTerm, searchLoc, 1);
 		}
 		
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -260,7 +260,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 	public void onNetworkSuccess(int requestCode, JSONObject json) {
 		switch (requestCode) {
 		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST:
-			jsonArr = Utility.lookupJSONArrayFromJSONObject(json, "events");
+			jsonArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "events");
 			populateList();
 			break;
 		default:

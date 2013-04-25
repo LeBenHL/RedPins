@@ -29,7 +29,7 @@ public class TouchGalleryFragment extends Fragment implements JSONResponseHandle
 		Log.i("TouchGalleryFragment On Create", "ON CREATE");
 		View view = inflater.inflate(R.layout.touch_gallery_fragment, container, false);
 		viewer = (GalleryViewPager) view.findViewById(R.id.viewer);
-		Utility.getPhotos(this, getArguments().getString("event_id"));
+		MainActivity.utility.getPhotos(this, getArguments().getString("event_id"));
 		return view;
 	}
 

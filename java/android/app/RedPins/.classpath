@@ -4,12 +4,8 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK/library"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AndroidTouchGallery"/>
-	<classpathentry kind="lib" path="/Users/SooHyoung/Documents/cs169/RedPins/java/android/app/httpmime-4.2.3.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/google-play-services_lib"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/FacebookSDK"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/PullToRefresh"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TouchGallery"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

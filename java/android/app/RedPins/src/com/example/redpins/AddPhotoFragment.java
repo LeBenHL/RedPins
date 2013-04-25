@@ -81,7 +81,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 			public void onClick(View view) {
 				System.out.println("uploading photo");
 				try {
-					Utility.addPhoto(AddPhotoFragment.this, getArguments().getString("event_id"), bm, "uploaded with RedPins");
+					MainActivity.utility.addPhoto(AddPhotoFragment.this, getArguments().getString("event_id"), bm, "uploaded with RedPins");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					System.out.println("Failed");
@@ -165,7 +165,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 
 	@Override
 	public void onNetworkSuccess(int requestCode, HttpResponse response) {
-		JSONObject responseJSON = Utility.convertHttpResponseToJSONObject(response); // resulting JSONObject
+		JSONObject responseJSON = MainActivity.utility.convertHttpResponseToJSONObject(response); // resulting JSONObject
 	}
 
 	@Override

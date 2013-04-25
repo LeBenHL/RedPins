@@ -107,15 +107,15 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		eventImg.setOnClickListener(this);
 		
 		// API Requests
-		Utility.getEvent(this, event_id);
-		Utility.getRatings(this, event_id);
-		Utility.getComments(this, event_id);
+		MainActivity.utility.getEvent(this, event_id);
+		MainActivity.utility.getRatings(this, event_id);
+		MainActivity.utility.getComments(this, event_id);
 
 		return view;
 	}
 
 	public void updateComments() {
-		Utility.getComments(this, event_id);
+		MainActivity.utility.getComments(this, event_id);
 	}
 	
 	public void uploadPhoto(View view) {
@@ -146,7 +146,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 					// TODO Auto-generated method stub
 					commentArr.remove(pos);
 					populateCommentList();
-					Utility.deleteComment(EventFragment.this, event_id, comment_id);
+					MainActivity.utility.deleteComment(EventFragment.this, event_id, comment_id);
 				}
 			});
 			AlertDialog alertDialog = builder.create();
@@ -161,12 +161,12 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 	private void bookmarkEvent() {
 		if(!bookmarked){
 			bookmarked = true;
-			Utility.addBookmark(this, event_id);
+			MainActivity.utility.addBookmark(this, event_id);
 			Toast toast = Toast.makeText(getActivity(), "This event got bookmarked", Toast.LENGTH_SHORT);
 			toast.show();
 		}else{
 			bookmarked = false;
-			Utility.deleteBookmark(this, event_id);
+			MainActivity.utility.deleteBookmark(this, event_id);
 			Toast toast = Toast.makeText(getActivity(), "Bookmark for this event is removed", Toast.LENGTH_SHORT);
 			toast.show();
 		}
@@ -190,38 +190,38 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			System.out.println("LIKE");
 			if (likeButton.isSelected()){
 				likeButton.setSelected(false);
-				Utility.deleteLike(this, event_id);
+				MainActivity.utility.deleteLike(this, event_id);
 				break;
 			} else if (dislikeButton.isSelected()) {
-				Utility.deleteLike(this, event_id);
+				MainActivity.utility.deleteLike(this, event_id);
 			}
 			likeButton.setSelected(true);
 			dislikeButton.setSelected(false);
-			Utility.modifyLike(this, event_id, true);
+			MainActivity.utility.modifyLike(this, event_id, true);
 			break;
 		case R.id.dislike_button:
 			System.out.println("DISLIKE");
 			if (dislikeButton.isSelected()) {
 				dislikeButton.setSelected(false);
-				Utility.deleteLike(this, event_id);
+				MainActivity.utility.deleteLike(this, event_id);
 				break;
 			} else if (likeButton.isSelected()) {
-				Utility.deleteLike(this, event_id);
+				MainActivity.utility.deleteLike(this, event_id);
 			}
 			dislikeButton.setSelected(true);
 			likeButton.setSelected(false);
-			Utility.modifyLike(this, event_id, false);
+			MainActivity.utility.modifyLike(this, event_id, false);
 			break;
 		case R.id.bookmark_button:
 			bookmarkEvent();
 			break;
 		case R.id.removeEventButton:
 			System.out.println("Are you sure you want to remove the event?");
-			Utility.cancelEvent(this, event_id);
+			MainActivity.utility.cancelEvent(this, event_id);
 			break;
 		case R.id.deleteEventButton:
 			System.out.println("Are you sure you want to delete the event?");
-			Utility.deleteEvent(this, event_id);
+			MainActivity.utility.deleteEvent(this, event_id);
 			break;
 		case R.id.uploadPhoto:
 			Log.i("onClick", "UploadPhoto");
@@ -373,7 +373,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			break;
 		
 		case Utility.REQUEST_GET_COMMENTS:
-			JSONArray responseJSONArray = Utility.lookupJSONArrayFromJSONObject(json, "comments");
+			JSONArray responseJSONArray = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "comments");
 			for (int i = 0; i < responseJSONArray.length(); i++) {
 				try {
 					System.out.println("JSONObj: " + responseJSONArray.getJSONObject(i));
@@ -386,7 +386,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			break;
 			
 		case Utility.REQUEST_MODIFY_LIKE:
-			Utility.getRatings(this, event_id);
+			MainActivity.utility.getRatings(this, event_id);
 			break;
 			
 		case Utility.REQUEST_DELETE_LIKE:

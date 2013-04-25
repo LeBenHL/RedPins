@@ -90,7 +90,7 @@ public class FacebookFragment extends Fragment implements JSONResponseHandler {
 	        		            getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         		       if (networkInfo != null && networkInfo.isConnected()) {
-        		    	   Utility.loginUser(FacebookFragment.this, _user.getProperty("email").toString(), _user.getProperty("id").toString(), _session.getAccessToken());
+        		    	   MainActivity.utility.loginUser(FacebookFragment.this, _user.getProperty("email").toString(), _user.getProperty("id").toString(), _session.getAccessToken());
         		    	   ((MainActivity) getActivity()).hideFacebookFragment();
         		        } else {
         		        }
@@ -190,7 +190,7 @@ public class FacebookFragment extends Fragment implements JSONResponseHandler {
 				switch (json.getInt("errCode")) {
 				  case ERR_NO_USER_EXISTS:
 					  System.out.println("REQUEST_LOGIN_USER: User does not exist. Adding user now.");
-					  Utility.addUser(FacebookFragment.this, _user.getProperty("email").toString(), _user.getProperty("id").toString(), _session.getAccessToken(), _user.getFirstName(),  _user.getLastName());
+					  MainActivity.utility.addUser(FacebookFragment.this, _user.getProperty("email").toString(), _user.getProperty("id").toString(), _session.getAccessToken(), _user.getFirstName(),  _user.getLastName());
 					  break;
 				  default:
 					  break;
@@ -212,4 +212,3 @@ public class FacebookFragment extends Fragment implements JSONResponseHandler {
     	((MainActivity) getActivity()).showFacebookFragment();
 	}
 }
-    
