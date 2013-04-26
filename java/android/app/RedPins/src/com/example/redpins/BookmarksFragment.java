@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 	private ListView listview;
 	private JSONArray jsonArr;
 	private ArrayList<Integer> remList;
+	private ProgressDialog progress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.bookmarks_fragment, container, false);
 		listview = (ListView) view.findViewById(android.R.id.list);
+	    progress = MainActivity.utility.addProgressDialog(getActivity(), "Loading", "Loading Bookmarks...");
 		MainActivity.utility.getBookmarks(this, 1);
 		return view;
 	}
@@ -213,6 +216,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
+		progress.dismiss();
 	}
 
 	@Override
@@ -224,6 +228,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
+		progress.dismiss();
 	}
 
 	@Override
