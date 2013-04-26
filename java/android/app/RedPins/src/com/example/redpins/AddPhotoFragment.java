@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -35,12 +36,14 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 	File finalFile;
 	File outputFileName;
 	private ProgressDialog progress;
+	private ImageView photo;
 	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.add_photo_fragment, container, false);
 		selectBtn = (Button) view.findViewById(R.id.add_photo_select_btn);
+		photo = (ImageView) view.findViewById(R.id.photo); 
 		selectBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -76,6 +79,14 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 			}
 		});
 		cancelBtn = (Button) view.findViewById(R.id.add_photo_cancel_btn);
+		cancelBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View view) {
+				bm = null;
+				photo.setImageResource(R.drawable.content_attachment);
+			}
+		});
 		uploadBtn = (Button) view.findViewById(R.id.add_photo_upload_btn);
 		uploadBtn.setOnClickListener(new OnClickListener() {
 			
@@ -105,6 +116,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 				Uri selectedImage = data.getData();
 				try {
 					bm = MediaStore.Images.Media.getBitmap(((MainActivity)getActivity()).getContentResolver(), selectedImage);
+					photo.setImageBitmap(bm); 
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -115,6 +127,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 			} else if (outputFileName != null){
 				try {
 					bm = MediaStore.Images.Media.getBitmap(((MainActivity)getActivity()).getContentResolver(), Uri.fromFile(outputFileName));
+					photo.setImageBitmap(bm); 
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -170,6 +183,8 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 	public void onNetworkSuccess(int requestCode, HttpResponse response) {
 		JSONObject responseJSON = MainActivity.utility.convertHttpResponseToJSONObject(response); // resulting JSONObject
 		progress.dismiss();
+		bm = null;
+		photo.setImageResource(R.drawable.content_attachment);
 	}
 
 	@Override
