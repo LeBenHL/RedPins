@@ -260,7 +260,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 		currentCalendar.set(Calendar.MONTH, month);
 		currentCalendar.set(Calendar.DAY_OF_MONTH, day);
 		Toast toast = null;
-		if (id == startTimeID) {
+		if (id == startDateID) {
 			currentCalendar.set(Calendar.HOUR_OF_DAY, startHour);
 			currentCalendar.set(Calendar.MINUTE, startMinute);
 			Calendar maxCalendar = getEndCalendar();
@@ -269,7 +269,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			} else {
 				setDate(currentCalendar, id);
 			}
-		} else if (id == endTimeID) {
+		} else if (id == endDateID) {
 			currentCalendar.set(Calendar.HOUR_OF_DAY, endHour);
 			currentCalendar.set(Calendar.MINUTE, endMinute);
 			Calendar minCalendar = getStartCalendar();
