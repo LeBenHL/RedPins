@@ -322,6 +322,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 
 	@Override
 	public void onNetworkSuccess(int requestCode, JSONObject json) {
+		boolean returnToNavigationMenu = false;
 		switch (requestCode) {
 		case Utility.REQUEST_ADD_EVENT:
 			System.out.println(json.toString());
@@ -341,8 +342,11 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	@Override
 	public void onNetworkFailure(int requestCode, JSONObject json) {
 		progress.dismiss();
-		// TODO Auto-generated method stub
-		
+		switch (requestCode) {
+		case Utility.REQUEST_ADD_EVENT:
+			Toast.makeText(getActivity(), "REQUEST_ADD_EVENT: Failed to create event.", Toast.LENGTH_SHORT).show();
+			break;
+		}
 	}
 
 	@Override
