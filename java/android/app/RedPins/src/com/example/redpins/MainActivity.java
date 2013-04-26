@@ -390,6 +390,12 @@ public class MainActivity extends FragmentActivity{
 		Toast toast = Toast.makeText(this, text, length);
 		toast.show();
 	}
+	
+	public void popFragmentStack() {
+		if (!mFragmentStack.empty()) {
+			mFragmentStack.pop();
+		}
+	}
 
 	@Override
 	public void onBackPressed() {

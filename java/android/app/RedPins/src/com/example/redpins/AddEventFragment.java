@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
@@ -324,7 +325,14 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 		switch (requestCode) {
 		case Utility.REQUEST_ADD_EVENT:
 			System.out.println(json.toString());
-			System.out.println("Response after creating event!");	
+			System.out.println("Response after creating event!");
+			try {
+				String event_id = json.getString("event_id");
+				((MainActivity) getActivity()).popFragmentStack();
+				((MainActivity) getActivity()).showEventFrag(event_id);
+			} catch (JSONException e) {
+				((MainActivity) getActivity()).makeToast("Error when adding event", Toast.LENGTH_SHORT);
+			}
 			break;
 		}
 		progress.dismiss();
