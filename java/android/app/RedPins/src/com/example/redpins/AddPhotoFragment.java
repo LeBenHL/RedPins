@@ -93,13 +93,15 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 			@Override
 			public void onClick(View view) {
 				System.out.println("uploading photo");
-				try {
-					progress = MainActivity.utility.addProgressDialog(getActivity(), "Uploading", "Uploading Photo...");
-					MainActivity.utility.addPhoto(AddPhotoFragment.this, getArguments().getString("event_id"), bm, "uploaded with RedPins");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("Failed");
-					e.printStackTrace();
+				if (bm != null) {
+					try {
+						progress = MainActivity.utility.addProgressDialog(getActivity(), "Uploading", "Uploading Photo...");
+						MainActivity.utility.addPhoto(AddPhotoFragment.this, getArguments().getString("event_id"), bm, "uploaded with RedPins");
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						System.out.println("Failed");
+						e.printStackTrace();
+					}
 				}
 			}
 		});

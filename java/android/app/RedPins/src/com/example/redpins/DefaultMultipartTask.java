@@ -11,27 +11,35 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.AsyncTask;
 
-public class DefaultMultipartTask extends AsyncTask<Void, Void, Void> {
+public class DefaultMultipartTask extends AsyncTask<Void, Void, HttpResponse> {
 	MultipartResponseHandler fragment;
 	int requestCode;
 	MultipartEntity requestEntity;
 	String requestPath;
 	
 	@Override
-	protected Void doInBackground(Void... params) {
+	protected HttpResponse doInBackground(Void... params) {
 		HttpPost httpPost = new HttpPost(MainActivity.serverURL + requestPath);
 		httpPost.setEntity(requestEntity);
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpResponse postResponse = null;
 		try {
 			postResponse = httpClient.execute(httpPost);
-			fragment.onNetworkSuccess(requestCode, postResponse);
 		} catch (ClientProtocolException e) {
-			fragment.onNetworkFailure(requestCode, null);
+			//Do nothing
 		} catch (IOException e) {
-			fragment.onNetworkFailure(requestCode, null);
+			//Do Nothing
 		}
-		return null;
+		return postResponse;
+	}
+	
+	@Override
+	protected void onPostExecute(HttpResponse response) {
+		if (response == null) {
+			fragment.onNetworkFailure(requestCode, response);
+		} else {
+			fragment.onNetworkSuccess(requestCode, response);
+		}
 	}
 	
 	protected void executeTask(MultipartResponseHandler fragment, int requestCode, MultipartEntity requestEntity, String requestPath) {
