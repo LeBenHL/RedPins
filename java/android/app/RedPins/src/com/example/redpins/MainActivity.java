@@ -387,7 +387,7 @@ public class MainActivity extends FragmentActivity{
 	}
 	
 	public void makeToast(String text, Integer length) {
-		Toast toast = Toast.makeText(this, "REQUEST_LOGIN_USER: Could not connect to server", Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(this, text, length);
 		toast.show();
 	}
 

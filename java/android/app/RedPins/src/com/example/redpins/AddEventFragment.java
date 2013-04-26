@@ -9,8 +9,10 @@ import java.util.TimeZone;
 
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,9 +25,10 @@ import android.widget.Toast;
 public class AddEventFragment extends Fragment implements OnClickListener, TimePick, DatePick, JSONResponseHandler, MapPicker{
 	private String startTimestamp, endTimestamp;
 	private EditText titleField;
-	private AutoCompleteTextView locationField;
+	private EditText locationField;
 	private double latitude = -360.0;
 	private double longitude = -360.0;
+	private String location = null;
 	private Button startDateButton, endDateButton, startTimeButton, endTimeButton, mapButton, createButton;
 	private int startYear;
 	private int startMonth;
@@ -37,6 +40,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	private int endDay;
 	private int endHour;
 	private int endMinute;
+	private ProgressDialog progress;
 	
 	static final int startDateID = 0;
 	static final int startTimeID = 1;
@@ -50,7 +54,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.add_event_fragment, container, false);
 		titleField = (EditText) view.findViewById(R.id.newevent_title_field);
-		locationField = (AutoCompleteTextView) view.findViewById(R.id.newevent_locationField);
+		locationField = (EditText) view.findViewById(R.id.newevent_locationField);
 		
 		// Attaching onClickListeners to Buttons
 		startDateButton = (Button) view.findViewById(R.id.newevent_startDatePicker);
@@ -90,6 +94,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			public void onClick(View v) {
 				System.out.println("clicked the create button");
 				updateTimestamps();
+				progress = MainActivity.utility.addProgressDialog(getActivity(), "Adding Event", "Adding Event...");
 				MainActivity.utility.addEvent(AddEventFragment.this, titleField.getText().toString(), startTimestamp, endTimestamp, locationField.getText().toString(), "http://www.redpins.com", latitude, longitude, "");
 			}
 		});
@@ -104,6 +109,17 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 		});
 		initDefaultDateTime();
 		return view;
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (location != null) {
+			Log.i("LOCATION", location.replaceAll("\n", " "));
+			locationField.setText(location.replaceAll("\n", " "));
+		} else {
+			locationField.setHint("Click the Map Button to the left to choose a location");
+		}
 	}
 	
 	private void initDefaultDateTime() {
@@ -311,11 +327,18 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			System.out.println("Response after creating event!");	
 			break;
 		}
+		progress.dismiss();
 	}
 
 	@Override
 	public void onNetworkFailure(int requestCode, JSONObject json) {
+		progress.dismiss();
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setAddress(String location) {
+		this.location = location;
 	}
 }

@@ -1,10 +1,17 @@
 package com.example.redpins;
 
+import java.io.IOException;
+import java.util.List;
+
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +32,7 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 	private SupportMapFragment mapFrag;
 	private Marker currentMarker;
 	public MapPicker parent;
+	private Geocoder geocoder;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,7 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.add_event_map_fragment, container, false);
+		geocoder = new Geocoder(getActivity());
 		setUpMapIfNeeded();
 		//mMap = mapFrag.getMap();
 		return view;
@@ -98,7 +107,27 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 			currentMarker.remove();
 		}
 		currentMarker = mMap.addMarker(new MarkerOptions().position(point).title("New Event"));
-		parent.setLatitudeLongitude(point.latitude, point.longitude);
+		List<Address> addresses;
+		try {
+			addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
+			if (addresses.size() > 0) {
+				Address address = addresses.get(0);
+				Log.i("onMapLongClick", address.toString());
+				int count = 0;
+				String location = "";
+				while (address.getAddressLine(count) != null) {
+					location = location + "\n" + address.getAddressLine(count);
+					count++;
+				}
+				Log.i("onMapLongClick", location);
+				parent.setAddress(location);
+				parent.setLatitudeLongitude(point.latitude, point.longitude);
+			} else {
+				((MainActivity) getActivity()).makeToast("Invalid Location Chosen", Toast.LENGTH_LONG);
+			}
+		} catch (IOException e) {
+			((MainActivity) getActivity()).makeToast("Invalid Location Chosen", Toast.LENGTH_LONG);
+		}
 	}
 
 	@Override
