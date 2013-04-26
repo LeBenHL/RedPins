@@ -8,7 +8,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -63,6 +66,35 @@ public class Utility{
 	public static final int REQUEST_LOGIN_USER = 600;
 	
 	// Helper methods
+	public Calendar convertLocalCalendarToUTCCalendar(Calendar newCalendar) {
+		// Find the date and timezone from the calendar
+		Date newDate = newCalendar.getTime();
+		TimeZone tz = newCalendar.getTimeZone();
+		long msFromUnixTime = newDate.getTime();
+		int offsetFromUTC = tz.getOffset(msFromUnixTime);
+		
+		// Create a new calendar in GMT and account for offsets
+		Calendar gmtCalendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		gmtCalendar.setTime(newDate);
+		gmtCalendar.add(Calendar.MILLISECOND, -offsetFromUTC);
+		return gmtCalendar;
+	}
+	
+	//TODO: UNTESTED
+	public Calendar convertUTCCalendarToLocalCalendar(Calendar newCalendar) {
+		// Find the date and timezone from the calendar
+		Date newDate = newCalendar.getTime();
+		TimeZone tz = newCalendar.getTimeZone();
+		long msFromUnixTime = newDate.getTime();
+		int offsetFromUTC = tz.getOffset(msFromUnixTime);
+		
+		// Create a new calendar in local timezone and account for offsets
+		Calendar localCalendar = Calendar.getInstance(TimeZone.getDefault());
+		localCalendar.setTime(newDate);
+		localCalendar.add(Calendar.MILLISECOND, -offsetFromUTC);
+		return localCalendar;
+	}
+	
 	public JSONObject requestServer(String url, JSONObject jsonInput) {
 		HttpPost request = new HttpPost(url);
 		Log.v("UTILITY", "API REQUEST: " + url);
