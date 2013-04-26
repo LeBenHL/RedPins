@@ -40,6 +40,7 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	private HashMap<String, String> hash;
 	private ArrayList <LatLng> locArray;
 	private SupportMapFragment mapFrag;
+	protected JSONArray jsonArr;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,22 +67,63 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		listviewButton = (Button) view.findViewById(R.id.button_to_listview);
 		listviewButton.setOnClickListener(this);
 		locArray = new ArrayList<LatLng>();
-		JSONArray jsonArr = null;
-		//System.out.println("JSONArray received:" + getArguments().getString("JSONArr"));
+//		System.out.println("JSONArray received:" + getArguments().getString("JSONArr"));
 		try {
 			jsonArr = new JSONArray(getArguments().getString("JSONArr"));
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		for(int i = 0; i < jsonArr.length() ; i++){
-			try {
-				addPins(jsonArr.getJSONObject(i));
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		mMap.setInfoWindowAdapter(new InfoWindowAdapter() {
+
+			@Override
+			public View getInfoWindow(Marker marker) {
+				// TODO Auto-generated method stub
+				return null;
 			}
+
+			@Override
+			public View getInfoContents(Marker marker) {
+				// TODO Auto-generated method stub
+				// Getting view from the layout file info_window_layout
+				JSONObject jsonObj = null;
+				try {
+					jsonObj = jsonArr.getJSONObject(Integer.parseInt(marker.getTitle()));
+				} catch (NumberFormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				View v = getActivity().getLayoutInflater().inflate(R.layout.event_info, null,false);
+
+				TextView eventName = (TextView) v.findViewById(R.id.event_name);
+				//ImageView eventImage = (ImageView) v.findViewById(R.id.event_image);
+				TextView eventDesc = (TextView) v.findViewById(R.id.event_description);
+				TextView eventAddr = (TextView) v.findViewById(R.id.event_address);
+				TextView eventTime = (TextView) v.findViewById(R.id.event_time);
+				//event tags
+				// Likes/Dislikes
+				try {
+					eventName.setText(jsonObj.getString("title"));
+					//eventImage.setImageResource(R.drawable.ic_launcher);
+					eventDesc.setText(jsonObj.getString("url"));
+					eventAddr.setText(jsonObj.getString("location"));
+					eventTime.setText(jsonObj.getString("start_time")+"~"+ jsonObj.getString("end_time"));
+					String event_id = jsonObj.getString("id");
+					hash.put(marker.getId(), event_id);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return v;
+			}
+		});
+		for(int i = 0; i < jsonArr.length() ; i++){
+			addPins(i);
 		}
+
 
 		double sumLat = 0;
 		double sumLng = 0;
@@ -107,55 +149,17 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		((MainActivity) getActivity()).showEventFrag(event_id);
 	}
 
-	private void addPins(JSONObject json){
-		Location eventLoc = new Location(Context.LOCATION_SERVICE);
+	private void addPins(int i){
 		LatLng loc = null;
-		final JSONObject jsonObj = json;
 		try {
+			JSONObject json = jsonArr.getJSONObject(i);
 			loc = new LatLng(json.getDouble("latitude"),json.getDouble("longitude"));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		locArray.add(loc);
-		mMap.setInfoWindowAdapter(new InfoWindowAdapter() {
-
-			@Override
-			public View getInfoWindow(Marker marker) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public View getInfoContents(Marker marker) {
-				// TODO Auto-generated method stub
-				// Getting view from the layout file info_window_layout
-				View v = getActivity().getLayoutInflater().inflate(R.layout.event_info, null);
-
-				TextView eventName = (TextView) v.findViewById(R.id.event_name);
-				ImageView eventImage = (ImageView) v.findViewById(R.id.event_image);
-				TextView eventDesc = (TextView) v.findViewById(R.id.event_description);
-				TextView eventAddr = (TextView) v.findViewById(R.id.event_address);
-				TextView eventTime = (TextView) v.findViewById(R.id.event_time);
-				//event tags
-				// Likes/Dislikes
-				try {
-					eventName.setText(jsonObj.getString("title"));
-					//eventImage.setImageResource(R.drawable.ic_launcher);
-					eventDesc.setText(jsonObj.getString("url"));
-					eventAddr.setText(jsonObj.getString("location"));
-					eventTime.setText(jsonObj.getString("start_time")+"~"+ jsonObj.getString("end_time"));
-					String event_id = jsonObj.getString("id");
-					System.out.println("MARKER ID: "+marker.getId());
-					hash.put(marker.getId(), event_id);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return v;
-			}
-		});
-		mMap.addMarker(new MarkerOptions().position(loc).title("LOC: ").snippet("desc"+"\n"+"address"));
+		mMap.addMarker(new MarkerOptions().position(loc).title(""+i));
 	}
 
 
