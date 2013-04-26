@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
@@ -321,10 +322,23 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 
 	@Override
 	public void onNetworkSuccess(int requestCode, JSONObject json) {
+		boolean returnToNavigationMenu = false;
 		switch (requestCode) {
 		case Utility.REQUEST_ADD_EVENT:
+			Toast toast = Toast.makeText(getActivity(), "REQUEST_ADD_EVENT: Failed to create event.", Toast.LENGTH_SHORT);
 			System.out.println(json.toString());
-			System.out.println("Response after creating event!");	
+			try {
+				if (json.getString("errCode").equals("1")) {
+					toast = Toast.makeText(getActivity(), "REQUEST_ADD_EVENT: Successfully created event.",Toast.LENGTH_LONG);
+					returnToNavigationMenu = true;
+				}
+			} catch (JSONException e) {
+				// TODO: Handle JSONException e 
+			}
+			toast.show();
+			if (returnToNavigationMenu) {
+				getActivity().onBackPressed();
+			}
 			break;
 		}
 		progress.dismiss();
@@ -333,8 +347,11 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	@Override
 	public void onNetworkFailure(int requestCode, JSONObject json) {
 		progress.dismiss();
-		// TODO Auto-generated method stub
-		
+		switch (requestCode) {
+		case Utility.REQUEST_ADD_EVENT:
+			Toast.makeText(getActivity(), "REQUEST_ADD_EVENT: Failed to create event.", Toast.LENGTH_SHORT).show();
+			break;
+		}
 	}
 
 	@Override
