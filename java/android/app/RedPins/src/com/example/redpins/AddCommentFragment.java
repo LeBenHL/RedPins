@@ -26,8 +26,7 @@ public class AddCommentFragment extends Fragment implements OnClickListener, JSO
 	@Override
 	public void onClick(View v) {
 		MainActivity.utility.addComment(this, getArguments().getString("event_id"), commentText.getText().toString());
-		((MainActivity) MainActivity.activity).showEventFrag(getArguments().getString("event_id"));
-		getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+		((MainActivity) getActivity()).onBackPressed();
 	}
 
 	@Override
