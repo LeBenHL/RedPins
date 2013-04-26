@@ -67,6 +67,8 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		listviewButton = (Button) view.findViewById(R.id.button_to_listview);
 		listviewButton.setOnClickListener(this);
 		locArray = new ArrayList<LatLng>();
+		TextView textSearch = (TextView) view.findViewById(R.id.searched_term);
+		textSearch.setText(getArguments().getString("searchTerm"));
 //		System.out.println("JSONArray received:" + getArguments().getString("JSONArr"));
 		try {
 			jsonArr = new JSONArray(getArguments().getString("JSONArr"));
