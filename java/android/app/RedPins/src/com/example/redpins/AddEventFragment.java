@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class AddEventFragment extends Fragment implements OnClickListener, TimePick, DatePick, JSONResponseHandler, MapPicker{
 	private String startTimestamp, endTimestamp;
@@ -37,12 +38,12 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	private int endHour;
 	private int endMinute;
 	
-	private static final int startDateID = 0;
-	private static final int startTimeID = 1;
-	private static final int endDateID = 2;
-	private static final int endTimeID = 3;
-	private static final int NEWEVENT_DEFAULT_END_HOUR_OFFSET = 1;
-	private static final String[] WEEKDAY_ABBREVIATIONS = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+	static final int startDateID = 0;
+	static final int startTimeID = 1;
+	static final int endDateID = 2;
+	static final int endTimeID = 3;
+	static final int NEWEVENT_DEFAULT_END_HOUR_OFFSET = 1;
+	static final String[] WEEKDAY_ABBREVIATIONS = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 	
 	
 	@Override
@@ -225,14 +226,14 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 		Calendar currentCalendar = Calendar.getInstance();
 		currentCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 		currentCalendar.set(Calendar.MINUTE, minute);
+		Toast toast = null;
 		if (id == startTimeID) {
 			currentCalendar.set(Calendar.YEAR, startYear);
 			currentCalendar.set(Calendar.MONTH, startMonth);
 			currentCalendar.set(Calendar.DAY_OF_MONTH, startDay);
-			Calendar maxCalendar = Calendar.getInstance();
-			maxCalendar.set(endYear, endMonth, endDay, endHour, endMinute);
+			Calendar maxCalendar = getEndCalendar();
 			if (compareCalendar(currentCalendar, maxCalendar) > 0) {
-				// Toast here
+				toast = Toast.makeText(getActivity(), "REQUEST_ADD_EVENT: Start time must occur before end time.", Toast.LENGTH_SHORT);
 			} else {
 				setTime(currentCalendar, id);
 			}
@@ -240,7 +241,15 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			currentCalendar.set(Calendar.YEAR, endYear);
 			currentCalendar.set(Calendar.MONTH, endMonth);
 			currentCalendar.set(Calendar.DAY_OF_MONTH, endDay);
-			setTime(currentCalendar, id);
+			Calendar minCalendar = getStartCalendar();
+			if (compareCalendar(minCalendar, currentCalendar) > 0) {
+				toast = Toast.makeText(getActivity(), "REQUEST_ADD_EVENT: End time must occur after start time.", Toast.LENGTH_SHORT);
+			} else {
+				setTime(currentCalendar, id);
+			}
+		}
+		if (toast != null) {
+			toast.show();
 		}
 	}
 
@@ -250,7 +259,41 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 		currentCalendar.set(Calendar.YEAR, year);
 		currentCalendar.set(Calendar.MONTH, month);
 		currentCalendar.set(Calendar.DAY_OF_MONTH, day);
-		setDate(currentCalendar, id);
+		Toast toast = null;
+		if (id == startTimeID) {
+			currentCalendar.set(Calendar.HOUR_OF_DAY, startHour);
+			currentCalendar.set(Calendar.MINUTE, startMinute);
+			Calendar maxCalendar = getEndCalendar();
+			if (compareCalendar(currentCalendar, maxCalendar) > 0) {
+				toast = Toast.makeText(getActivity(), "REQUEST_ADD_EVENT: Start date must occur before end date.", Toast.LENGTH_SHORT);
+			} else {
+				setDate(currentCalendar, id);
+			}
+		} else if (id == endTimeID) {
+			currentCalendar.set(Calendar.HOUR_OF_DAY, endHour);
+			currentCalendar.set(Calendar.MINUTE, endMinute);
+			Calendar minCalendar = getStartCalendar();
+			if (compareCalendar(minCalendar, currentCalendar) > 0) {
+				toast = Toast.makeText(getActivity(), "REQUEST_ADD_EVENT: End date must occur after start date.", Toast.LENGTH_SHORT);
+			} else {
+				setDate(currentCalendar, id);
+			}
+		}
+		if (toast != null) {
+			toast.show();
+		}
+	}
+	
+	public Calendar getStartCalendar() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(startYear, startMonth, startDay, startHour, startMinute);
+		return calendar;
+	}
+	
+	public Calendar getEndCalendar() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(endYear, endMonth, endDay, endHour, endMinute);
+		return calendar;
 	}
 
 	@Override
