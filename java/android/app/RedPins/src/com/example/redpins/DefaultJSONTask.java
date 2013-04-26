@@ -15,7 +15,7 @@ public class DefaultJSONTask extends AsyncTask<Void, Void, JSONObject> {
 	protected JSONObject doInBackground(Void... params) {
 		JSONObject responseJSON = null;
 		try {
-			responseJSON = Utility.requestServer(MainActivity.serverURL + requestPath, requestJSON);
+			responseJSON = MainActivity.utility.requestServer(MainActivity.serverURL + requestPath, requestJSON);
 		} catch (Throwable e) {
 			responseJSON = null;
 		}

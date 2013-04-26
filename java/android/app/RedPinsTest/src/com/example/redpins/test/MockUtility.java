@@ -7,7 +7,7 @@ import com.example.redpins.*;
 
 public class MockUtility extends Utility {
 
-	public static JSONObject requestServer(String url, JSONObject jsonInput) {
+	public JSONObject requestServer(String url, JSONObject jsonInput) {
 		// switch statement between request URLs, return customized JSONs 
 		JSONObject response = null;
 		try{

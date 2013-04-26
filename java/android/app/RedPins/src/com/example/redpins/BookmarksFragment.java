@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 	private ListView listview;
 	private JSONArray jsonArr;
 	private ArrayList<Integer> remList;
+	private ProgressDialog progress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,8 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.bookmarks_fragment, container, false);
 		listview = (ListView) view.findViewById(android.R.id.list);
-		Utility.getBookmarks(this, 1);
+	    progress = MainActivity.utility.addProgressDialog(getActivity(), "Loading", "Loading Bookmarks...");
+		MainActivity.utility.getBookmarks(this, 1);
 		return view;
 	}
 
@@ -206,13 +209,14 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 	public void onNetworkSuccess(int requestCode, JSONObject json) {
 		switch (requestCode) {
 		case Utility.REQUEST_GET_BOOKMARKS:
-			jsonArr = Utility.lookupJSONArrayFromJSONObject(json, "events");
+			jsonArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "events");
 			populateList();
 			System.out.println("Successfully get bookmarks");
 			break;
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
+		progress.dismiss();
 	}
 
 	@Override
@@ -224,13 +228,14 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
+		progress.dismiss();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		for(int i = 0; i < remList.size();i++){
-			Utility.deleteBookmark(this, remList.get(i).toString());
+			MainActivity.utility.deleteBookmark(this, remList.get(i).toString());
 		}
 	}
 }

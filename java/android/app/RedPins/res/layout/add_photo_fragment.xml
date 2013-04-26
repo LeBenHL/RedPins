@@ -6,12 +6,6 @@
     android:layout_margin="0dp"
     android:padding="10dp" >
     
-	<ScrollView
-	    android:id="@+id/add_photo_scrollview"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:layout_gravity="center" >
-        
 	    <RelativeLayout
             android:id="@+id/add_photo_relativeLayout1"
             android:layout_width="match_parent"
@@ -20,7 +14,7 @@
 				android:id="@+id/add_photo_space"
 	    		android:layout_width="wrap_content"
 	    		android:layout_height="30dp"
-	   			android:layout_marginTop="130dp"/>
+	   			android:layout_marginTop="dp"/>
             
             <LinearLayout
                 android:id="@+id/linearLayout1"
@@ -73,11 +67,16 @@
 
             </LinearLayout>
 
+	    </RelativeLayout>
 
-
-	    </RelativeLayout>   
-	</ScrollView>
-
-	
+	    <ImageView
+	        android:id="@+id/photo"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/add_photo_relativeLayout1"
+	        android:layout_alignRight="@+id/add_photo_relativeLayout1"
+	        android:layout_below="@+id/add_photo_relativeLayout1"
+	        android:layout_marginTop="0dp"
+	        android:src="@drawable/content_attachment" />
 
 </RelativeLayout>

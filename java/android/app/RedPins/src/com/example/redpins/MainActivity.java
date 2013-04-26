@@ -1,5 +1,7 @@
 package com.example.redpins;
 
+import java.util.Stack;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -23,6 +25,7 @@ import com.facebook.Session;
 public class MainActivity extends FragmentActivity{
 
 	static Activity activity;
+	static Utility utility;
 	public FacebookFragment facebookFragment;
 	public Fragment appFragment;
 	private Fragment searchFragment;
@@ -31,17 +34,16 @@ public class MainActivity extends FragmentActivity{
 	public String mQuery;
 	public String mLoc;
 	public LocationManager locationManager;
-
 	private Menu _menu;
-
 	public static String serverURL = "http://kantas92.pagekite.me"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
-
+	private Stack<Fragment> mFragmentStack = new Stack<Fragment>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		System.out.println("GOT CREATED");
 		super.onCreate(savedInstanceState);
 		activity = this;
+		utility = new Utility();
 		setContentView(R.layout.main_activity);
 		if (savedInstanceState == null) {
 			// Add the fragment on initial activity setup
@@ -49,8 +51,7 @@ public class MainActivity extends FragmentActivity{
 			appFragment = new NavigationFragment();
 			getSupportFragmentManager()
 			.beginTransaction()
-			.add(R.id.mainAppFragment, appFragment)
-			//.addToBackStack(null)
+			.add(R.id.mainAppFragment, mFragmentStack.push(appFragment))
 			.disallowAddToBackStack()
 			.commit();
 			facebookFragment = new FacebookFragment();
@@ -176,11 +177,10 @@ public class MainActivity extends FragmentActivity{
 		appFragment = listViewFragment;
 		//		if (lastAppFragment instanceof NavigationFragment) {
 		ft.show(appFragment);
-		ft.replace(R.id.mainAppFragment, appFragment);//.addToBackStack(null);			
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));//.addToBackStack(null);			
 		//		} else {
 		//			ft.replace(R.id.mainAppFragment, appFragment);
-		//		}
-		ft.addToBackStack("list");
+		//		};
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding createListview: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
@@ -191,8 +191,7 @@ public class MainActivity extends FragmentActivity{
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = listViewFragment;
 		ft.show(appFragment);
-		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.addToBackStack("list");
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding toggle: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
@@ -217,8 +216,7 @@ public class MainActivity extends FragmentActivity{
 		getSupportFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = googleMapFragment;
-		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.addToBackStack("map");
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
@@ -231,8 +229,7 @@ public class MainActivity extends FragmentActivity{
 		appFragment = new EventFragment();
 		appFragment.setArguments(data);
 		ft.show(appFragment);
-		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.addToBackStack("event");
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
@@ -241,8 +238,7 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("showing bookmarks page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = new BookmarksFragment();
-		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.addToBackStack("bookmark");
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
@@ -261,7 +257,7 @@ public class MainActivity extends FragmentActivity{
 		//		data.putString("event_id",eventID);
 		appFragment = new AddPhotoFragment();
 		appFragment.setArguments(data);
-		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 		//		fragStack.push("bookmark");
 	}
@@ -271,7 +267,7 @@ public class MainActivity extends FragmentActivity{
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = new TouchGalleryFragment();
 		appFragment.setArguments(data);
-		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 	}
 
@@ -280,7 +276,7 @@ public class MainActivity extends FragmentActivity{
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = new AddEventFragment();
 		appFragment.setArguments(data);
-		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 	}
 	
@@ -290,7 +286,7 @@ public class MainActivity extends FragmentActivity{
 		appFragment = new AddEventMapFragment();
 		((AddEventMapFragment) appFragment).parent = addEventFragment;
 		appFragment.setArguments(bundle);
-		ft.replace(R.id.mainAppFragment, appFragment).addToBackStack(null);
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 	}
 
@@ -300,8 +296,7 @@ public class MainActivity extends FragmentActivity{
 		commFragment.setArguments(bundle);
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = commFragment;
-		ft.replace(R.id.mainAppFragment, appFragment);
-		ft.addToBackStack(null);
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 		ft.commit();
 	}
@@ -398,16 +393,15 @@ public class MainActivity extends FragmentActivity{
 
 	@Override
 	public void onBackPressed() {
-		Log.i("onBackPressed", "Back Pressed");
-		Log.v("onBackPressed", "Old Fragment: " + appFragment.toString());
-		super.onBackPressed();
-		getSupportFragmentManager().beginTransaction().hide(appFragment).remove(appFragment).commit();//hide(appFragment).remove(appFragment).commit();
-		//getSupportFragmentManager().popBackStack();
-		appFragment = getSupportFragmentManager()
-				.findFragmentById(R.id.mainAppFragment);
-		getSupportFragmentManager().beginTransaction().show(appFragment).add(R.id.mainAppFragment,appFragment).commit();
-		//getSupportFragmentManager().beginTransaction().show(appFragment).commit();
-		Log.v("onBackPressed","backstack count after: "+getSupportFragmentManager().getBackStackEntryCount());
-		Log.v("onBackPressed", "New Fragment: " + appFragment.toString());
+	    mFragmentStack.pop();
+	    if (mFragmentStack.size() > 0) {
+	        FragmentTransaction ft = getSupportFragmentManager()
+	                .beginTransaction();
+	        appFragment = mFragmentStack.peek();
+	        ft.replace(R.id.mainAppFragment, appFragment);
+	        ft.commit();
+	    } else {
+	        super.onBackPressed();
+	    }
 	}
 }
