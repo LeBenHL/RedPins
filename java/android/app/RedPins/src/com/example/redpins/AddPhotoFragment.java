@@ -9,6 +9,7 @@ import java.util.Date;
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -33,6 +34,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 	Bitmap bm;
 	File finalFile;
 	File outputFileName;
+	private ProgressDialog progress;
 	
 	
 	@Override
@@ -81,6 +83,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 			public void onClick(View view) {
 				System.out.println("uploading photo");
 				try {
+					progress = MainActivity.utility.addProgressDialog(getActivity(), "Uploading", "Uploading Photo...");
 					MainActivity.utility.addPhoto(AddPhotoFragment.this, getArguments().getString("event_id"), bm, "uploaded with RedPins");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -166,10 +169,12 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 	@Override
 	public void onNetworkSuccess(int requestCode, HttpResponse response) {
 		JSONObject responseJSON = MainActivity.utility.convertHttpResponseToJSONObject(response); // resulting JSONObject
+		progress.dismiss();
 	}
 
 	@Override
 	public void onNetworkFailure(int requestCode, HttpResponse response) {
+		progress.dismiss();
 		// TODO Auto-generated method stub
 		
 	}

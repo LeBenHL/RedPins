@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,6 +57,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 	private boolean bookmarked;
 	private ImageButton deleteEventButton;
 	private Button uploadPhotoButton;
+	private ProgressDialog progress;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,6 +109,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		eventImg.setOnClickListener(this);
 		
 		// API Requests
+		progress = MainActivity.utility.addProgressDialog(getActivity(), "Loading", "Loading Event...", 3);
 		MainActivity.utility.getEvent(this, event_id);
 		MainActivity.utility.getRatings(this, event_id);
 		MainActivity.utility.getComments(this, event_id);
@@ -456,6 +459,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
+		progress.dismiss();
 	}
 
 	@Override
@@ -501,6 +505,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
+		progress.dismiss();
 		toast.show();
 	}
 	

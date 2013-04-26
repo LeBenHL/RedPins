@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.location.Location;
@@ -34,6 +35,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 	private String searchLoc;
 	private Double latitude;
 	private Double longitude;
+	private ProgressDialog progress;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaZnceState) {
@@ -53,6 +55,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 		latitude = getArguments().getDouble("latitude");
 		longitude = getArguments().getDouble("longitude");
 		
+		progress = MainActivity.utility.addProgressDialog(getActivity(), "Searching", "Searching For Events...");
 		if (searchLoc == null) {
 			MainActivity.utility.getNearbyEventList(this, searchTerm, latitude, longitude, 1);
 		} else {
@@ -266,6 +269,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
+		progress.dismiss();
 	}
 
 	@Override
@@ -278,5 +282,6 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
+		progress.dismiss();
 	}
 }

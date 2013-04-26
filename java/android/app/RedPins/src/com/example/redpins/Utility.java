@@ -26,6 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
@@ -448,5 +450,22 @@ public class Utility{
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_LOGIN_USER, requestJSON, "/users/login.json");
+	}
+	
+	public ProgressDialog addProgressDialog(Context context, String title, String message, Integer count) {
+		CountingProgressDialog progress = new CountingProgressDialog(context, count);
+		progress.setTitle(title);
+		progress.setMessage(message);
+		progress.show();
+		return progress;
+	}
+	
+	public ProgressDialog addProgressDialog(Context context, String title, String message) {
+		Log.i("Progress Dialog", "CREATING DIALOG");
+		CountingProgressDialog progress = new CountingProgressDialog(context);
+		progress.setTitle(title);
+		progress.setMessage(message);
+		progress.show();
+		return progress;
 	}
 }
