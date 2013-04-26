@@ -93,7 +93,15 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 		createButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				System.out.println("clicked the create button");
+				System.out.println("clicked the create button"); 
+				if (titleField.getText().toString().length() == 0) {
+					((MainActivity) getActivity()).makeToast("REQ_ADD_EVENT: Title cannot be empty.", Toast.LENGTH_SHORT);
+					return;
+				}
+				if (locationField.getText().toString().length() == 0) {
+					((MainActivity) getActivity()).makeToast("REQ_ADD_EVENT: Location cannot be empty.", Toast.LENGTH_SHORT);
+					return;
+				}
 				updateTimestamps();
 				progress = MainActivity.utility.addProgressDialog(getActivity(), "Adding Event", "Adding Event...");
 				MainActivity.utility.addEvent(AddEventFragment.this, titleField.getText().toString(), startTimestamp, endTimestamp, locationField.getText().toString(), "http://www.redpins.com", latitude, longitude, "");
@@ -105,6 +113,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			public void onClick(View v) {
 				System.out.println("lat long is currently at " + Double.toString(latitude) + "," + Double.toString(longitude));
 				Bundle data = new Bundle();
+				data.putString("title", titleField.getText().toString());
 				((MainActivity) getActivity()).createAddEventMapFrag(data, AddEventFragment.this);
 			}
 		});
@@ -322,7 +331,6 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 
 	@Override
 	public void onNetworkSuccess(int requestCode, JSONObject json) {
-		boolean returnToNavigationMenu = false;
 		switch (requestCode) {
 		case Utility.REQUEST_ADD_EVENT:
 			System.out.println(json.toString());

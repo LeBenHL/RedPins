@@ -184,23 +184,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" android:layout_below="@+id/newevent_relativeLayout1_1" android:weightSum="1" android:padding="10dp">
 
-                <Button
-                    android:id="@+id/newevent_cancel_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight=".5"
-                    android:minHeight="40dp"
-                    android:text="Cancel"
-                    android:padding="15dp"/>
-                
-                <Button
-                    android:id="@+id/newevent_create_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight=".5"
-                    android:minHeight="40dp"
-                    android:text="Create"/>
+				<Button
+				    android:id="@+id/newevent_create_btn"
+				    android:layout_width="match_parent"
+				    android:layout_height="fill_parent"
+				    android:minHeight="40dp"
+				    android:text="Create" />
+
             </LinearLayout>
 	    </RelativeLayout>   
 	</ScrollView>

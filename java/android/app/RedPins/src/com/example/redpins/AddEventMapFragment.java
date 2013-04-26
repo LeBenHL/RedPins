@@ -33,6 +33,7 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 	private Marker currentMarker;
 	public MapPicker parent;
 	private Geocoder geocoder;
+	private String title;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,12 +50,14 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.add_event_map_fragment, container, false);
 		geocoder = new Geocoder(getActivity());
 		setUpMapIfNeeded();
-		//mMap = mapFrag.getMap();
+		title = getArguments().getString("title");
+		if (title.length() == 0) {
+			title = "New event";
+		}
 		return view;
 	}
 	
@@ -86,7 +89,6 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 		if (f != null) {
 			getFragmentManager().beginTransaction().remove(f).commit();
 		}
-		
 	}
 	
 	@Override
@@ -106,7 +108,7 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 		if (currentMarker != null) {
 			currentMarker.remove();
 		}
-		currentMarker = mMap.addMarker(new MarkerOptions().position(point).title("New Event"));
+		
 		List<Address> addresses;
 		try {
 			addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
@@ -122,12 +124,14 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 				Log.i("onMapLongClick", location);
 				parent.setAddress(location);
 				parent.setLatitudeLongitude(point.latitude, point.longitude);
+				currentMarker = mMap.addMarker(new MarkerOptions().position(point).title(title).snippet(location));
 			} else {
 				((MainActivity) getActivity()).makeToast("Invalid Location Chosen", Toast.LENGTH_LONG);
 			}
 		} catch (IOException e) {
 			((MainActivity) getActivity()).makeToast("Invalid Location Chosen", Toast.LENGTH_LONG);
 		}
+		
 	}
 
 	@Override
