@@ -29,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import com.facebook.Request;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -482,6 +484,11 @@ public class Utility{
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_LOGIN_USER, requestJSON, "/users/login.json");
+	}
+	
+	public void executeFacebookRequest(Request request) {
+		FacebookTask task = new FacebookTask(request);
+		task.execute();
 	}
 	
 	public ProgressDialog addProgressDialog(Context context, String title, String message, Integer count) {

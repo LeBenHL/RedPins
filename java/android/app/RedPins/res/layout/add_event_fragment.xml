@@ -145,7 +145,7 @@
                 </LinearLayout>
                 
                 <LinearLayout
-                	android:id="@+id/linearLayout2"
+                	android:id="@+id/linearLayout4"
                 	android:layout_width="match_parent"
                 	android:layout_height="wrap_content"
                 	android:orientation="horizontal" android:layout_below="@+id/newevent_endTimePanel" android:weightSum="1" android:padding="10dp">
@@ -177,12 +177,64 @@
 	                    android:textSize="18sp" />
             	</LinearLayout>
 
+            	
+                <CheckBox
+			        android:id="@+id/facebookCheckBox"
+			        android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_below="@+id/linearLayout2"
+				    android:paddingTop="10dp"
+				    android:text="Push Event on Facebook"
+			        />
+            	<LinearLayout
+                	android:id="@+id/linearLayout3"
+                	android:layout_width="match_parent"
+                	android:layout_height="wrap_content"
+                	android:orientation="horizontal" android:layout_below="@+id/linearLayout4" android:weightSum="1" android:padding="10dp">
+
+					<EditText
+					    android:id="@+id/newevent_url_field"
+					    android:layout_width="fill_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginBottom="1dp"
+					    android:autoLink="web"
+					    android:hint="URL for this event (optional)"
+					    android:inputType="textUri"
+					    android:minHeight="42dp"
+					    android:paddingBottom="10dp"
+					    android:paddingTop="10dp"
+					    android:textSize="18sp" />
+
+            	</LinearLayout>
+            	<LinearLayout
+                	android:id="@+id/linearLayout2"
+                	android:layout_width="match_parent"
+                	android:layout_height="wrap_content"
+                	android:orientation="horizontal" android:layout_below="@+id/linearLayout3" android:weightSum="1" android:padding="10dp">
+
+					<EditText
+					    android:id="@+id/newevent_description_field"
+					    android:layout_width="fill_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginBottom="1dp"
+					    android:minHeight="42dp"
+					    android:paddingBottom="10dp"
+					    android:paddingTop="10dp"
+					    android:autoLink="web"
+					    android:hint="Description for this event (optional)"
+					    android:lines="3"
+					    android:textSize="18sp" />
+
+            	</LinearLayout>
+
+
 			</RelativeLayout>
 			<LinearLayout
                 android:id="@+id/linearLayout1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" android:layout_below="@+id/newevent_relativeLayout1_1" android:weightSum="1" android:padding="10dp">
+             
 
 				<Button
 				    android:id="@+id/newevent_create_btn"
