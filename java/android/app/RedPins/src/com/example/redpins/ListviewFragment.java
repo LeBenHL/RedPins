@@ -42,8 +42,6 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 		Log.i("Listview On Create", "ON CREATE");
 		View view = inflater.inflate(R.layout.listview_fragment, container, false);
 		//((MainActivity) getActivity()).hideNaviFrag();
-		homeButton = (ImageButton) view.findViewById(R.id.home_button);
-		homeButton.setOnClickListener(this);
 		mapviewButton = (Button) view.findViewById(R.id.button_to_mapview);
 		mapviewButton.setOnClickListener(this);
 		listView = (ListView) view.findViewById(android.R.id.list);
@@ -172,6 +170,7 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 					// Create Map Fragment version of it
 					Bundle bundle = new Bundle();
 					bundle.putString("JSONArr", jsonArr.toString());
+					bundle.putString("searchTerm", searchTerm);
 					((MainActivity)getActivity()).createMapviewFrag(bundle);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

@@ -4,7 +4,8 @@
     android:id="@+id/cool"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#FF0000"
+    android:padding="10dp"
     android:orientation="vertical" >
 
     <RelativeLayout

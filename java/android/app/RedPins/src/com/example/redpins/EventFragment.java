@@ -63,8 +63,6 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		System.out.println("CREATED EventFragment");
 		View view = inflater.inflate(R.layout.event_fragment, container, false);
-		homeButton = (ImageButton) view.findViewById(R.id.home_button);
-		homeButton.setOnClickListener(this);
 		eventName = (TextView) view.findViewById(R.id.event_name);
 		eventURL = (TextView) view.findViewById(R.id.event_url);
 		eventURL.setOnClickListener(this);

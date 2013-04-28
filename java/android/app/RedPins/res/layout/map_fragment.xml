@@ -8,41 +8,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/home_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/action_about"
-            android:text="@string/home" />
-
-        <Button
-            android:id="@+id/button_to_listview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/to_listview" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
         <TextView
             android:id="@+id/search_term_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Searched Events Related To: " />
+            android:text="Searched Events Related To: "
+            android:textColor="#FFFFFF" />
 
         <TextView
             android:id="@+id/searched_term"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="asdfghjkl" />
+            android:text=""
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/map_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_width="match_parent"
+        android:layout_height="402dp"
+        android:layout_weight="0.94" >
 
         <fragment
             android:id="@+id/map"
@@ -50,5 +35,14 @@
             android:layout_height="match_parent"
             class="com.google.android.gms.maps.SupportMapFragment" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button_to_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/itemlist_gradient_red"
+        android:padding="5dp"
+        android:text="@string/to_listview"
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>

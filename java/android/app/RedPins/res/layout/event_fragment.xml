@@ -12,17 +12,11 @@
         android:orientation="horizontal" >
 
         <ImageButton
-            android:id="@+id/home_button"
-            android:layout_columnSpan="2"
-            android:layout_gravity="left"
-            android:src="@drawable/action_about"
-            android:text="@string/home" />
-
-        <ImageButton
             android:id="@+id/bookmark_button"
             android:layout_column="0"
             android:layout_columnSpan="2"
             android:layout_gravity="left"
+            android:background="@drawable/itemlist_gradient_red"
             android:src="@drawable/collections_labels" />
 
         <TextView
@@ -32,6 +26,7 @@
             android:layout_gravity="fill_horizontal"
             android:padding="@dimen/object_padding"
             android:text="Event Name"
+            android:textColor="#FFFFFF"
             android:textSize="@dimen/event_name" />
 
         <ImageView
@@ -44,7 +39,8 @@
             android:layout_rowSpan="4"
             android:contentDescription="@string/null_val"
             android:padding="@dimen/words"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_launcher"
+            android:background="#FFFFFF" />
 
         <TextView
             android:id="@+id/event_url"
@@ -52,13 +48,14 @@
             android:layout_gravity="left"
             android:clickable="true"
             android:text="Event URL"
-            android:textColor="#0032FF"
+            android:textColor="#FFFFFF"
             android:textSize="@dimen/words" />
 
         <TextView
             android:id="@+id/event_description"
             android:layout_columnSpan="4"
             android:layout_gravity="left"
+            android:textColor="#FFFFFF"
             android:text="Event Description"
             android:textSize="@dimen/words" />
 
@@ -67,6 +64,7 @@
             android:layout_column="2"
             android:layout_columnSpan="4"
             android:layout_gravity="left"
+            android:textColor="#FFFFFF"
             android:text="Event Location"
             android:textSize="@dimen/words" />
 
@@ -75,6 +73,7 @@
             android:layout_column="2"
             android:layout_columnSpan="4"
             android:layout_gravity="left"
+            android:textColor="#FFFFFF"
             android:text="Event Time"
             android:textSize="@dimen/words" />
 
@@ -83,6 +82,7 @@
             android:layout_column="4"
             android:layout_gravity="left"
             android:layout_margin="@dimen/object_padding"
+            android:textColor="#FFFFFF"
             android:text="LIKE"
             android:textSize="@dimen/words" />
 
@@ -90,6 +90,7 @@
             android:id="@+id/event_dislike"
             android:layout_gravity="left"
             android:layout_margin="@dimen/object_padding"
+            android:textColor="#FFFFFF"
             android:text="DISLIKE"
             android:textSize="@dimen/words" />
 
@@ -107,12 +108,14 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_column="0"
             android:layout_gravity="left"
+            android:background="@drawable/itemlist_gradient_red"
             android:src="@drawable/rating_good" />
 
         <ImageButton
             android:id="@+id/dislike_button"
             style="?android:attr/borderlessButtonStyle"
             android:layout_gravity="left"
+            android:background="@drawable/itemlist_gradient_red"
             android:src="@drawable/rating_bad" />
 
         <Button
@@ -121,6 +124,8 @@
             android:layout_columnSpan="6"
             android:layout_gravity="left"
             android:layout_row="11"
+            android:background="@drawable/itemlist_gradient_red"
+            android:textColor="#FFFFFF"
             android:text="Add Comment" />
 
         <Space
@@ -133,6 +138,7 @@
             android:layout_column="3"
             android:layout_gravity="left|top"
             android:layout_row="1"
+            android:background="@drawable/itemlist_gradient_red"
             android:src="@drawable/content_discard" />
 
         <ImageButton
@@ -140,6 +146,7 @@
             android:layout_column="3"
             android:layout_gravity="left|top"
             android:layout_row="0"
+            android:background="@drawable/itemlist_gradient_red"
             android:src="@drawable/content_remove" />
 
         <Button
@@ -147,6 +154,8 @@
             android:layout_column="5"
             android:layout_gravity="left|top"
             android:layout_row="1"
+            android:background="@drawable/itemlist_gradient_red"
+            android:textColor="#FFFFFF"
             android:text="@string/upload_photo" />
     </GridLayout>
 

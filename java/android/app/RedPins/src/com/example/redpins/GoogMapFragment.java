@@ -34,7 +34,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoWindowClickListener{
 
 	private Button listviewButton;
-	private ImageButton homeButton;
 	private GoogleMap mMap;
 	private View mapView;
 	private HashMap<String, String> hash;
@@ -62,8 +61,6 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 		mapFrag = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map));
 		mMap = mapFrag.getMap(); 
 		mMap.setOnInfoWindowClickListener(this);
-		homeButton = (ImageButton) view.findViewById(R.id.home_button);
-		homeButton.setOnClickListener(this);
 		listviewButton = (Button) view.findViewById(R.id.button_to_listview);
 		listviewButton.setOnClickListener(this);
 		locArray = new ArrayList<LatLng>();
@@ -167,23 +164,17 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.button_to_listview:
-			//go to viewView
-			//((MainActivity) getActivity()).removeMapFragment();
+			//go to listView
 			((MainActivity) getActivity()).toggleListviewFrag();
-			//			((MainActivity) getActivity()).toggleListviewFrag();
 			break;
 
 		}
 	}
 
-	//	public void onDestroy() {};
-
 	@Override
 	public void onDestroyView() {
-		// TODO Auto-generated method stub
 		super.onDestroyView();
 		System.out.println("DESTROY View");
 		SupportMapFragment f = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
@@ -194,14 +185,11 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 	
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		Log.v("onBackPressed","GoogMap onDestroy");
-		//getActivity().getSupportFragmentManager().beginTransaction().hide(this).remove(this).commit();
 	}
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		Log.v("onBackPressed","GoogMap onResume");
 	}
