@@ -74,7 +74,11 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 
 				// Update the LastUpdatedLabel
 				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-				MainActivity.utility.getEventList((JSONResponseHandler) fragment, searchTerm, searchLoc, page);
+				if (searchLoc == null) {
+					MainActivity.utility.getNearbyEventList((JSONResponseHandler) fragment, searchTerm, latitude, longitude, page);
+				} else {
+					MainActivity.utility.getEventList((JSONResponseHandler) fragment, searchTerm, searchLoc, page);
+				}
 				//				if(success){
 				//					page++;
 				//				}
