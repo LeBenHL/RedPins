@@ -222,7 +222,7 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	public void showEventFrag(String eventID){
-		System.out.println("showing event page");
+		Log.i("showEventFrag", "Adding Event Fragment");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Bundle data = new Bundle();
 		data.putString("event_id",eventID);
@@ -231,7 +231,6 @@ public class MainActivity extends FragmentActivity{
 		ft.show(appFragment);
 		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
-		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	public void showBookmarksFrag(){
