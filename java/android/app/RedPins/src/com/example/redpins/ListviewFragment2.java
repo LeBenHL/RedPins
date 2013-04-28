@@ -7,17 +7,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,57 +30,82 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
-import android.widget.TextView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class ListviewFragment2 extends ListFragment implements OnClickListener{
+
+public class ListviewFragment2 extends ListFragment implements OnClickListener, JSONResponseHandler {
 	private Button mapviewButton;
-	//private PullToRefreshListView listView;
+	private PullToRefreshListView listView;
 	private ImageButton homeButton;
-	protected ArrayList<JSONObject> jsonList;
+	protected JSONArray jsonArr;
 	private String searchTerm;
 	private String searchLoc;
+	private Double latitude;
+	private Double longitude;
+	private ProgressDialog progress;
 	private int page;
-	private PullToRefreshListView listView;
+	protected ArrayList<JSONObject> jsonList;
+	protected Context mContext;
+	protected ListFragment fragment;
+	private boolean yes;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaZnceState) {
 		Log.i("Listview On Create", "ON CREATE");
 		View view = inflater.inflate(R.layout.listview_fragment2, container, false);
 		//((MainActivity) getActivity()).hideNaviFrag();
-		homeButton = (ImageButton) view.findViewById(R.id.home_button);
-		homeButton.setOnClickListener(this);
 		mapviewButton = (Button) view.findViewById(R.id.button_to_mapview);
 		mapviewButton.setOnClickListener(this);
 		jsonList = new ArrayList<JSONObject>();
-		listView = (PullToRefreshListView) view.findViewById(android.R.id.list);
+		page = 1;
+		yes = true;
+		fragment = this;
+		mContext = getActivity().getApplicationContext();
+		listView = (PullToRefreshListView) view.findViewById(R.id.events_listview);
+		listView.setClickable(true);		
 		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub
-				page++;
-				GetEventListTask task = new GetEventListTask();
-				task.execute();
+				String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+
+				// Update the LastUpdatedLabel
+				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+				MainActivity.utility.getEventList((JSONResponseHandler) fragment, searchTerm, searchLoc, page);
+				//				if(success){
+				//					page++;
+				//				}
 			}
-		});//setClickable(true);
+		});
 		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
 		searchTerm = getArguments().getString("query");
 		searchText.setText(searchTerm);
 		searchLoc = getArguments().getString("location");
-		page = 1;
-		GetEventListTask task = new GetEventListTask();
-		task.execute();
+		latitude = getArguments().getDouble("latitude");
+		longitude = getArguments().getDouble("longitude");
+
+		progress = MainActivity.utility.addProgressDialog(getActivity(), "Searching", "Searching For Events...");
+		if (searchLoc == null) {
+			MainActivity.utility.getNearbyEventList(this, searchTerm, latitude, longitude, page);
+			page++;
+		} else {
+			MainActivity.utility.getEventList(this, searchTerm, searchLoc, page);
+			page++;
+		}
+
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,
 					long arg3) {
-				//View view = (View) listView.getItemAtPosition(position);
+				// TODO Auto-generated method stub
+				View view = (View) listView.getChildAt(position);
 				System.out.println("CLICKED");
 				//((MainActivity) getActivity()).hideListviewFrag();
-				//((MainActivity) getActivity()).showEventFrag(view.getTag().toString());
+				((MainActivity) getActivity()).showEventFrag(view.getTag().toString());
 			}
 
 		});
@@ -92,8 +119,10 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 		switch (v.getId()) {
 		case R.id.button_to_mapview:
 			//go to mapView
+			// Create Map Fragment version of it
 			Bundle bundle = new Bundle();
-			bundle.putString("JSONArr", jsonList.toString());
+			bundle.putString("JSONArr", jsonArr.toString());
+			bundle.putString("searchTerm", searchTerm);
 			((MainActivity)getActivity()).createMapviewFrag(bundle);
 			((MainActivity) getActivity()).toggleMapviewFrag();
 			break;
@@ -106,15 +135,13 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			System.out.println("CLICKED");
-			//((MainActivity) getActivity()).hideListviewFrag();
-			//		showMapviewFrag();
+			((MainActivity) getActivity()).toggleListviewFrag();
 			((MainActivity) getActivity()).showEventFrag(v.getTag().toString());
 		}
 	};
 
 	private void populateList(){
 		Log.v("Populate List", "Populate List");
-
 		ListAdapter adapter = new ListAdapter() {
 
 			@Override
@@ -170,7 +197,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 				double lng;
 				JSONObject json;
 				try {
-					if (jsonList == null) {
+					if (jsonArr == null) {
 						System.out.println("jsonarray is null");
 					}
 					//System.out.println(jsonArr);
@@ -181,10 +208,6 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 					eventDesc.setText(json.getString("url"));
 					eventAddr.setText(json.getString("location"));
 					eventTime.setText(json.getString("start_time"));
-					// Create Map Fragment version of it
-//					Bundle bundle = new Bundle();
-//					bundle.putString("JSONArr", jsonList.toString());
-//					((MainActivity)getActivity()).createMapviewFrag(bundle);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -213,7 +236,11 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 			@Override
 			public int getCount() {
 				// TODO Auto-generated method stub
-				return jsonList.size();
+				if(jsonList == null){
+					return 0;
+				}else{
+					return jsonList.size();
+				}
 			}
 
 			@Override
@@ -230,57 +257,6 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 		};
 		listView.setAdapter(adapter);
 	}
-
-
-	public class GetEventListTask extends AsyncTask<Void, Void, JSONArray>{
-
-		//how should i save comments
-
-		@Override
-		protected JSONArray doInBackground(Void... arg0) {
-			JSONObject json = new JSONObject();
-			try {
-				json.put("search_query", searchTerm);
-				json.put("location_query", searchLoc);
-				json.put("facebook_id", ((MainActivity)getActivity()).getFacebookId());
-				json.put("session_token", ((MainActivity)getActivity()).getFacebookSessionToken());
-				json.put("page", page);
-				System.out.println("INPUT: " + json.toString());
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-			JSONArray ret =null; 
-			try {
-				//sends requests to server and receives
-				JSONObject jsonObj = MainActivity.utility.requestServer(MainActivity.serverURL + "/events/search.json", json);
-				//System.out.println("RESPONSE: " + jsonObj.toString());
-				ret = jsonObj.getJSONArray("events");
-				//System.out.println("RET: " + ret);
-				ret.toString().replace("[", "");
-				ret.toString().replace("]", "");
-			} catch (JSONException e) {
-				System.out.println("Caught Exception");
-				e.printStackTrace();
-			}
-			return ret;
-		}
-		@Override
-		protected void onPostExecute(JSONArray result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			for(int i = 0;i<result.length();i++){
-				try {
-					jsonList.add(result.getJSONObject(i));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			populateList();
-
-		}
-	}
-
 
 	private Location currLoc;
 	private LocationManager mLocationManager;
@@ -316,11 +292,44 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener{
 		};
 		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locListener);
 	}
-	
+
+
 	@Override
-	public void onDestroy() {
+	public void onNetworkSuccess(int requestCode, JSONObject json) {
+		switch (requestCode) {
+		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST:
+			jsonArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "events");
+			for(int i = 0; i < jsonArr.length();i++){
+				try {
+					jsonList.add(jsonArr.getJSONObject(i));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(yes){
+				populateList();
+				yes = false;
+			}
+			listView.onRefreshComplete();
+			break;
+		default:
+			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
+		}
+		progress.dismiss();
+	}
+
+	@Override
+	public void onNetworkFailure(int requestCode, JSONObject json) {
 		// TODO Auto-generated method stub
-		super.onDestroy();
-		Log.v("onBackPressed","Listview Destroyed");
+		switch (requestCode) {
+		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST:
+			System.out.println("Error loading list of events");
+			break;
+		default:
+			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
+		}
+		listView.onRefreshComplete();
+		progress.dismiss();
 	}
 }
