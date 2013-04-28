@@ -31,9 +31,8 @@ import android.widget.Toast;
 
 public class AddEventFragment extends Fragment implements OnClickListener, TimePick, DatePick, JSONResponseHandler, MapPicker{
 	private String startTimestamp, endTimestamp;
-	private EditText titleField;
-	private EditText locationField;
 	private CheckBox facebookCheckBox;
+	private EditText titleField, locationField, urlField, descriptionField;
 	private double latitude = -360.0;
 	private double longitude = -360.0;
 	private String location = null;
@@ -64,6 +63,8 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 		titleField = (EditText) view.findViewById(R.id.newevent_title_field);
 		locationField = (EditText) view.findViewById(R.id.newevent_locationField);
 		facebookCheckBox = (CheckBox) view.findViewById(R.id.facebookCheckBox);
+		urlField = (EditText) view.findViewById(R.id.newevent_url_field);
+		descriptionField = (EditText) view.findViewById(R.id.newevent_description_field);
 		
 		// Attaching onClickListeners to Buttons
 		startDateButton = (Button) view.findViewById(R.id.newevent_startDatePicker);
@@ -126,7 +127,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 					MainActivity.utility.executeFacebookRequest(request);
 				}
 				progress = MainActivity.utility.addProgressDialog(getActivity(), "Adding Event", "Adding Event...");
-				MainActivity.utility.addEvent(AddEventFragment.this, titleField.getText().toString(), startTimestamp, endTimestamp, locationField.getText().toString(), "http://www.redpins.com", latitude, longitude, "");
+				MainActivity.utility.addEvent(AddEventFragment.this, titleField.getText().toString(), startTimestamp, endTimestamp, locationField.getText().toString(), urlField.getText().toString(), latitude, longitude, descriptionField.getText().toString());
 			}
 		});
 		mapButton = (Button) view.findViewById(R.id.newevent_mapButton);
