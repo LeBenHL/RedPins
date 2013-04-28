@@ -16,7 +16,13 @@ import com.facebook.Request;
 import com.facebook.android.Facebook;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,8 +39,8 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	private String startTimestamp, endTimestamp;
 	private CheckBox facebookCheckBox;
 	private EditText titleField, locationField, urlField, descriptionField;
-	private double latitude = -360.0;
-	private double longitude = -360.0;
+	private double latitude = DEFAULT_LATITUDE;
+	private double longitude = DEFAULT_LONGITUDE;
 	private String location = null;
 	private Button startDateButton, endDateButton, startTimeButton, endTimeButton, mapButton, createButton;
 	private int startYear;
@@ -49,6 +55,8 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	private int endMinute;
 	private ProgressDialog progress;
 	
+	static final double DEFAULT_LATITUDE = -360.0;
+	static final double DEFAULT_LONGITUDE = -360.0;
 	static final int startDateID = 0;
 	static final int startTimeID = 1;
 	static final int endDateID = 2;
@@ -59,7 +67,33 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//TODO: Move this to Utility and refactor NavigationFragment code too. 
 		View view = inflater.inflate(R.layout.add_event_fragment, container, false);
+		Log.v("buttonClick", "NEARBY");
+		Criteria locationCritera = new Criteria();
+		locationCritera.setAccuracy(Criteria.ACCURACY_COARSE);
+		locationCritera.setAltitudeRequired(false);
+		locationCritera.setBearingRequired(false);
+		locationCritera.setCostAllowed(true);
+		locationCritera.setPowerRequirement(Criteria.NO_REQUIREMENT);
+		//String providerName = ((MainActivity) getActivity()).locationManager.getBestProvider(locationCritera, true);
+		String providerName = LocationManager.NETWORK_PROVIDER;
+		Log.v("buttonClick", "Provider: " + providerName);
+
+		if (providerName != null && ((MainActivity) getActivity()).locationManager.isProviderEnabled(providerName)) {
+			// Provider is enabled
+			Log.v("buttonClick", "Provider Enabled");
+			((MainActivity) getActivity()).locationManager.requestLocationUpdates(providerName, 100, 1, locationListener);
+			Toast.makeText(getActivity(), "Getting Location Data.....", Toast.LENGTH_SHORT).show();
+		} else {
+			// Provider not enabled, prompt user to enable it
+			Log.v("buttonClick", "Provider Not Enabled");
+			Toast.makeText(getActivity(), "Please turn on Wi-Fi & mobile network location so we can get your location data", Toast.LENGTH_LONG).show();
+			Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			getActivity().startActivity(myIntent);
+		}
+        // ---
+        
 		titleField = (EditText) view.findViewById(R.id.newevent_title_field);
 		locationField = (EditText) view.findViewById(R.id.newevent_locationField);
 		facebookCheckBox = (CheckBox) view.findViewById(R.id.facebookCheckBox);
@@ -133,10 +167,13 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 		mapButton = (Button) view.findViewById(R.id.newevent_mapButton);
 		mapButton.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v) {				
 				System.out.println("lat long is currently at " + Double.toString(latitude) + "," + Double.toString(longitude));
 				Bundle data = new Bundle();
 				data.putString("title", titleField.getText().toString());
+				data.putDouble("latitude", latitude);
+				data.putDouble("longitude", longitude);
+				data.putString("location", locationField.getText().toString());
 				((MainActivity) getActivity()).createAddEventMapFrag(data, AddEventFragment.this);
 			}
 		});
@@ -384,4 +421,36 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	public void setAddress(String location) {
 		this.location = location;
 	}
+	
+	private final LocationListener locationListener = new LocationListener() {
+
+	    @Override
+	    public void onLocationChanged(Location location) {
+	    	    Log.v("Location Listener", "Location Changed");
+	    	    if ((latitude == DEFAULT_LATITUDE) || (longitude == DEFAULT_LONGITUDE)) {
+	    	    	latitude = location.getLatitude();
+	    	    	longitude = location.getLongitude();
+	    	    }
+	    	    System.out.println("Latitude Longitude found! " + Double.toString(latitude) + ", " + Double.toString(longitude));
+	    }
+
+		@Override
+		public void onProviderEnabled(String arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onProviderDisabled(String arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+			// TODO Auto-generated method stub
+			
+		}
+
+	};
 }

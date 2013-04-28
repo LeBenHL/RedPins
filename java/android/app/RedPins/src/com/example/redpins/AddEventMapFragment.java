@@ -34,6 +34,9 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 	public MapPicker parent;
 	private Geocoder geocoder;
 	private String title;
+	private String location;
+	private double previousLatitude = AddEventFragment.DEFAULT_LATITUDE;
+	private double previousLongitude = AddEventFragment.DEFAULT_LONGITUDE;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +56,14 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.add_event_map_fragment, container, false);
 		geocoder = new Geocoder(getActivity());
-		setUpMapIfNeeded();
 		title = getArguments().getString("title");
+		previousLatitude = getArguments().getDouble("latitude");
+		previousLongitude = getArguments().getDouble("longitude");
 		if (title.length() == 0) {
 			title = "New event";
 		}
+		location = getArguments().getString("location");
+		setUpMapIfNeeded();
 		return view;
 	}
 	
@@ -68,6 +74,8 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
             if (mMap != null) {
                 setUpMap();
             }
+        } else {
+        	moveMapCameraAndAddMarker();
         }
     }
 	
@@ -75,9 +83,46 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setOnCameraChangeListener(this);
-        //TODO: Set the latlng to be the current location
-        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(37.87557959345215, -122.25866295397283) , 14.0f) );
+        moveMapCameraAndAddMarker();
     }
+	
+	private void moveMapCameraAndAddMarker() {
+		if ((previousLatitude == AddEventFragment.DEFAULT_LATITUDE) || (previousLongitude == AddEventFragment.DEFAULT_LONGITUDE)) {
+        	mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(37.87557959345215, -122.25866295397283) , 14.0f) );
+        } else {
+        	LatLng point = new LatLng(previousLatitude, previousLongitude);
+        	mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(point , 14.0f) );
+        	if (currentMarker == null) {
+        		location = getLocationAddress(previousLatitude, previousLongitude);
+        		currentMarker = mMap.addMarker(new MarkerOptions().position(point).title(title).snippet(location));
+        	}
+        }
+	}
+	
+	private String getLocationAddress(double lat, double lng) {
+		String geolocation = "";
+		List<Address> addresses;
+		try {
+			addresses = geocoder.getFromLocation(lat, lng, 1);
+			if (addresses.size() > 0) {
+				Address address = addresses.get(0);
+				Log.i("onMapLongClick", address.toString());
+				int count = 0;
+				
+				while (address.getAddressLine(count) != null) {
+					geolocation = geolocation + "\n" + address.getAddressLine(count);
+					count++;
+				}
+				Log.i("onMapLongClick", geolocation);
+				
+			} else {
+				((MainActivity) getActivity()).makeToast("Invalid Location Chosen", Toast.LENGTH_LONG);
+			}
+		} catch (IOException e) {
+			((MainActivity) getActivity()).makeToast("Invalid Location Chosen", Toast.LENGTH_LONG);
+		}
+		return geolocation;
+	}
 	
 	@Override
 	public void onDestroyView() {
@@ -108,29 +153,10 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 		if (currentMarker != null) {
 			currentMarker.remove();
 		}
-		
-		List<Address> addresses;
-		try {
-			addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
-			if (addresses.size() > 0) {
-				Address address = addresses.get(0);
-				Log.i("onMapLongClick", address.toString());
-				int count = 0;
-				String location = "";
-				while (address.getAddressLine(count) != null) {
-					location = location + "\n" + address.getAddressLine(count);
-					count++;
-				}
-				Log.i("onMapLongClick", location);
-				parent.setAddress(location);
-				parent.setLatitudeLongitude(point.latitude, point.longitude);
-				currentMarker = mMap.addMarker(new MarkerOptions().position(point).title(title).snippet(location));
-			} else {
-				((MainActivity) getActivity()).makeToast("Invalid Location Chosen", Toast.LENGTH_LONG);
-			}
-		} catch (IOException e) {
-			((MainActivity) getActivity()).makeToast("Invalid Location Chosen", Toast.LENGTH_LONG);
-		}
+		parent.setLatitudeLongitude(point.latitude, point.longitude);
+		String geolocation = getLocationAddress(point.latitude, point.longitude);
+		parent.setAddress(geolocation);
+		currentMarker = mMap.addMarker(new MarkerOptions().position(point).title(title).snippet(geolocation));
 		
 	}
 

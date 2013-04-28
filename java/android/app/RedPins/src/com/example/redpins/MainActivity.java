@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity{
 	public String mLoc;
 	public LocationManager locationManager;
 	private Menu _menu;
-	public static String serverURL = "http://kantas92.pagekite.me"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://10.0.1.146:3000"; //"http://kantas92.pagekite.me"; //"http://redpins.pagekite.me";
 	private Stack<Fragment> mFragmentStack = new Stack<Fragment>();
 
 	@Override
