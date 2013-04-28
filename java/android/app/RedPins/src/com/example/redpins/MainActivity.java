@@ -36,7 +36,7 @@ public class MainActivity extends FragmentActivity{
 	public LocationManager locationManager;
 	private Menu _menu;
 	public static String serverURL = "http://kantas92.pagekite.me"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
-	private Stack<Fragment> mFragmentStack = new Stack<Fragment>();
+	private Stack<Fragment> mFragmentStack = new AnnouncingStack<Fragment>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -222,16 +222,14 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	public void showEventFrag(String eventID){
-		System.out.println("showing event page");
+		Log.i("showEventFrag", "Adding Event Fragment");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		Bundle data = new Bundle();
 		data.putString("event_id",eventID);
 		appFragment = new EventFragment();
 		appFragment.setArguments(data);
-		ft.show(appFragment);
 		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
-		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
 
 	public void showBookmarksFrag(){

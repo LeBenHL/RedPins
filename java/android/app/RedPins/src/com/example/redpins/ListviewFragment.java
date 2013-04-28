@@ -26,7 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class ListviewFragment extends ListFragment implements OnClickListener, JSONResponseHandler {
+public class ListviewFragment extends ListFragment implements JSONResponseHandler {
 	private Button mapviewButton;
 	private ListView listView;
 	private ImageButton homeButton;
@@ -43,9 +43,12 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 		View view = inflater.inflate(R.layout.listview_fragment, container, false);
 		//((MainActivity) getActivity()).hideNaviFrag();
 		homeButton = (ImageButton) view.findViewById(R.id.home_button);
-		homeButton.setOnClickListener(this);
 		mapviewButton = (Button) view.findViewById(R.id.button_to_mapview);
-		mapviewButton.setOnClickListener(this);
+		mapviewButton.setOnClickListener(new View.OnClickListener() {
+		    public void onClick(View v) {
+				((MainActivity) getActivity()).toggleMapviewFrag();
+		      }
+		    });
 		listView = (ListView) view.findViewById(android.R.id.list);
 		listView.setClickable(true);
 		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
@@ -79,24 +82,11 @@ public class ListviewFragment extends ListFragment implements OnClickListener, J
 		return view;
 	}
 
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.button_to_mapview:
-			//go to mapView
-			((MainActivity) getActivity()).toggleMapviewFrag();
-			break;
-		}
-	}
-
 	protected OnClickListener listener = new OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			System.out.println("CLICKED");
-			((MainActivity) getActivity()).toggleListviewFrag();
 			((MainActivity) getActivity()).showEventFrag(v.getTag().toString());
 		}
 	};
