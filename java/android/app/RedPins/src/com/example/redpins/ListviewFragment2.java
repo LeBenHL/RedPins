@@ -50,6 +50,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 	protected Context mContext;
 	protected ListFragment fragment;
 	private boolean yes;
+	private boolean noMore;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaZnceState) {
@@ -61,6 +62,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 		jsonList = new ArrayList<JSONObject>();
 		page = 1;
 		yes = true;
+		noMore = false;
 		fragment = this;
 		mContext = getActivity().getApplicationContext();
 		listView = (PullToRefreshListView) view.findViewById(R.id.events_listview);
@@ -74,10 +76,19 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 
 				// Update the LastUpdatedLabel
 				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-				MainActivity.utility.getEventList((JSONResponseHandler) fragment, searchTerm, searchLoc, page);
-				//				if(success){
-				//					page++;
-				//				}
+				if (searchLoc == null) {
+					MainActivity.utility.getNearbyEventList((JSONResponseHandler) fragment, searchTerm, latitude, longitude, page);
+					if(!noMore){
+						page++;
+					}
+					noMore = false;
+				} else {
+					MainActivity.utility.getEventList((JSONResponseHandler) fragment, searchTerm, searchLoc, page);
+					if(!noMore){
+						page++;
+					}
+					noMore = false;
+				}
 			}
 		});
 		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
@@ -299,7 +310,8 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 		switch (requestCode) {
 		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST:
 			jsonArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "events");
-			for(int i = 0; i < jsonArr.length();i++){
+			int i = 0;
+			for(; i < jsonArr.length();i++){
 				try {
 					jsonList.add(jsonArr.getJSONObject(i));
 				} catch (JSONException e) {
@@ -310,6 +322,9 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 			if(yes){
 				populateList();
 				yes = false;
+			}
+			if(i==0){
+				noMore = true;
 			}
 			listView.onRefreshComplete();
 			break;
