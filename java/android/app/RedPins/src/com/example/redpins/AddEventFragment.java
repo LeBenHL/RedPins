@@ -1,6 +1,7 @@
 package com.example.redpins;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -9,6 +10,10 @@ import java.util.TimeZone;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.android.Facebook;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -20,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,6 +33,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	private String startTimestamp, endTimestamp;
 	private EditText titleField;
 	private EditText locationField;
+	private CheckBox facebookCheckBox;
 	private double latitude = -360.0;
 	private double longitude = -360.0;
 	private String location = null;
@@ -56,6 +63,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 		View view = inflater.inflate(R.layout.add_event_fragment, container, false);
 		titleField = (EditText) view.findViewById(R.id.newevent_title_field);
 		locationField = (EditText) view.findViewById(R.id.newevent_locationField);
+		facebookCheckBox = (CheckBox) view.findViewById(R.id.facebookCheckBox);
 		
 		// Attaching onClickListeners to Buttons
 		startDateButton = (Button) view.findViewById(R.id.newevent_startDatePicker);
@@ -103,6 +111,20 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 					return;
 				}
 				updateTimestamps();
+				
+				//Push Event onto Facebook
+				if (facebookCheckBox.isChecked()) {
+					if (!((MainActivity) getActivity()).haveFacebookPermission("create_event")) {
+						((MainActivity) getActivity()).requestExtraFacebookPublishPermissions(Arrays.asList("create_event"));
+					}
+					Bundle parameters = new Bundle();
+					parameters.putString("name", titleField.getText().toString());
+					parameters.putString("start_time", startTimestamp);
+					parameters.putString("end_time", endTimestamp);
+					parameters.putString("location", locationField.getText().toString());
+					Request request = new Request(((MainActivity) getActivity()).getFacebookSession(), ((MainActivity) getActivity()).getFacebookId() + "/events", parameters, HttpMethod.POST);
+					MainActivity.utility.executeFacebookRequest(request);
+				}
 				progress = MainActivity.utility.addProgressDialog(getActivity(), "Adding Event", "Adding Event...");
 				MainActivity.utility.addEvent(AddEventFragment.this, titleField.getText().toString(), startTimestamp, endTimestamp, locationField.getText().toString(), "http://www.redpins.com", latitude, longitude, "");
 			}

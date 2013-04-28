@@ -1,5 +1,7 @@
 package com.example.redpins;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 
 import android.app.Activity;
@@ -21,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.Session;
+import com.facebook.Session.NewPermissionsRequest;
 
 public class MainActivity extends FragmentActivity{
 
@@ -35,7 +38,7 @@ public class MainActivity extends FragmentActivity{
 	public String mLoc;
 	public LocationManager locationManager;
 	private Menu _menu;
-	public static String serverURL = "http://10.0.2.2:3000";//"http://kantas92.pagekite.me"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
+	public static String serverURL = "http://kantas92.pagekite.me"; //"http://redpins.pagekite.me"; //"http://192.168.5.188:3000";
 	private Stack<Fragment> mFragmentStack = new Stack<Fragment>();
 
 	@Override
@@ -142,6 +145,19 @@ public class MainActivity extends FragmentActivity{
 	public String getFacebookSessionToken() {
 		System.out.println(facebookFragment._session.getAccessToken());
 		return facebookFragment._session.getAccessToken();
+	}
+	
+	public Session getFacebookSession() {
+		return facebookFragment._session;
+	}
+	
+	public boolean haveFacebookPermission(String permission) {
+		return facebookFragment._session.getPermissions().contains(permission);
+	}
+	
+	public void requestExtraFacebookPublishPermissions(List<String> permissions) {
+ 		NewPermissionsRequest request = new NewPermissionsRequest(this, permissions);
+		facebookFragment._session.requestNewPublishPermissions(request);
 	}
 
 	public void nearbyOnClick(View view) {
