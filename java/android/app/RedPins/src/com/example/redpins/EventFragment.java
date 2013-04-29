@@ -447,11 +447,33 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			break;
 			
 		case Utility.REQUEST_CANCEL_EVENT:
-			System.out.println("This event has been canceled");
+			try {
+				if(json.getInt("errCode")==1){
+					Toast toast = Toast.makeText(getActivity(), "This event got cancelled", Toast.LENGTH_SHORT);
+					toast.show();
+				}else{
+					Toast toast = Toast.makeText(getActivity(), "You are not authorized to cancel this event", Toast.LENGTH_SHORT);
+					toast.show();
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 			
 		case Utility.REQUEST_DELETE_EVENT:
-			System.out.println("This event has been deleted");
+			try {
+				if(json.getInt("errCode")==1){
+					Toast toast = Toast.makeText(getActivity(), "This event got deleted", Toast.LENGTH_SHORT);
+					toast.show();
+				}else{
+					Toast toast = Toast.makeText(getActivity(), "You are not authorized to delete this event", Toast.LENGTH_SHORT);
+					toast.show();
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 			
 		default:
