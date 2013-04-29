@@ -59,6 +59,7 @@ public class Utility{
 	public static final int REQUEST_GET_RATINGS = 204;
 	public static final int REQUEST_GET_EVENTLIST = 205;
 	public static final int REQUEST_GET_NEARBYEVENTLIST = 206;
+	public static final int REQUEST_GET_RECENTEVENTLIST = 207;
 	public static final int REQUEST_CANCEL_EVENT = 301;
 	public static final int REQUEST_DELETE_COMMENT = 400;
 	public static final int REQUEST_DELETE_EVENT = 401;
@@ -484,6 +485,17 @@ public class Utility{
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_LOGIN_USER, requestJSON, "/users/login.json");
+	}
+	
+	public void getRecentEventList(JSONResponseHandler fragment, Integer page) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			 requestJSON.put("page", page);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_GET_RECENTEVENTLIST, requestJSON, "/users/getRecentEvents.json");
 	}
 	
 	public void executeFacebookRequest(Request request) {

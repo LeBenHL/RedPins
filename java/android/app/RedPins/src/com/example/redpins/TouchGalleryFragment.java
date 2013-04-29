@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import ru.truba.touchgallery.GalleryWidget.GalleryViewPager;
 import ru.truba.touchgallery.GalleryWidget.UrlPagerAdapter;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.view.ViewManager;
 public class TouchGalleryFragment extends Fragment implements JSONResponseHandler {
 	
 	GalleryViewPager viewer;
+	ProgressDialog progress;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, 
@@ -29,6 +31,7 @@ public class TouchGalleryFragment extends Fragment implements JSONResponseHandle
 		Log.i("TouchGalleryFragment On Create", "ON CREATE");
 		View view = inflater.inflate(R.layout.touch_gallery_fragment, container, false);
 		viewer = (GalleryViewPager) view.findViewById(R.id.viewer);
+		progress = MainActivity.utility.addProgressDialog(getActivity(), "Loading", "Loading Photos...");
 		MainActivity.utility.getPhotos(this, getArguments().getString("event_id"));
 		return view;
 	}
@@ -60,12 +63,14 @@ public class TouchGalleryFragment extends Fragment implements JSONResponseHandle
 				((ViewManager) viewer.getParent()).removeView(viewer);
 			}
 		}
+		progress.dismiss();
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void onNetworkFailure(int requestCode, JSONObject json) {
+		progress.dismiss();
 		// TODO Auto-generated method stub
 		
 	}

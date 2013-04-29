@@ -189,14 +189,9 @@ public class MainActivity extends FragmentActivity{
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		listViewFragment = new ListviewFragment2();
 		listViewFragment.setArguments(data);
-		//Fragment lastAppFragment = appFragment;
 		appFragment = listViewFragment;
-		//		if (lastAppFragment instanceof NavigationFragment) {
 		ft.show(appFragment);
-		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));//.addToBackStack(null);			
-		//		} else {
-		//			ft.replace(R.id.mainAppFragment, appFragment);
-		//		};
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));		
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding createListview: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
@@ -424,5 +419,11 @@ public class MainActivity extends FragmentActivity{
 	    } else {
 	        super.onBackPressed();
 	    }
+	}
+	
+	public enum ListViewFragType {		
+		NEARBY,
+		LOCATION,
+		HISTORY		
 	}
 }

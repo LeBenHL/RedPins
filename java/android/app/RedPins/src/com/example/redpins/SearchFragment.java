@@ -76,6 +76,7 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		Bundle data = new Bundle();
 		data.putString("query",((MainActivity) getActivity()).mQuery);
 		data.putString("location", ((MainActivity) getActivity()).mLoc);
+		data.putInt("type", ListviewFragment2.LOCATION);
 		((MainActivity) getActivity()).createListviewFrag(data);
 		return true;
 	}
