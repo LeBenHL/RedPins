@@ -81,14 +81,13 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 					if(!noMore){
 						page++;
 					}
-					noMore = false;
 				} else {
 					MainActivity.utility.getEventList((JSONResponseHandler) fragment, searchTerm, searchLoc, page);
 					if(!noMore){
 						page++;
 					}
-					noMore = false;
 				}
+				System.out.println("page number: "+page);
 			}
 		});
 		TextView searchText = (TextView) view.findViewById(R.id.searched_term);
@@ -323,8 +322,11 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 				populateList();
 				yes = false;
 			}
+			System.out.println("i value: "+i);
 			if(i==0){
 				noMore = true;
+			}else{
+				noMore = false;
 			}
 			listView.onRefreshComplete();
 			break;
