@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal" >
+    android:layout_gravity="center_horizontal"
+    android:background="#FFFFFF"
+    android:padding="5dp" >
 
     <SearchView
         android:id="@+id/search_view"
@@ -10,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-		android:background="#FFFFFF"
         android:layout_margin="10dp" >
     </SearchView>
 
@@ -23,7 +24,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
             android:text="Location: " />
 
         <EditText
@@ -31,7 +31,6 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:textColor="#FFFFFF"
             android:text="UC Berkeley" />
     </LinearLayout>
 

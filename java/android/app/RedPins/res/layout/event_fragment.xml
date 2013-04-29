@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="7"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:padding="10dp" >
 
         <ImageButton
             android:id="@+id/bookmark_button"
@@ -26,7 +28,6 @@
             android:layout_gravity="fill_horizontal"
             android:padding="@dimen/object_padding"
             android:text="Event Name"
-            android:textColor="#FFFFFF"
             android:textSize="@dimen/event_name" />
 
         <ImageView
@@ -39,8 +40,7 @@
             android:layout_rowSpan="4"
             android:contentDescription="@string/null_val"
             android:padding="@dimen/words"
-            android:src="@drawable/ic_launcher"
-            android:background="#FFFFFF" />
+            android:src="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/event_url"
@@ -48,14 +48,13 @@
             android:layout_gravity="left"
             android:clickable="true"
             android:text="Event URL"
-            android:textColor="#FFFFFF"
             android:textSize="@dimen/words" />
 
         <TextView
             android:id="@+id/event_description"
             android:layout_columnSpan="4"
             android:layout_gravity="left"
-            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
             android:text="Event Description"
             android:textSize="@dimen/words" />
 
@@ -64,7 +63,6 @@
             android:layout_column="2"
             android:layout_columnSpan="4"
             android:layout_gravity="left"
-            android:textColor="#FFFFFF"
             android:text="Event Location"
             android:textSize="@dimen/words" />
 
@@ -73,7 +71,6 @@
             android:layout_column="2"
             android:layout_columnSpan="4"
             android:layout_gravity="left"
-            android:textColor="#FFFFFF"
             android:text="Event Time"
             android:textSize="@dimen/words" />
 
@@ -82,7 +79,6 @@
             android:layout_column="4"
             android:layout_gravity="left"
             android:layout_margin="@dimen/object_padding"
-            android:textColor="#FFFFFF"
             android:text="LIKE"
             android:textSize="@dimen/words" />
 
@@ -90,7 +86,6 @@
             android:id="@+id/event_dislike"
             android:layout_gravity="left"
             android:layout_margin="@dimen/object_padding"
-            android:textColor="#FFFFFF"
             android:text="DISLIKE"
             android:textSize="@dimen/words" />
 
@@ -126,6 +121,7 @@
             android:layout_row="11"
             android:background="@drawable/itemlist_gradient_red"
             android:textColor="#FFFFFF"
+            android:padding="5dp"
             android:text="Add Comment" />
 
         <Space
