@@ -100,6 +100,9 @@ public class NavigationFragment extends Fragment{
 	
 	public void historyOnClick(View view) {
 		Log.v("buttonClick", "HISTORY");
+		Bundle data = new Bundle();
+		data.putInt("type", ListviewFragment2.HISTORY);
+		((MainActivity) getActivity()).createListviewFrag(data);
 	}
 	
 	private final LocationListener locationListener = new LocationListener() {
@@ -112,6 +115,7 @@ public class NavigationFragment extends Fragment{
         		data.putString("query", "Everything");
         		data.putDouble("latitude", location.getLatitude());
         		data.putDouble("longitude", location.getLongitude());
+        		data.putInt("type", ListviewFragment2.NEARBY);
         		((MainActivity) getActivity()).createListviewFrag(data);
 	    }
 

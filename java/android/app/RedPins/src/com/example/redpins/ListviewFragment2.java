@@ -36,6 +36,11 @@ import android.widget.Toast;
 
 
 public class ListviewFragment2 extends ListFragment implements OnClickListener, JSONResponseHandler {
+	
+	public static final int NEARBY = 1;
+	public static final int LOCATION = 2;
+	public static final int HISTORY = 3;
+	
 	private Button mapviewButton;
 	private PullToRefreshListView listView;
 	private ImageButton homeButton;
@@ -51,6 +56,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 	protected ListFragment fragment;
 	private boolean yes;
 	private boolean noMore;
+	private Integer type;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstaZnceState) {
@@ -97,14 +103,25 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 		searchLoc = getArguments().getString("location");
 		latitude = getArguments().getDouble("latitude");
 		longitude = getArguments().getDouble("longitude");
+		type = getArguments().getInt("type");
 
 		progress = MainActivity.utility.addProgressDialog(getActivity(), "Searching", "Searching For Events...");
-		if (searchLoc == null) {
-			MainActivity.utility.getNearbyEventList(this, searchTerm, latitude, longitude, page);
-			page++;
-		} else {
-			MainActivity.utility.getEventList(this, searchTerm, searchLoc, page);
-			page++;
+		switch (type) {
+			case NEARBY:
+				MainActivity.utility.getNearbyEventList(this, searchTerm, latitude, longitude, page);
+				page++;
+				break;
+			case LOCATION:
+				MainActivity.utility.getEventList(this, searchTerm, searchLoc, page);
+				page++;
+				break;
+			case HISTORY:
+				MainActivity.utility.getRecentEventList(this, page);
+				page++;
+				break;
+			default:
+				((MainActivity) getActivity()).makeToast("ERROR, UNKNOWN LISTVIEWFRAG TYPE", Toast.LENGTH_SHORT);
+				break;
 		}
 
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -308,7 +325,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 	@Override
 	public void onNetworkSuccess(int requestCode, JSONObject json) {
 		switch (requestCode) {
-		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST:
+		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST: case Utility.REQUEST_GET_RECENTEVENTLIST:
 			jsonArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "events");
 			int i = 0;
 			for(; i < jsonArr.length();i++){
