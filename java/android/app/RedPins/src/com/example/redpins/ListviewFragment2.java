@@ -162,7 +162,6 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			System.out.println("CLICKED");
-			((MainActivity) getActivity()).toggleListviewFrag();
 			((MainActivity) getActivity()).showEventFrag(v.getTag().toString());
 		}
 	};
