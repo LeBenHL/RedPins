@@ -359,6 +359,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 					String location = responseJSONObject.getString("location");
 					String description = responseJSONObject.getString("description");
 					String time = responseJSONObject.getString("start_time");
+					boolean photo = responseJSONObject.getBoolean("isPhoto");
 					owner_id = responseJSONObject.getInt("user_id");
 					eventName.setText(name);
 					urlLink = url;
@@ -366,6 +367,10 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 					eventLoc.setText("Location: " + location);
 					eventTime.setText("Time: " + time);
 					eventDesc.setText("Description: " + description);
+					if (photo) {
+						String photoPath = responseJSONObject.getString("photo");
+						MainActivity.utility.getImage(eventImg, photoPath);
+					}
 				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
