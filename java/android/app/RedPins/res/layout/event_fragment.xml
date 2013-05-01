@@ -103,14 +103,14 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_column="0"
             android:layout_gravity="left"
-            android:background="@drawable/itemlist_gradient_red"
+            android:background="#FFFFFF"
             android:src="@drawable/rating_good" />
 
         <ImageButton
             android:id="@+id/dislike_button"
             style="?android:attr/borderlessButtonStyle"
             android:layout_gravity="left"
-            android:background="@drawable/itemlist_gradient_red"
+            android:background="#FFFFFF"
             android:src="@drawable/rating_bad" />
 
         <Button
