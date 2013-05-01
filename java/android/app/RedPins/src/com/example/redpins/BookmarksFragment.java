@@ -102,6 +102,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 				int id = -1;
 				try {
 					id = jsonArr.getJSONObject(position).getInt("id");
+					v.setTag(id);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -202,6 +203,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			System.out.println("CLICKED");
+			((MainActivity) getActivity()).showEventFrag(v.getTag().toString());
 		}
 	};
 
