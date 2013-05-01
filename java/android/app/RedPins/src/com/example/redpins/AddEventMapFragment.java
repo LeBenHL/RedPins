@@ -3,6 +3,8 @@ package com.example.redpins;
 import java.io.IOException;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -157,6 +159,26 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 		String geolocation = getLocationAddress(point.latitude, point.longitude);
 		parent.setAddress(geolocation);
 		currentMarker = mMap.addMarker(new MarkerOptions().position(point).title(title).snippet(geolocation));
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Confirm Event Location")
+		.setMessage("Have you pinned the correct location?")
+		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		})
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				((MainActivity) getActivity()).onBackPressed();
+			}
+		});
+		AlertDialog alertDialog = builder.create();
+		// Set the Icon for the Dialog
+		alertDialog.show();
 		
 	}
 
