@@ -188,7 +188,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 			Log.i("LOCATION", location.replaceAll("\n", " "));
 			locationField.setText(location.replaceAll("\n", " "));
 		} else {
-			locationField.setHint("Click the Map Button to the left to choose a location");
+			locationField.setHint("Click the Map Button on the right to choose a location");
 		}
 	}
 	
