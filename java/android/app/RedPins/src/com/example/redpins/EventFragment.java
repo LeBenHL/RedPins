@@ -456,6 +456,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 				if(json.getInt("errCode")==1){
 					Toast toast = Toast.makeText(getActivity(), "This event got cancelled", Toast.LENGTH_SHORT);
 					toast.show();
+					((MainActivity) getActivity()).onBackPressed();
 				}else{
 					Toast toast = Toast.makeText(getActivity(), "You are not authorized to cancel this event", Toast.LENGTH_SHORT);
 					toast.show();
@@ -471,6 +472,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 				if(json.getInt("errCode")==1){
 					Toast toast = Toast.makeText(getActivity(), "This event got deleted", Toast.LENGTH_SHORT);
 					toast.show();
+					((MainActivity) getActivity()).onBackPressed();
 				}else{
 					Toast toast = Toast.makeText(getActivity(), "You are not authorized to delete this event", Toast.LENGTH_SHORT);
 					toast.show();
