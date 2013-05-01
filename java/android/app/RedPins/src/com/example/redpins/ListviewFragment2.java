@@ -333,12 +333,14 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST: case Utility.REQUEST_GET_RECENTEVENTLIST:
 			jsonArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "events");
 			int i = 0;
-			for(; i < jsonArr.length();i++){
-				try {
-					jsonList.add(jsonArr.getJSONObject(i));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if (jsonArr != null) {
+				for(; i < jsonArr.length();i++){
+					try {
+						jsonList.add(jsonArr.getJSONObject(i));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 			if(yes){
