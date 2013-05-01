@@ -36,6 +36,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ImageView;
 
 public class Utility{
 	
@@ -496,6 +497,11 @@ public class Utility{
 		}
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_GET_RECENTEVENTLIST, requestJSON, "/users/getRecentEvents.json");
+	}
+	
+	public void getImage(ImageView image, String requestPath) {
+		DownloadImageTask task = new DownloadImageTask(image, requestPath);
+		task.execute();
 	}
 	
 	public void executeFacebookRequest(Request request) {

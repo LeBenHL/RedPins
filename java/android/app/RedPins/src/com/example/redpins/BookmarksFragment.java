@@ -102,6 +102,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 				int id = -1;
 				try {
 					id = jsonArr.getJSONObject(position).getInt("id");
+					v.setTag(id);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -142,6 +143,13 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 					eventDesc.setText(json.getString("url"));
 					eventAddr.setText(json.getString("location"));
 					eventTime.setText(json.getString("start_time"));
+					boolean photo = json.getBoolean("isPhoto");
+					if (photo) {
+						String photoPath = json.getString("photo");
+						MainActivity.utility.getImage(eventImage, photoPath);
+					} else {
+						eventImage.setImageResource(R.drawable.ic_launcher);
+					}
 					// Create Map Fragment version of it
 					Bundle bundle = new Bundle();
 					bundle.putString("JSONArr", jsonArr.toString());
@@ -202,6 +210,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			System.out.println("CLICKED");
+			((MainActivity) getActivity()).showEventFrag(v.getTag().toString());
 		}
 	};
 

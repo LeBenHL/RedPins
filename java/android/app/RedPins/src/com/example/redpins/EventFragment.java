@@ -357,6 +357,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 					String location = responseJSONObject.getString("location");
 					String description = responseJSONObject.getString("description");
 					String time = responseJSONObject.getString("start_time");
+					boolean photo = responseJSONObject.getBoolean("isPhoto");
 					owner_id = responseJSONObject.getInt("user_id");
 					eventName.setText(name);
 					urlLink = url;
@@ -364,6 +365,10 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 					eventLoc.setText("Location: " + location);
 					eventTime.setText("Time: " + time);
 					eventDesc.setText("Description: " + description);
+					if (photo) {
+						String photoPath = responseJSONObject.getString("photo");
+						MainActivity.utility.getImage(eventImg, photoPath);
+					}
 				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
@@ -449,6 +454,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 				if(json.getInt("errCode")==1){
 					Toast toast = Toast.makeText(getActivity(), "This event got cancelled", Toast.LENGTH_SHORT);
 					toast.show();
+					((MainActivity) getActivity()).onBackPressed();
 				}else{
 					Toast toast = Toast.makeText(getActivity(), "You are not authorized to cancel this event", Toast.LENGTH_SHORT);
 					toast.show();
@@ -464,6 +470,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 				if(json.getInt("errCode")==1){
 					Toast toast = Toast.makeText(getActivity(), "This event got deleted", Toast.LENGTH_SHORT);
 					toast.show();
+					((MainActivity) getActivity()).onBackPressed();
 				}else{
 					Toast toast = Toast.makeText(getActivity(), "You are not authorized to delete this event", Toast.LENGTH_SHORT);
 					toast.show();

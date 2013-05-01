@@ -162,7 +162,6 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			System.out.println("CLICKED");
-			((MainActivity) getActivity()).toggleListviewFrag();
 			((MainActivity) getActivity()).showEventFrag(v.getTag().toString());
 		}
 	};
@@ -235,6 +234,13 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 					eventDesc.setText(json.getString("url"));
 					eventAddr.setText(json.getString("location"));
 					eventTime.setText(json.getString("start_time"));
+					boolean photo = json.getBoolean("isPhoto");
+					if (photo) {
+						String photoPath = json.getString("photo");
+						MainActivity.utility.getImage(eventImage, photoPath);
+					} else {
+						eventImage.setImageResource(R.drawable.ic_launcher);
+					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -327,12 +333,14 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 		case Utility.REQUEST_GET_EVENTLIST: case Utility.REQUEST_GET_NEARBYEVENTLIST: case Utility.REQUEST_GET_RECENTEVENTLIST:
 			jsonArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "events");
 			int i = 0;
-			for(; i < jsonArr.length();i++){
-				try {
-					jsonList.add(jsonArr.getJSONObject(i));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if (jsonArr != null) {
+				for(; i < jsonArr.length();i++){
+					try {
+						jsonList.add(jsonArr.getJSONObject(i));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 			if(yes){
