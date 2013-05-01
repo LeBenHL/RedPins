@@ -234,6 +234,13 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 					eventDesc.setText(json.getString("url"));
 					eventAddr.setText(json.getString("location"));
 					eventTime.setText(json.getString("start_time"));
+					boolean photo = json.getBoolean("isPhoto");
+					if (photo) {
+						String photoPath = json.getString("photo");
+						MainActivity.utility.getImage(eventImage, photoPath);
+					} else {
+						eventImage.setImageResource(R.drawable.ic_launcher);
+					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
