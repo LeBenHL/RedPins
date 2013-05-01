@@ -96,14 +96,12 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			event_id = getArguments().getString("event_id");
 		}
 		
-		System.out.println("event_id1: "+event_id);
 		linkBack = getArguments().getString("prev");
 		progressBar = (ProgressBar) view.findViewById(R.id.event_progress);
 		mContext = getActivity().getApplicationContext();
 		commentArr = new ArrayList<JSONObject>();
 		bookmarkButton = (ImageButton) view.findViewById(R.id.bookmark_button);
 		bookmarkButton.setOnClickListener(this);
-		
 		eventImg.setOnClickListener(this);
 		
 		// API Requests

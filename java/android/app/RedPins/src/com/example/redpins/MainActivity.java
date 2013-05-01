@@ -146,17 +146,17 @@ public class MainActivity extends FragmentActivity{
 		System.out.println(facebookFragment._session.getAccessToken());
 		return facebookFragment._session.getAccessToken();
 	}
-	
+
 	public Session getFacebookSession() {
 		return facebookFragment._session;
 	}
-	
+
 	public boolean haveFacebookPermission(String permission) {
 		return facebookFragment._session.getPermissions().contains(permission);
 	}
-	
+
 	public void requestExtraFacebookPublishPermissions(List<String> permissions) {
- 		NewPermissionsRequest request = new NewPermissionsRequest(this, permissions);
+		NewPermissionsRequest request = new NewPermissionsRequest(this, permissions);
 		facebookFragment._session.requestNewPublishPermissions(request);
 	}
 
@@ -187,6 +187,9 @@ public class MainActivity extends FragmentActivity{
 	public void createListviewFrag(Bundle data){
 		System.out.println("showing listview");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		if(listViewFragment != null){
+			mFragmentStack.remove(listViewFragment);
+		}
 		listViewFragment = new ListviewFragment2();
 		listViewFragment.setArguments(data);
 		appFragment = listViewFragment;
@@ -198,7 +201,9 @@ public class MainActivity extends FragmentActivity{
 
 	public void toggleListviewFrag() {
 		System.out.println("toggling mapview");
-		getSupportFragmentManager().popBackStack("map", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		if(googleMapFragment != null){
+			mFragmentStack.remove(googleMapFragment);
+		}
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = listViewFragment;
 		ft.show(appFragment);
@@ -224,7 +229,9 @@ public class MainActivity extends FragmentActivity{
 	}
 	public void toggleMapviewFrag() {
 		System.out.println("toggling mapview");
-		getSupportFragmentManager().popBackStack("list", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		if(listViewFragment != null){
+			mFragmentStack.remove(listViewFragment);
+		}
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = googleMapFragment;
 		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
@@ -289,7 +296,7 @@ public class MainActivity extends FragmentActivity{
 		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 	}
-	
+
 	public void createAddEventMapFrag(Bundle bundle, AddEventFragment addEventFragment) {
 		Log.i("createAddEventMapFrag", "Created addEventMap frag");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -310,7 +317,7 @@ public class MainActivity extends FragmentActivity{
 		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 		ft.commit();
 	}
-	
+
 	public void logoutFacebook(MenuItem item) {
 		facebookFragment.authButton.callOnClick();
 	}
@@ -372,35 +379,35 @@ public class MainActivity extends FragmentActivity{
 		dateFragment.fragment = fragment;
 		dateFragment.show(getSupportFragmentManager(), "datePicker");
 	}
-	
+
 	public void showTimePickerDialog(TimePick fragment, int id, int currentHour, int currentMinute) {
 		Bundle data = new Bundle();
 		data.putInt("id", id);
 		data.putInt("hour", currentHour);
 		data.putInt("minute", currentMinute);
-	    TimePickerFragment timeFragment = new TimePickerFragment();
-	    timeFragment.setArguments(data);
-	    timeFragment.fragment = fragment;
-	    timeFragment.show(getSupportFragmentManager(), "timePicker");
+		TimePickerFragment timeFragment = new TimePickerFragment();
+		timeFragment.setArguments(data);
+		timeFragment.fragment = fragment;
+		timeFragment.show(getSupportFragmentManager(), "timePicker");
 	}
-	
+
 	public void showDatePickerDialog(DatePick fragment, int id, int currentYear, int currentMonth, int currentDay) {
 		Bundle data = new Bundle();
 		data.putInt("id", id);
 		data.putInt("year", currentYear);
 		data.putInt("month", currentMonth);
 		data.putInt("day", currentDay);
-	    DatePickerFragment dateFragment = new DatePickerFragment();
-	    dateFragment.setArguments(data);
-	    dateFragment.fragment = fragment;
-	    dateFragment.show(getSupportFragmentManager(), "datePicker");
+		DatePickerFragment dateFragment = new DatePickerFragment();
+		dateFragment.setArguments(data);
+		dateFragment.fragment = fragment;
+		dateFragment.show(getSupportFragmentManager(), "datePicker");
 	}
-	
+
 	public void makeToast(String text, Integer length) {
 		Toast toast = Toast.makeText(this, text, length);
 		toast.show();
 	}
-	
+
 	public void popFragmentStack() {
 		if (!mFragmentStack.empty()) {
 			mFragmentStack.pop();
@@ -409,18 +416,18 @@ public class MainActivity extends FragmentActivity{
 
 	@Override
 	public void onBackPressed() {
-	    mFragmentStack.pop();
-	    if (mFragmentStack.size() > 0) {
-	        FragmentTransaction ft = getSupportFragmentManager()
-	                .beginTransaction();
-	        appFragment = mFragmentStack.peek();
-	        ft.replace(R.id.mainAppFragment, appFragment);
-	        ft.commit();
-	    } else {
-	        super.onBackPressed();
-	    }
+		mFragmentStack.pop();
+		if (mFragmentStack.size() > 0) {
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
+			appFragment = mFragmentStack.peek();
+			ft.replace(R.id.mainAppFragment, appFragment);
+			ft.commit();
+		} else {
+			super.onBackPressed();
+		}
 	}
-	
+
 	public enum ListViewFragType {		
 		NEARBY,
 		LOCATION,
