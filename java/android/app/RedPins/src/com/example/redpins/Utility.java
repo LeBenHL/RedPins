@@ -61,6 +61,7 @@ public class Utility{
 	public static final int REQUEST_GET_EVENTLIST = 205;
 	public static final int REQUEST_GET_NEARBYEVENTLIST = 206;
 	public static final int REQUEST_GET_RECENTEVENTLIST = 207;
+	public static final int REQUEST_GET_RECOMMENDATIONSLIST = 208;
 	public static final int REQUEST_CANCEL_EVENT = 301;
 	public static final int REQUEST_DELETE_COMMENT = 400;
 	public static final int REQUEST_DELETE_EVENT = 401;
@@ -502,6 +503,12 @@ public class Utility{
 	public void getImage(ImageView image, String requestPath) {
 		DownloadImageTask task = new DownloadImageTask(image, requestPath);
 		task.execute();
+	}
+	
+	public void getSimpleRecommendations(JSONResponseHandler fragment) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_GET_RECOMMENDATIONSLIST, requestJSON, "/users/getSimpleRecommendations.json");
 	}
 	
 	public void executeFacebookRequest(Request request) {

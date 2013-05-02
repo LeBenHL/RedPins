@@ -80,6 +80,7 @@ public class NavigationFragment extends Fragment{
 	
 	public void recommendationsOnClick(View view) {
 		Log.v("buttonClick", "RECOMMENDATIONS");
+		((MainActivity)getActivity()).showRecommendationsFrag();
 	}
 	
 	public void addEventOnClick(View view) {
@@ -89,13 +90,11 @@ public class NavigationFragment extends Fragment{
 	
 	public void bookmarksOnClick(View view) {
 		Log.v("buttonClick", "BOOKMARKS");
-		//((MainActivity)getActivity()).hideNaviFrag();
 		((MainActivity)getActivity()).showBookmarksFrag();
 	}
 	
 	public void profileOnClick(View view) {
 		Log.v("buttonClick", "PROFILE");
-		//((MainActivity)getActivity()).hideNaviFrag();
 	}
 	
 	public void historyOnClick(View view) {
