@@ -6,8 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -30,6 +33,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 	private JSONArray jsonArr;
 	private ArrayList<Integer> remList;
 	private ProgressDialog progress;
+	private Fragment fragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 		View view = inflater.inflate(R.layout.bookmarks_fragment, container, false);
 		listview = (ListView) view.findViewById(android.R.id.list);
 	    progress = MainActivity.utility.addProgressDialog(getActivity(), "Loading", "Loading Bookmarks...");
+	    fragment = this;
 		MainActivity.utility.getBookmarks(this, 1);
 		return view;
 	}
@@ -98,7 +103,7 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 					v = convertView;
 				}
 				v.setOnClickListener(listener);
-				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				Button removeButton = (Button) v.findViewById(R.id.remove_button);
 				int id = -1;
 				try {
 					id = jsonArr.getJSONObject(position).getInt("id");
@@ -106,18 +111,33 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				checkbox.setTag(id);
-				checkbox.setChecked(true);
-				checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
+				removeButton.setTag(id);
+				removeButton.setOnClickListener(new OnClickListener() {
+					
 					@Override
-					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						int id = (Integer) buttonView.getTag();
-						if(!isChecked){
-							remList.add(id);
-						}else{
-							remList.remove(new Integer(id));
-						}
+					public void onClick(View v) {
+						final View view = v;
+						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+						builder.setTitle("Remove Bookmark")
+						.setMessage("Would you like to remove this bookmark?")
+						.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.dismiss();
+							}
+						})
+						.setPositiveButton("remove", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								MainActivity.utility.deleteBookmark((JSONResponseHandler) fragment, view.getTag().toString());
+								MainActivity.utility.getBookmarks((JSONResponseHandler) fragment, 1);
+							}
+						});
+						AlertDialog alertDialog = builder.create();
+						// Set the Icon for the Dialog
+						alertDialog.show();
 					}
 				});
 				TextView eventName = (TextView) v.findViewById(R.id.event_name);
@@ -243,8 +263,5 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		for(int i = 0; i < remList.size();i++){
-			MainActivity.utility.deleteBookmark(this, remList.get(i).toString());
-		}
 	}
 }

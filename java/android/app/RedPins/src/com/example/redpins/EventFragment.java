@@ -410,10 +410,12 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			
 		case Utility.REQUEST_ADD_BOOKMARK:
 			System.out.println("Bookmarked event!");
+			bookmarkButton.setPressed(true);
 			break;
 			
 		case Utility.REQUEST_DELETE_BOOKMARK:
 			System.out.println("Deleted bookmark for this event.");
+			bookmarkButton.setPressed(false);
 			break;
 			
 		case Utility.REQUEST_DELETE_COMMENT:

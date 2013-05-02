@@ -31,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -216,6 +217,7 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 				TextView eventDesc = (TextView) v.findViewById(R.id.event_description);
 				TextView eventAddr = (TextView) v.findViewById(R.id.event_address);
 				TextView eventTime = (TextView) v.findViewById(R.id.event_time);
+				ProgressBar progressBar = (ProgressBar) v.findViewById(R.id.event_progress);
 				//event tags
 				// Likes/Dislikes
 				//eventImage.setRes...
@@ -231,10 +233,11 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 					System.out.println("JSON"+position+": "+json);
 					v.setTag(json.getInt("id"));
 					eventName.setText(json.getString("title"));
-					eventDesc.setText(json.getString("url"));
+					eventDesc.setText(json.getString("description"));
 					eventAddr.setText(json.getString("location"));
 					eventTime.setText(json.getString("start_time"));
 					boolean photo = json.getBoolean("isPhoto");
+					
 					if (photo) {
 						String photoPath = json.getString("photo");
 						MainActivity.utility.getImage(eventImage, photoPath);
