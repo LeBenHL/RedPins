@@ -1,6 +1,6 @@
 package com.example.redpins;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -13,7 +13,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
@@ -38,7 +37,12 @@ public class MainActivity extends FragmentActivity{
 	public String mLoc;
 	public LocationManager locationManager;
 	private Menu _menu;
-	public static String serverURL = "http://kantas92.pagekite.me"; //"http://redpins.pagekite.me";
+	@SuppressWarnings("serial")
+	private static HashMap<String, String> serverAddresses = new HashMap<String, String>() {{
+															put("andy", "http://redpins.pagekite.me");
+															put("ben", "http://kantas92.pagekite.me");
+														}};;
+	public static String serverURL = serverAddresses.get("andy");
 	private Stack<Fragment> mFragmentStack = new AnnouncingStack<Fragment>();
 
 	@Override
@@ -255,6 +259,15 @@ public class MainActivity extends FragmentActivity{
 		System.out.println("showing bookmarks page");
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		appFragment = new BookmarksFragment();
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
+		ft.commit();
+		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
+	}
+	
+	public void showRecommendationsFrag(){
+		System.out.println("showing recommendations page");
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = new RecommendationsFragment();
 		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());

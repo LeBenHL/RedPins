@@ -145,6 +145,8 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 				TextView eventDesc = (TextView) v.findViewById(R.id.event_description);
 				TextView eventAddr = (TextView) v.findViewById(R.id.event_address);
 				TextView eventTime = (TextView) v.findViewById(R.id.event_time);
+				TextView eventLikes = (TextView) v.findViewById(R.id.event_likes);
+				TextView eventDislikes = (TextView) v.findViewById(R.id.event_dislikes);
 				//event tags
 				// Likes/Dislikes
 				//eventImage.setRes...
@@ -163,6 +165,8 @@ public class BookmarksFragment extends Fragment implements OnClickListener, JSON
 					eventDesc.setText(json.getString("url"));
 					eventAddr.setText(json.getString("location"));
 					eventTime.setText(json.getString("start_time"));
+					eventLikes.setText(json.getString("likes"));
+					eventDislikes.setText(json.getString("dislikes"));
 					boolean photo = json.getBoolean("isPhoto");
 					if (photo) {
 						String photoPath = json.getString("photo");
