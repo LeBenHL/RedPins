@@ -32,7 +32,6 @@ import android.widget.Toast;
 
 public class EventFragment extends Fragment implements OnClickListener, JSONResponseHandler {
 
-	private ImageButton homeButton;
 	private ImageButton removeEventButton;
 	private TextView eventName;
 	private TextView eventURL;
