@@ -63,18 +63,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-
-            <TextView
+            
+             <TextView
                 android:id="@+id/event_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="likes" />
+                android:layout_gravity="bottom"
+                android:text=""
+                android:textSize="20dp" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/rating_good" />
 
             <TextView
                 android:id="@+id/event_dislikes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="dislikes" />
+                android:layout_gravity="bottom"
+                android:paddingLeft="15dp"
+                android:text=""
+                android:textSize="20dp" />
+            
+            <ImageView
+		        android:id="@+id/imageView2"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="bottom"
+		        android:src="@drawable/rating_bad" />
+
         </LinearLayout>
     </LinearLayout>
 
