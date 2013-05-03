@@ -355,14 +355,13 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 					String url = responseJSONObject.getString("url");
 					String location = responseJSONObject.getString("location");
 					String description = responseJSONObject.getString("description");
-					String time = responseJSONObject.getString("start_time");
 					boolean photo = responseJSONObject.getBoolean("isPhoto");
 					owner_id = responseJSONObject.getInt("user_id");
 					eventName.setText(name);
 					urlLink = url;
 					eventURL.setText("URL: " + urlLink);
 					eventLoc.setText("Location: " + location);
-					eventTime.setText("Time: " + time);
+					eventTime.setText(responseJSONObject.getString("start_time")+"~"+ responseJSONObject.getString("end_time"));
 					eventDesc.setText("Description: " + description);
 					if (photo) {
 						String photoPath = responseJSONObject.getString("photo");

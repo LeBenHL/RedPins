@@ -217,6 +217,8 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 				TextView eventDesc = (TextView) v.findViewById(R.id.event_description);
 				TextView eventAddr = (TextView) v.findViewById(R.id.event_address);
 				TextView eventTime = (TextView) v.findViewById(R.id.event_time);
+				TextView eventLikes = (TextView) v.findViewById(R.id.event_likes);
+				TextView eventDislikes = (TextView) v.findViewById(R.id.event_dislikes);
 				ProgressBar progressBar = (ProgressBar) v.findViewById(R.id.event_progress);
 				//event tags
 				// Likes/Dislikes
@@ -236,6 +238,8 @@ public class ListviewFragment2 extends ListFragment implements OnClickListener, 
 					eventDesc.setText(json.getString("description"));
 					eventAddr.setText(json.getString("location"));
 					eventTime.setText(json.getString("start_time"));
+					eventLikes.setText(json.getString("likes"));
+					eventDislikes.setText(json.getString("dislikes"));
 					boolean photo = json.getBoolean("isPhoto");
 					
 					if (photo) {

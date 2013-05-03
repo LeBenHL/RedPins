@@ -102,8 +102,8 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 				TextView eventDesc = (TextView) v.findViewById(R.id.event_description);
 				TextView eventAddr = (TextView) v.findViewById(R.id.event_address);
 				TextView eventTime = (TextView) v.findViewById(R.id.event_time);
-				//event tags
-				// Likes/Dislikes
+				TextView eventLikes = (TextView) v.findViewById(R.id.event_likes);
+				TextView eventDislikes = (TextView) v.findViewById(R.id.event_dislikes); 
 				try {
 					eventName.setText(jsonObj.getString("title"));
 					//eventImage.setImageResource(R.drawable.ic_launcher);
@@ -111,6 +111,8 @@ public class GoogMapFragment extends Fragment implements OnClickListener,OnInfoW
 					eventAddr.setText(jsonObj.getString("location"));
 					eventTime.setText(jsonObj.getString("start_time")+"~"+ jsonObj.getString("end_time"));
 					String event_id = jsonObj.getString("id");
+					eventLikes.setText(jsonObj.getString("likes"));
+					eventDislikes.setText(jsonObj.getString("dislikes"));
 					hash.put(marker.getId(), event_id);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
