@@ -35,7 +35,6 @@ public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 		solo.assertCurrentActivity("Expected MainActivity", "MainActivity");
 	}
 	
-	
 	public void test02_AddEvent() throws Throwable {
 		solo.sleep(2000);
 		ImageView addEventView = (ImageView) solo.getCurrentActivity().findViewById(R.id.AddEventImg);
@@ -51,7 +50,6 @@ public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 		solo.sleep(1000);
 		Button createButton = (Button) solo.getCurrentActivity().findViewById(R.id.newevent_create_btn);
 		solo.clickOnView(createButton);
-		solo.sleep(2000);
 	}
 	
 	public void test03_nearby() throws Throwable {
@@ -87,66 +85,13 @@ public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 		assertTrue(solo.searchText("Bookmark Event 2"));
 	}
 	
-	/*
-	solo.clickOnScreen(500, 150);
-	solo.enterText(0, "Korean");
-	solo.clickOnScreen(730, 150);
-	solo.clickOnText("Eric's BBQ");
-	assertTrue(solo.searchText("Add Comment"));
-	solo.clickOnText("Add Comment");
-	assertTrue(solo.searchText("Write Comments"));
-	solo.enterText(2, "HIYO");
-	solo.clickOnText("SUBMIT");
-	assertTrue(solo.searchText("HIYO"));
-	*/
-	/*
-	public void test4Bookmark() throws Throwable{
-		solo.clickOnScreen(500, 150);
-		solo.enterText(0, "Korean");
-		solo.clickOnScreen(730, 150);
-		solo.clickOnText("Danceworks");
-		solo.clickOnScreen(50, 350);
-		solo.goBack();
-		solo.goBack();
-		solo.clickOnScreen(700, 900);
-		assertTrue(solo.searchText("Danceworks"));
-		solo.clickOnScreen(200, 50);
-		solo.goBack();
-		solo.clickOnScreen(700, 900);
-		assertFalse(solo.searchText("Danceworks"));
+	public void test06_recommended() throws Throwable{
+		solo.sleep(2000);
+		ImageView recommendationsView = (ImageView) solo.getCurrentActivity().findViewById(R.id.RecommendationsImg);
+		solo.clickOnView(recommendationsView);
+		solo.sleep(2000);
+		assertTrue(solo.searchText("Recommended Event 1"));
+		assertTrue(solo.searchText("Recommended Event 2"));
+		assertTrue(solo.searchText("Recommended Event 3"));
 	}
-	public void test5Map() throws Throwable{
-		solo.clickOnScreen(500, 150);
-		solo.enterText(0, "Korean");
-		solo.clickOnScreen(730, 150);
-		solo.clickOnText("To the Map");
-		assertTrue(solo.searchText("To Search List"));
-		//"To the Map"
-		//click search button
-		//check that current fragment is ListviewFragment
-	}
-	
-	public void test6DislikeEvent() throws Throwable {
-		solo.clickOnScreen(500, 150);
-		solo.enterText(0, "food");
-		solo.clickOnScreen(730, 150);
-		solo.clickOnText("Off the Grid");
-		assertTrue(solo.searchText("Off The Grid"));
-		ImageButton dislikeButton = (ImageButton) solo.getCurrentActivity().findViewById(R.id.dislike_button);
-		solo.clickOnView(dislikeButton);
-		assertTrue(dislikeButton.isSelected());
-	}
-	
-	public void test7LikeEvent() throws Throwable {
-		solo.clickOnScreen(500, 150);
-		solo.enterText(0, "burger");
-		solo.clickOnScreen(730, 150);
-		solo.clickOnText("Eric's BBQ");
-		ImageButton dislikeButton = (ImageButton) solo.getCurrentActivity().findViewById(R.id.dislike_button);
-		ImageButton likeButton = (ImageButton) solo.getCurrentActivity().findViewById(R.id.like_button);
-		solo.clickOnView(likeButton);
-		assertTrue(likeButton.isSelected());
-		assertFalse(dislikeButton.isSelected());
-	}
-	*/
 }
