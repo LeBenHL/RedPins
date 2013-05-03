@@ -429,7 +429,7 @@ public class AddEventFragment extends Fragment implements OnClickListener, TimeP
 	    	    Log.v("Location Listener", "Location Changed");
 	    	    if ((latitude == DEFAULT_LATITUDE) || (longitude == DEFAULT_LONGITUDE)) {
 	    	    	latitude = location.getLatitude();
-	    	    	longitude = location.getLongitude();
+	    	    	longitude = location.getLongitude();	
 	    	    }
 	    	    System.out.println("Latitude Longitude found! " + Double.toString(latitude) + ", " + Double.toString(longitude));
 	    }

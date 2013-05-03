@@ -97,11 +97,14 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
         	if (currentMarker == null) {
         		location = getLocationAddress(previousLatitude, previousLongitude);
         		currentMarker = mMap.addMarker(new MarkerOptions().position(point).title(title).snippet(location));
+        		parent.setLatitudeLongitude(point.latitude, point.longitude);
+        		String geolocation = getLocationAddress(point.latitude, point.longitude);
+        		parent.setAddress(geolocation);
         	}
         }
 	}
 	
-	private String getLocationAddress(double lat, double lng) {
+	public String getLocationAddress(double lat, double lng) {
 		String geolocation = "";
 		List<Address> addresses;
 		try {
@@ -149,7 +152,7 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 	}
 
 	@Override
-	public void onMapLongClick(LatLng point) {
+	public void onMapClick(LatLng point) {
 		// TODO Auto-generated method stub
 		System.out.println("long pressed, point=" + point);
 		if (currentMarker != null) {
@@ -183,12 +186,6 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 	}
 
 	@Override
-	public void onMapClick(LatLng point) {
-		// TODO Auto-generated method stub
-		System.out.println("pressed, point=" + point);
-	}
-
-	@Override
 	public void onCameraChange(CameraPosition arg0) {
 		// TODO Auto-generated method stub
 		
@@ -196,6 +193,12 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
 
 	@Override
 	public void onInfoWindowClick(Marker arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMapLongClick(LatLng arg0) {
 		// TODO Auto-generated method stub
 		
 	}

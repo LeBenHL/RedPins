@@ -1,9 +1,9 @@
 package com.example.redpins.test;
 
-import com.example.redpins.*;
-import com.jayway.android.robotium.solo.Solo;
-
 import android.test.ActivityInstrumentationTestCase2;
+
+import com.example.redpins.MainActivity;
+import com.jayway.android.robotium.solo.Solo;
 
 // Unit Tests for MainActivity
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -17,8 +17,10 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		solo = new Solo(getInstrumentation(), getActivity());
 		main = (MainActivity) getActivity();
+		MockUtility mockUtility = new MockUtility();
+		main.setUtility(mockUtility);
+		solo = new Solo(getInstrumentation(), main);
 	}
 	
 	@Override
@@ -35,7 +37,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		assertTrue(solo.searchText("Bookmarks"));
 		assertTrue(solo.searchText("Recommended Events"));
 	}
-	
+	/*
 	public void testAddEventButtonClick() throws Exception {
 		solo.clickOnText("Add Event");
 		assertTrue(solo.searchText("Cancel"));
@@ -44,5 +46,5 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		solo.goBack();
 		assertEquals(solo.getCurrentActivity(), main);
 	}
-
+	*/
 }

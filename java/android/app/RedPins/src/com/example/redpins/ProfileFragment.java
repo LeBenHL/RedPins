@@ -1,8 +1,11 @@
 package com.example.redpins;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.facebook.widget.ProfilePictureView;
 
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
@@ -26,6 +29,9 @@ public class ProfileFragment extends Fragment implements OnClickListener, JSONRe
 	private ListView myEventsListView;
 	private JSONArray likesArr;
 	private JSONArray eventsArr;
+	private ProfilePictureView profilePictureView;
+	private TextView userName;
+	private TextView locale;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,22 @@ public class ProfileFragment extends Fragment implements OnClickListener, JSONRe
 		progress = MainActivity.utility.addProgressDialog(getActivity(), "Loading", "Loading your profile...");
 		likesListView = (ListView) view.findViewById(R.id.bookmarksListView);
 		myEventsListView = (ListView) view.findViewById(R.id.myEventsListView);
+		profilePictureView = (ProfilePictureView) view.findViewById(R.id.userImage);
+		profilePictureView.setCropped(true);
+		profilePictureView.setProfileId(((MainActivity) getActivity()).getFacebookId());
+		userName = (TextView) view.findViewById(R.id.userName);
+		userName.setText(((MainActivity) getActivity()).getFacebookUser().getName());
+		locale = (TextView) view.findViewById(R.id.locale);
+		Object location = null;
+		try {
+			location = ((MainActivity) getActivity()).getFacebookUser().getLocation().asMap().get("Name");
+		} catch(NullPointerException e) {
+			location = "";
+		}
+		if (location != null) {
+			locale.setText(location.toString());
+		}
+		
 		MainActivity.utility.getUserProfile(this);
 		// MainActivity.utility.getSimpleRecommendations(this);
 		return view;

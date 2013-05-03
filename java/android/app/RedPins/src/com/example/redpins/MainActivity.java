@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.facebook.Session;
 import com.facebook.Session.NewPermissionsRequest;
+import com.facebook.model.GraphUser;
 
 public class MainActivity extends FragmentActivity{
 
@@ -43,15 +44,19 @@ public class MainActivity extends FragmentActivity{
 															put("ben", "http://kantas92.pagekite.me");
 															put("emu","http://10.0.2.2:3000");
 														}};;
-	public static String serverURL = serverAddresses.get("emu");
+	public static String serverURL = serverAddresses.get("andy");
 	private Stack<Fragment> mFragmentStack = new AnnouncingStack<Fragment>();
 
+	public void setUtility(Utility _utility) {
+		MainActivity.utility = _utility;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		System.out.println("GOT CREATED");
 		super.onCreate(savedInstanceState);
 		activity = this;
-		utility = new Utility();
+		setUtility(new Utility());
 		setContentView(R.layout.main_activity);
 		if (savedInstanceState == null) {
 			// Add the fragment on initial activity setup
@@ -145,6 +150,10 @@ public class MainActivity extends FragmentActivity{
 			return null;
 		}
 		return facebookFragment._user.getProperty("id").toString();
+	}
+	
+	public GraphUser getFacebookUser() {
+		return facebookFragment._user;
 	}
 
 	public String getFacebookSessionToken() {
