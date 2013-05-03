@@ -62,6 +62,7 @@ public class Utility{
 	public static final int REQUEST_GET_NEARBYEVENTLIST = 206;
 	public static final int REQUEST_GET_RECENTEVENTLIST = 207;
 	public static final int REQUEST_GET_RECOMMENDATIONSLIST = 208;
+	public static final int REQUEST_GET_USER_PROFILE = 209;
 	public static final int REQUEST_CANCEL_EVENT = 301;
 	public static final int REQUEST_DELETE_COMMENT = 400;
 	public static final int REQUEST_DELETE_EVENT = 401;
@@ -509,6 +510,18 @@ public class Utility{
 		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		DefaultJSONTask jsonTask = new DefaultJSONTask();
 		jsonTask.executeTask(fragment, REQUEST_GET_RECOMMENDATIONSLIST, requestJSON, "/users/getSimpleRecommendations.json");
+	}
+	
+	public void getUserProfile(JSONResponseHandler fragment) {
+		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
+		try {
+			 requestJSON.put("bookmarksPage", 1);
+			 requestJSON.put("eventsPage", 1);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DefaultJSONTask jsonTask = new DefaultJSONTask();
+		jsonTask.executeTask(fragment, REQUEST_GET_USER_PROFILE, requestJSON, "/users/getUserProfile.json");
 	}
 	
 	public void executeFacebookRequest(Request request) {
