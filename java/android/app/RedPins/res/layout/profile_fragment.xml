@@ -45,7 +45,7 @@
         android:layout_below="@id/myEventsListView"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
-        android:text="My Bookmarks"
+        android:text="Liked Events"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView

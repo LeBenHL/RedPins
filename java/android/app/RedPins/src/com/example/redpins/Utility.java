@@ -515,7 +515,7 @@ public class Utility{
 	public void getUserProfile(JSONResponseHandler fragment) {
 		JSONObject requestJSON = createJSONObjectWithFacebookIDAndSessionToken();
 		try {
-			 requestJSON.put("bookmarksPage", 0);
+			 requestJSON.put("likesPage", 0);
 			 requestJSON.put("eventsPage", 0);
 		} catch (JSONException e) {
 			e.printStackTrace();

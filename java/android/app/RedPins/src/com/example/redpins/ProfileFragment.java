@@ -86,7 +86,7 @@ public class ProfileFragment extends Fragment implements OnClickListener, JSONRe
 				if(likesArr.length()==0){
 					v = inflater.inflate(R.layout.null_list, null);
 					TextView text = (TextView) v.findViewById(R.id.text_view);
-					text.setText("You Have No Bookmarked Events");
+					text.setText("You Have No Liked Events");
 				}else{
 					if (convertView == null) {
 						v = inflater.inflate(R.layout.event_list, null); 
@@ -318,10 +318,11 @@ public class ProfileFragment extends Fragment implements OnClickListener, JSONRe
 	public void onNetworkSuccess(int requestCode, JSONObject json) {
 		switch (requestCode) {
 		case Utility.REQUEST_GET_USER_PROFILE:
-			likesArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "events");
+			likesArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "likedEvents");
 			eventsArr = MainActivity.utility.lookupJSONArrayFromJSONObject(json, "myEvents");
 			populateLikes();
 			populateEvents();
+			break;
 		default:
 			System.out.println("Unknown network request with requestCode: " + Integer.toString(requestCode));
 		}
