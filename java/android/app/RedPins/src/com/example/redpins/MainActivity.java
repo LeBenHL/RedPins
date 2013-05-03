@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.facebook.Session;
 import com.facebook.Session.NewPermissionsRequest;
+import com.facebook.model.GraphUser;
 
 public class MainActivity extends FragmentActivity{
 
@@ -144,6 +145,10 @@ public class MainActivity extends FragmentActivity{
 			return null;
 		}
 		return facebookFragment._user.getProperty("id").toString();
+	}
+	
+	public GraphUser getFacebookUser() {
+		return facebookFragment._user;
 	}
 
 	public String getFacebookSessionToken() {

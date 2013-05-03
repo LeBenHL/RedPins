@@ -15,11 +15,12 @@
         android:text="Test User"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ImageView
+    <com.facebook.widget.ProfilePictureView
         android:id="@+id/userImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:contentDescription="" />
+       	android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/myEventsLabel"
@@ -53,5 +54,15 @@
         android:layout_width="fill_parent"
         android:layout_height="230dp"
         android:layout_below="@id/bookmarksLabel" />
+
+    <TextView
+        android:id="@+id/locale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/userName"
+        android:layout_below="@+id/userName"
+        android:background="#FFFFFF"
+        android:text="Locale"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
