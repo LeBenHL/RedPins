@@ -78,15 +78,6 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 				startActivityForResult(chooserIntent, SELECT_GALLERY_REQUEST_CODE);
 			}
 		});
-		cancelBtn = (Button) view.findViewById(R.id.add_photo_cancel_btn);
-		cancelBtn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View view) {
-				bm = null;
-				photo.setImageResource(R.drawable.content_attachment);
-			}
-		});
 		uploadBtn = (Button) view.findViewById(R.id.add_photo_upload_btn);
 		uploadBtn.setOnClickListener(new OnClickListener() {
 			
@@ -138,6 +129,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 					e.printStackTrace();
 				}
 			}
+			uploadBtn.setEnabled(true);
 		}
 	}
 	
@@ -187,6 +179,7 @@ public class AddPhotoFragment extends Fragment implements OnClickListener, Multi
 		progress.dismiss();
 		bm = null;
 		photo.setImageResource(R.drawable.content_attachment);
+		uploadBtn.setEnabled(false);
 	}
 
 	@Override
