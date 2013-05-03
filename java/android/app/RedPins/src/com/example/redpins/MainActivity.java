@@ -272,6 +272,14 @@ public class MainActivity extends FragmentActivity{
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());
 	}
+	
+	public void showProfileFrag() {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		appFragment = new RecommendationsFragment();
+		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
+		ft.commit();
+		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());		
+	}
 
 	public void hideAddPhotoFragFrag(){
 		System.out.println("hiding add photo page");
