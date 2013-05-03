@@ -26,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +70,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		eventTime = (TextView) view.findViewById(R.id.event_time);
 		eventImg = (ImageView) view.findViewById(R.id.event_photo);
 		eventDesc = (TextView) view.findViewById(R.id.event_description);
+		eventDesc.setOnClickListener(this);
 		eventLikes = (TextView) view.findViewById(R.id.event_like);
 		eventDislikes = (TextView) view.findViewById(R.id.event_dislike);
 		commentsList = (ListView) view.findViewById(R.id.comment_listview);
@@ -106,6 +108,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		// API Requests
 		progress = MainActivity.utility.addProgressDialog(getActivity(), "Loading", "Loading Event...", 3);
 		MainActivity.utility.getEvent(this, event_id);
+		//MainActivity.utility.
 		MainActivity.utility.getRatings(this, event_id);
 		MainActivity.utility.getComments(this, event_id);
 
@@ -175,7 +178,7 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 		switch(v.getId()) {
 		case R.id.event_url:
 			// takes user to web browser with given link
-			Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlLink));
+			Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://"+urlLink));
 			startActivity(myIntent);
 			break;
 		case R.id.add_comment_button:
@@ -229,6 +232,12 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 			Bundle data = new Bundle();
 			data.putString("event_id", event_id);
 			((MainActivity) getActivity()).createTouchGalleryFrag(data);
+			break;
+		case R.id.event_description:
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setMessage(eventDesc.getText().toString());
+			AlertDialog dialog = builder.create();
+			dialog.show();
 			break;
 		}
 	}
@@ -359,10 +368,15 @@ public class EventFragment extends Fragment implements OnClickListener, JSONResp
 					owner_id = responseJSONObject.getInt("user_id");
 					eventName.setText(name);
 					urlLink = url;
-					eventURL.setText("URL: " + urlLink);
+					eventURL.setText(urlLink);
 					eventLoc.setText("Location: " + location);
 					eventTime.setText(responseJSONObject.getString("start_time")+"~"+ responseJSONObject.getString("end_time"));
 					eventDesc.setText("Description: " + description);
+					if(!responseJSONObject.getBoolean("owner")){
+						removeEventButton.setVisibility(View.GONE);
+						deleteEventButton.setVisibility(View.GONE);
+					}
+					bookmarkButton.setPressed(responseJSONObject.getBoolean("bookmark"));
 					if (photo) {
 						String photoPath = responseJSONObject.getString("photo");
 						MainActivity.utility.getImage(eventImg, photoPath);
