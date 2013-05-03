@@ -2,12 +2,14 @@ package com.example.redpins;
 
 import org.json.JSONObject;
 
+import android.app.Service;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -18,6 +20,8 @@ public class AddCommentFragment extends Fragment implements OnClickListener, JSO
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.add_comment_fragment, container, false);
 		commentText = (EditText) view.findViewById(R.id.comment_input);
+		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
+		imm.showSoftInput(commentText, 0);
 		Button submitButton = (Button) view.findViewById(R.id.comment_submit_button);
 		submitButton.setOnClickListener(this);
 		return view;
