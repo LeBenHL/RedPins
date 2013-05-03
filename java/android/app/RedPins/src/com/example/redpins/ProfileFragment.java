@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class ProfileFragment extends Fragment implements OnClickListener, JSONResponseHandler{
 
 	private ProgressDialog progress;
-	private ListView bookmarksListView;
+	private ListView likesListView;
 	private ListView myEventsListView;
 	private JSONArray likesArr;
 	private JSONArray eventsArr;
@@ -38,7 +38,7 @@ public class ProfileFragment extends Fragment implements OnClickListener, JSONRe
 		View view = inflater.inflate(R.layout.profile_fragment, container, false);
 
 		progress = MainActivity.utility.addProgressDialog(getActivity(), "Loading", "Loading your profile...");
-		bookmarksListView = (ListView) view.findViewById(R.id.bookmarksListView);
+		likesListView = (ListView) view.findViewById(R.id.bookmarksListView);
 		myEventsListView = (ListView) view.findViewById(R.id.myEventsListView);
 		MainActivity.utility.getUserProfile(this);
 		// MainActivity.utility.getSimpleRecommendations(this);
@@ -172,7 +172,7 @@ public class ProfileFragment extends Fragment implements OnClickListener, JSONRe
 				return false;
 			}
 		};
-		bookmarksListView.setAdapter(adapter);
+		likesListView.setAdapter(adapter);
 	}
 
 	private void populateEvents(){
