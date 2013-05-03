@@ -42,8 +42,9 @@ public class MainActivity extends FragmentActivity{
 	private static HashMap<String, String> serverAddresses = new HashMap<String, String>() {{
 															put("andy", "http://redpins.pagekite.me");
 															put("ben", "http://kantas92.pagekite.me");
+															put("emu","http://10.0.2.2:3000");
 														}};;
-	public static String serverURL = serverAddresses.get("ben");
+	public static String serverURL = serverAddresses.get("emu");
 	private Stack<Fragment> mFragmentStack = new AnnouncingStack<Fragment>();
 
 	@Override
