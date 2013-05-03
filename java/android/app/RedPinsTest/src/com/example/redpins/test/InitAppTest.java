@@ -54,7 +54,7 @@ public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 		solo.sleep(2000);
 	}
 	
-	public void test00_nearby() throws Throwable {
+	public void test03_nearby() throws Throwable {
 		solo.sleep(2000);
 		ImageView nearbyView = (ImageView) solo.getCurrentActivity().findViewById(R.id.NearbyImg);
 		solo.clickOnView(nearbyView);
@@ -65,35 +65,41 @@ public class InitAppTest extends ActivityInstrumentationTestCase2<MainActivity>{
 		assertTrue(solo.searchText("Fake Event 4"));
 	}
 	
-		/*
-		solo.clickOnScreen(500, 150);
-		solo.enterText(0, "Korean");
-		solo.clickOnScreen(730, 150);
-		assertTrue(solo.searchText("To the Map"));
-		assertTrue(solo.searchText("Eric's BBQ'"));
-		assertTrue(solo.searchText("Off The Grid"));
-		*/
-		//"To the Map"
-		//click search button
-		//check that current fragment is ListviewFragment
-		//}
-	/*
-	public void test3Event() throws Throwable{
-		solo.clickOnScreen(500, 150);
-		solo.enterText(0, "Korean");
-		solo.clickOnScreen(730, 150);
-		solo.clickOnText("Eric's BBQ");
-		assertTrue(solo.searchText("Add Comment"));
-		solo.clickOnText("Add Comment");
-		assertTrue(solo.searchText("Write Comments"));
-		solo.enterText(2, "HIYO");
-		solo.clickOnText("SUBMIT");
-		assertTrue(solo.searchText("HIYO"));
-		//"To the Map"
-		//click search button
-		//check that current fragment is ListviewFragment
+	public void test04_history() throws Throwable{
+		solo.sleep(2000);
+		ImageView historyView = (ImageView) solo.getCurrentActivity().findViewById(R.id.HistoryImg);
+		solo.clickOnView(historyView);
+		solo.sleep(2000);
+		assertTrue(solo.searchText("Recent Event 1"));
+		assertTrue(solo.searchText("Recent Event 2"));
+		assertTrue(solo.searchText("Recent Event 3"));
+		assertTrue(solo.searchText("Recent Event 4"));
+		assertTrue(solo.searchText("Recent Event 5"));
+		assertTrue(solo.searchText("Recent Event 6"));
 	}
 	
+	public void test05_bookmarks() throws Throwable{
+		solo.sleep(2000);
+		ImageView bookmarksView = (ImageView) solo.getCurrentActivity().findViewById(R.id.BookmarksImg);
+		solo.clickOnView(bookmarksView);
+		solo.sleep(2000);
+		assertTrue(solo.searchText("Bookmark Event 1"));
+		assertTrue(solo.searchText("Bookmark Event 2"));
+	}
+	
+	/*
+	solo.clickOnScreen(500, 150);
+	solo.enterText(0, "Korean");
+	solo.clickOnScreen(730, 150);
+	solo.clickOnText("Eric's BBQ");
+	assertTrue(solo.searchText("Add Comment"));
+	solo.clickOnText("Add Comment");
+	assertTrue(solo.searchText("Write Comments"));
+	solo.enterText(2, "HIYO");
+	solo.clickOnText("SUBMIT");
+	assertTrue(solo.searchText("HIYO"));
+	*/
+	/*
 	public void test4Bookmark() throws Throwable{
 		solo.clickOnScreen(500, 150);
 		solo.enterText(0, "Korean");
