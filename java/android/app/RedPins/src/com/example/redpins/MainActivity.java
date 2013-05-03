@@ -275,7 +275,7 @@ public class MainActivity extends FragmentActivity{
 	
 	public void showProfileFrag() {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		appFragment = new RecommendationsFragment();
+		appFragment = new ProfileFragment();
 		ft.replace(R.id.mainAppFragment, mFragmentStack.push(appFragment));
 		ft.commit();
 		Log.v("onBackPressed","backstack count after adding: "+getSupportFragmentManager().getBackStackEntryCount());		
