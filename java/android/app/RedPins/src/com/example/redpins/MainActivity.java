@@ -42,7 +42,7 @@ public class MainActivity extends FragmentActivity{
 															put("andy", "http://redpins.pagekite.me");
 															put("ben", "http://kantas92.pagekite.me");
 														}};;
-	public static String serverURL = serverAddresses.get("andy");
+	public static String serverURL = serverAddresses.get("ben");
 	private Stack<Fragment> mFragmentStack = new AnnouncingStack<Fragment>();
 
 	@Override

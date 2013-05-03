@@ -2,25 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
     android:background="#FFFFFF"
     android:clickable="true"
     android:orientation="horizontal"
     android:padding="5dp" >
 
-    <Button
-        android:id="@+id/remove_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:text="X"
-        android:textColor="#FF0000" />
-
     <ImageView
         android:id="@+id/event_image"
         android:layout_width="@dimen/event_photo"
         android:layout_height="@dimen/event_photo"
-        android:layout_alignTop="@+id/remove_button"
         android:layout_toRightOf="@+id/remove_button"
         android:contentDescription="@string/null_val"
         android:src="@drawable/ic_launcher" />
@@ -103,5 +93,17 @@
             android:layout_gravity="bottom"
             android:src="@drawable/rating_bad" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/remove_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/event_image"
+        android:layout_alignParentLeft="true"
+        android:background="#FFFFFF"
+        android:gravity="center"
+        android:text="X"
+        android:textColor="#FF0000"
+        android:textSize="25sp" />
 
 </RelativeLayout>
