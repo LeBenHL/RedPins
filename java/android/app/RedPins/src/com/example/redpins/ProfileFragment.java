@@ -52,7 +52,12 @@ public class ProfileFragment extends Fragment implements OnClickListener, JSONRe
 		userName = (TextView) view.findViewById(R.id.userName);
 		userName.setText(((MainActivity) getActivity()).getFacebookUser().getName());
 		locale = (TextView) view.findViewById(R.id.locale);
-		Object location = ((MainActivity) getActivity()).getFacebookUser().getLocation().asMap().get("Name");
+		Object location = null;
+		try {
+			location = ((MainActivity) getActivity()).getFacebookUser().getLocation().asMap().get("Name");
+		} catch(NullPointerException e) {
+			location = "";
+		}
 		if (location != null) {
 			locale.setText(location.toString());
 		}
