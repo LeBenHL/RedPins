@@ -95,6 +95,7 @@ public class NavigationFragment extends Fragment{
 	
 	public void profileOnClick(View view) {
 		Log.v("buttonClick", "PROFILE");
+		((MainActivity) getActivity()).showProfileFrag();
 	}
 	
 	public void historyOnClick(View view) {
