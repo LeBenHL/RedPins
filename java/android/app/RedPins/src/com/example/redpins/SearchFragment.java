@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
@@ -73,6 +74,7 @@ public class SearchFragment extends Fragment implements OnQueryTextListener{
 		searchView.setFocusableInTouchMode(false);
 		searchView.setFocusable(false);
 		searchView.setSelected(false);
+		searchView.clearFocus();
 		Bundle data = new Bundle();
 		data.putString("query",((MainActivity) getActivity()).mQuery);
 		data.putString("location", ((MainActivity) getActivity()).mLoc);

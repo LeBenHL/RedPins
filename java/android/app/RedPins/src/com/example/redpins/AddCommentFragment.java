@@ -3,6 +3,7 @@ package com.example.redpins;
 import org.json.JSONObject;
 
 import android.app.Service;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,8 +21,9 @@ public class AddCommentFragment extends Fragment implements OnClickListener, JSO
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.add_comment_fragment, container, false);
 		commentText = (EditText) view.findViewById(R.id.comment_input);
-		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Service.INPUT_METHOD_SERVICE);
-		imm.showSoftInput(commentText, 0);
+		commentText.requestFocus();
+		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,InputMethodManager.HIDE_IMPLICIT_ONLY);
 		Button submitButton = (Button) view.findViewById(R.id.comment_submit_button);
 		submitButton.setOnClickListener(this);
 		return view;
@@ -29,6 +31,9 @@ public class AddCommentFragment extends Fragment implements OnClickListener, JSO
 	@Override
 	public void onClick(View v) {
 		MainActivity.utility.addComment(this, getArguments().getString("event_id"), commentText.getText().toString());
+		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+	      Context.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 		((MainActivity) getActivity()).onBackPressed();
 	}
 
