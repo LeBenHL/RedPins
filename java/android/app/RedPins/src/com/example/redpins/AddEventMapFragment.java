@@ -97,11 +97,14 @@ public class AddEventMapFragment extends Fragment implements OnMapClickListener,
         	if (currentMarker == null) {
         		location = getLocationAddress(previousLatitude, previousLongitude);
         		currentMarker = mMap.addMarker(new MarkerOptions().position(point).title(title).snippet(location));
+        		parent.setLatitudeLongitude(point.latitude, point.longitude);
+        		String geolocation = getLocationAddress(point.latitude, point.longitude);
+        		parent.setAddress(geolocation);
         	}
         }
 	}
 	
-	private String getLocationAddress(double lat, double lng) {
+	public String getLocationAddress(double lat, double lng) {
 		String geolocation = "";
 		List<Address> addresses;
 		try {
